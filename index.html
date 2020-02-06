@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!--  This site was created in Webflow. http://www.webflow.com  -->
+<!--  Last Published: Thu Feb 06 2020 16:46:33 GMT+0000 (Coordinated Universal Time)  -->
 <html data-wf-page="5e3c2743d9adb44262a38013" data-wf-site="5e3c2743d9adb426e6a38012">
 <head>
   <meta charset="utf-8">
@@ -31,7 +33,7 @@
       </div>
       <div class="form-block w-form">
         <form id="email-form" name="email-form" data-name="Email Form" class="form"><label for="email" class="field-label">Vul je mailadres in om op de hoogte te blijven van nieuwe versies</label>
-          <div class="div-block-2"><input type="email" class="text-field w-input" maxlength="256" name="email" data-name="Email" placeholder="enter email" id="email" required=""><input type="submit" value="Hou me op de hoogte" data-wait="Please wait..." class="submit-button w-button"></div>
+          <div class="div-block-2"><input type="email" class="text-field w-input" maxlength="256" name="email" data-name="Email" placeholder="enter email" id="email" required=""><a href="#" class="button w-button">Hou me op de hoogte</a></div>
         </form>
         <div class="w-form-done">
           <div>Thank you! Your submission has been received!</div>
@@ -198,13 +200,14 @@ function myFunction() {
   </div>
   <div class="section-2">
     <div class="w-container">
-      <div class="w-embed w-script"><textarea rows="8" cols="70" id="html" name="html"><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons-Licentie" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png"></a><br>Dit werk valt onder een <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Naamsvermelding 4.0 Internationaal-licentie</a>.</textarea>
+      <div class="html-embed w-embed"><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons-Licentie" style="border-width:0" src="https://gijsvandenbeucken.github.io/images/logogids30x30.svg"></a><br>Dit werk valt onder een <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Naamsvermelding 4.0 Internationaal-licentie</a>.</div>
+      <div class="html-embed-2 w-embed w-script"><textarea  rows="12" cols="70" id="html" name="html"><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons-Licentie" style="border-width:0" src="https://gijsvandenbeucken.github.io/images/logogids2.svg "></a><br>Dit werk valt onder een <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Naamsvermelding 4.0 Internationaal-licentie</a>.</textarea>
         <input type="button" value="Copy" onclick="copy_to_clipboard('html');">
         <script>
 function copy_to_clipboard(id)
 {
-    document.getElementById('html').select();
-    document.execCommand('copy');
+    document.getElementById('html').select();
+    document.execCommand('copy');
 }
 </script>
       </div>
