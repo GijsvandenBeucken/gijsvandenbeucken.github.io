@@ -7,3 +7,14 @@ color: white;
 text-align: center; 
 font-size: 20px;
 }
+
+.div-block-131 {
+  position: absolute;
+  left: 0%;
+  top: auto;
+  right: 0%;
+  bottom: 8%;
+  z-index: 20;
+  height: auto;
+  font-size: 18px;
+}
