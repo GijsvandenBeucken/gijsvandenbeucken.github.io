@@ -18,3 +18,9 @@ font-size: 20px;
   height: auto;
   font-size: 18px;
 }
+.canvas {
+  position: absolute;
+  z-index: 20;
+  width: 100vw;
+  height: 100vh;
+  min-height: auto;
