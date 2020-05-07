@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <meta name="description" content="demo of the bpmn.io CMMN 1.1 viewer">
+  <meta name="keywords" content="open source, toolkit, CMMN 1.1, case management, embed, model, integrate, extend">
+  <meta name="author" content="bpmn.io">
+
+  <base href="/" />
+
+  <title>cmmn toolkit | demo.bpmn.io</title>
+
+  <style>
+    body.preload {
+      opacity: 0;
+      overflow: hidden;
+    }
+  </style>
+
+  <link rel="icon" type="image/svg+xml" href="/assets/logo.svg" />
+  <link rel="icon" type="image/png" href="/assets/favicon.png" />
+</head>
+<body class="preload">
+  <div class="content" id="js-drop-zone">
+
+    <div class="screen intro">
+      <div class="note">
+
+        <div class="project-logo">
+          <a href="http://bpmn.io">
+            <span class="icon-bpmn-io-logo"></span>
+          </a>
+        </div>
+
+        <div class="message">
+          <a href title="open CMMN diagram from local file system" jsaction="click:bio.openLocal">
+            <span class="icon-open" style="font-size: 1em"></span> Open</a> or
+
+          <a href="/cmmn/new" title="create a new CMMN diagram" >
+            <span class="icon-plus-circled" style="font-size: 1em"></span> create</a> a CMMN diagram.
+        </div>
+
+        <div class="samples">
+
+          <p>Use <a href="https://bpmn.io/toolkit/cmmn-js/">cmmn-js</a> to view, create and edit CMMN 1.1 diagrams in your browser.</p>
+
+          <a class="sample" href="/cmmn/s/claims-file">
+            <img class="img" src="/cmmn/img/screenshot.png">
+            <img class="tryit" src="/assets/tryit.png">
+
+            <div class="caption">
+              A sample CMMN diagram. Click to inspect it.
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="screen loading">
+
+      <div class="note">
+        <div class="message">
+          <img class="animate-pulsate" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20960%20960%22%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M960%2060v839c0%2033-27%2061-60%2061H60c-33%200-60-27-60-60V60C0%2027%2027%200%2060%200h839c34%200%2061%2027%2061%2060z%22%2F%3E%3Cpath%20fill%3D%22%23DDD%22%20d%3D%22M217%20548a205%20205%200%200%200-144%2058%20202%20202%200%200%200-4%20286%20202%20202%200%200%200%20285%203%20200%20200%200%200%200%2048-219%20203%20203%200%200%200-185-128zM752%206a206%20206%200%200%200-192%20285%20206%20206%200%200%200%20269%20111%20207%20207%200%200%200%20111-260A204%20204%200%200%200%20752%206zM62%200A62%2062%200%200%200%200%2062v398l60%2046a259%20259%200%200%201%2089-36c5-28%2010-57%2014-85l99%202%2012%2085a246%20246%200%200%201%2088%2038l70-52%2069%2071-52%2068c17%2030%2029%2058%2035%2090l86%2014-2%20100-86%2012a240%20240%200%200%201-38%2089l43%2058h413c37%200%2060-27%2060-61V407a220%20220%200%200%201-44%2040l21%2085-93%2039-45-76a258%20258%200%200%201-98%201l-45%2076-94-39%2022-85a298%20298%200%200%201-70-69l-86%2022-38-94%2076-45a258%20258%200%200%201-1-98l-76-45%2040-94%2085%2022a271%20271%200%200%201%2041-47z%22%2F%3E%3C%2Fsvg%3E" />
+        </div>
+      </div>
+    </div>
+
+    <div class="screen error">
+      <div class="note">
+        <div class="message">
+          <p>
+            Ooops, we could not display that diagram.
+          </p>
+          <p>
+            <small>
+              You believe your input is valid CMMN 1.1 XML</a>?
+              Consult our <a href="https://forum.bpmn.io" target="_blank">forum</a> or
+              <a href="https://github.com/bpmn-io/cmmn-js/issues" target="_blank">file an issue</a> in our <a href="https://github.com/bpmn-io/cmmn-js/issues" target="_blank">issue tracker</a>.
+            </small>
+          </p>
+        </div>
+
+        <div class="details">
+          <span>Some details on the problem</span>
+          <textarea class="error-log"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="canvas" id="js-canvas"></div>
+  </div>
+
+  <div class="io-import-export">
+
+    <ul class="io-import io-control io-control-list io-horizontal">
+      <li>
+        <button title="open CMMN diagram from local file system" jsaction="click:bio.openLocal">
+          <span class="icon-open"></span>
+        </button>
+      </li>
+    </ul>
+
+    <ul class="io-export io-control io-control-list io-horizontal">
+      <li>
+        <a target="_blank" href class="download" title="download CMMN diagram" jswidget="downloadDiagram" data-track="diagram:download-cmmn">
+          <span class="icon-download"></span>
+        </a>
+      </li>
+      <li>
+        <a target="_blank" href class="download" title="download as SVG image" jswidget="downloadSVG" data-track="diagram:download-svg">
+          <span class="icon-picture"></span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="io-alerts">
+
+    <div class="io-control alert" jswidget="import-warnings-alert">
+      <a href class="close" aria-hidden="true" jsaction="click:bio.clearImportDetails">&times;</a>
+      Diagram may not render correctly due to import warnings.
+
+      <a href jsaction="click:bio.showImportDetails">Show details</a>.
+    </div>
+
+    <div class="io-control alert" jswidget="undo-redo-alert">
+      You edited the diagram.
+
+      <a href jsaction="click:bio.undo">Undo last change</a>.
+
+      <a href class="close" aria-hidden="true" jsaction="click:bio.hideUndoAlert">&times;</a>
+    </div>
+
+  </div>
+
+  <div class="io-help">
+
+    <ul class="io-control-list io-horizontal">
+      <li>
+        <a href="https://forum.bpmn.io/t/8" title="report an issue or suggest improvements" target="_blank" data-track="help:open-report">
+          <span class="icon-comment"></span>
+        </a>
+      </li>
+      <li>
+        <button title="more information about this demo" jsaction="click:bio.showAbout" data-track="help:open-about">
+          <span class="icon-info"></span>
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="io-legal">
+
+    <ul class="io-control-list io-horizontal">
+      <li>
+        <a href="http://bpmn.io/legal/privacy.html" target="_blank" title="privacy policy">
+          privacy
+        </a>
+      </li>
+      <li>
+        <a href="http://bpmn.io/legal/terms.html" target="_blank" title="terms of use">
+          terms
+        </a>
+      </li>
+      <li>
+        <a href="http://bpmn.io/legal/imprint.html" target="_blank" title="imprint">
+          imprint
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="io-editing-tools" jswidget="editing-tools">
+    <ul class="io-control-list io-horizontal">
+      <li class="io-control">
+        <button title="Toggle Fullscreen"
+                jsaction="click:bio.toggleFullscreen">
+          <span class="icon-resize-full"> </span>
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="io-zoom-controls">
+
+    <ul class="io-zoom-reset io-control io-control-list">
+      <li>
+        <button title="reset zoom" jsaction="click:bio.zoomReset">
+          <span class="icon-size-reset"></span>
+        </button>
+      </li>
+    </ul>
+
+    <ul class="io-zoom io-control io-control-list">
+      <li>
+        <button title="zoom in" jsaction="click:bio.zoomIn">
+          <span class="icon-plus"></span>
+        </button>
+      </li>
+      <li>
+        <hr/>
+      </li>
+      <li>
+        <button href title="zoom out" jsaction="click:bio.zoomOut">
+          <span class="icon-minus"></span>
+        </button>
+      </li>
+    </ul>
+  </div>
+
+
+  <div class="io-dialog about" jswidget="about-dialog">
+
+    <div class="content">
+      <h1>About bpmn.io</h1>
+
+      <p>
+        bpmn.io offers tools to view, annotate and edit <a href="http://www.bpmn.org">BPMN 2.0</a>, CMMN and DMN diagrams on the web. Refer to our <a href="http://bpmn.io">project website</a> for more information.
+      </p>
+
+      <p>
+        This is a demo of <a href="https://github.com/bpmn-io/bpmn-js">bpmn-js</a> the JavaScript toolkit that powers bpmn.io.
+      <p>
+
+      <h2>Built with open-source software</h2>
+
+      <p>
+        <a href="https://github.com/bpmn-io/bpmn-js">bpmn-js</a> is built with the help of a number of open-source libraries:
+      </p>
+
+      <ul>
+        <li><a href="https://github.com/isaacs/sax-js">saxjs</a></li>
+        <li><a href="http://snapsvg.io">snapsvg</a></li>
+        <li><a href="http://jquery.com">jquery</a></li>
+      </ul>
+
+      <p>
+        Icons are assembled using <a href="http://fontello.com">fontello</a> from the following icon fonts:
+      </p>
+
+      <ul>
+        <li><a href="http://fontello.com">Fontelico</a> crowdsourced, for Fontello project</li>
+        <li><a href="http://fortawesome.github.com/Font-Awesome/">Font Awesome</a> by Dave Gandy</li>
+        <li><a href="http://www.entypo.com">Entypo</a> by Daniel Bruce</li>
+        <li><a href="http://somerandomdude.com/work/iconic/">Iconic</a> by P.J. Onori</li>
+      </ul>
+
+      <a class="project-logo" href="http://bpmn.io">
+        <span class="icon-bpmn-io"></span>
+      </a>
+
+      <p>
+        You can find all bpmn.io related open-source projects on
+        <a href="https://github.com/bpmn-io">GitHub</a>.
+      </p>
+    </div>
+  </div>
+
+  <div class="io-dialog import-warnings" jswidget="import-warnings-dialog">
+
+    <div class="content">
+      <h1>Import Warnings</h1>
+
+      <p>
+        One or more problems have been identified when trying to import the BPMN 2.0 diagram:
+      </p>
+
+      <p>
+        <textarea class="error-log"></textarea>
+      <p>
+
+      <p>
+        This may have been caused by malformed input data.
+        As a result the diagram may not render correctly.
+      </p>
+
+      <h2>Need help on this?</h2>
+
+      <p>
+        File a report in <a href="https://forum.bpmn.io" target="_blank">our forum</a>.
+        Attach your diagram and the above error log.
+      </p>
+
+      <a class="project-logo" href="http://bpmn.io">
+        <span class="icon-bpmn-io"></span>
+      </a>
+    </div>
+  </div>
+
+  <script src="/assets/polyfills.js"></script>
+  <script src="/assets/sentry.js"></script>
+  <script src="/cmmn/app.js" async></script>
+  <script src="/assets/analytics.js" async></script>
+
+  <!-- d3bdca9d0afcd73416f5da15aca564a02f18d877 -->
+</html>
