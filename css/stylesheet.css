@@ -273,6 +273,11 @@ font-size: 30px;
     margin-bottom: 12px;
     padding: 16px;
   }
+  @media screen and (max-width: 767px) {
+    .container-53{
+    width: 90%;
+    }
+    }
   .rich-text-block-12 {
     font-family: 'Open Sans', sans-serif;
     color: #fff;
