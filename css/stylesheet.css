@@ -115,8 +115,11 @@ background-color: black;
 	line-height: 40px;
 	text-align: center;
 }
-
-
+@media screen and (max-width: 767px) {
+.text-block-name{
+font-size: 30px;
+}
+}
 .text-block-tagline {
 	margin-top: 18px;
 	font-family: 'Open Sans', sans-serif;
@@ -127,8 +130,9 @@ background-color: black;
 	text-align: center;
   text-decoration: none;
   font-size: 18px;
-  line-height: 18px;
-  }
+  line-height: 18px;}
+
+
 
 .link-block-projects {
     margin-top: 17px;
@@ -286,3 +290,8 @@ background-color: black;
 	font-size: 20px;
 	text-align: center;
 }
+@media screen and (max-width: 767px) {
+  .paragraph-12{
+  font-size: 12px;
+  }
+  }
