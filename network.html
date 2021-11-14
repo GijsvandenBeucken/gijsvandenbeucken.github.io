@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+   <head>
+      <script type="text/javascript" src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script>
+      <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"></script>
+<style>
+
+    html, body
+    {
+        height: 100%;
+    }
+
+    #header
+    {
+        width: 100%;
+        background: orange;
+        vertical-align: middle;
+        text-align: center;
+        line-height: 30px;
+    }
+
+    #mynetwork {
+      width:auto;
+      height: 60vh;
+      margin: auto;
+      border: 0px solid lightgray;
+      
+    }
+
+    #nodeContent {
+      position: relative;
+      border: 1px solid lightgray;
+      width: 80vw;
+      height: 40vh;
+      margin: auto;
+      padding: 10px;
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+ #pre-field{
+ 
+ }
+    .string {
+      color: green;
+    }
+
+    .number {
+      color: darkorange;
+    }
+
+    .boolean {
+      color: blue;
+    }
+
+    .null {
+      color: magenta;
+    }
+
+    .key {
+      color: red;
+    }
+  </style>
+  </head>
+<div id="header">Sample header region</div>
+        <div id="mynetwork"></div>
+        <div id="nodeContent">
+        <pre id="pre-field">Click on a node to show content here</pre>
+      </div>
+  
+
+
+<script type="text/javascript">
+     
+   // create an array with nodes
+   var nodes = new vis.DataSet([
+     { id: 1, label: "Node 1" ,
+     info1: "<h3>Title</h3>",
+     info2: '<p>paragraph text example.paragraph text example. paragraph text example. paragraph text example.paragraph text example.<br><b>Example of a link:</b> <a href=\"http://bing.com\">Bing</a>. </p>',
+     info3: "<b>Example of an image:</b> <br><img src=\"https://www.w3schools.com/images/w3schools_green.jpg\" alt=\"W3Schools.com\"> "
+      },
+     { id: 2, label: "Node 2" ,info1: "test2" },
+     { id: 3, label: "Node 3" },
+     { id: 4, label: "Node 4" },
+     { id: 5, label: "Node 5" },
+   ]);
+
+   // create an array with edges
+   var edges = new vis.DataSet([
+     { from: 1, to: 3 },
+     { from: 1, to: 2 },
+     { from: 2, to: 4 },
+     { from: 2, to: 5 },
+     { from: 3, to: 3 },
+   ]);
+ 
+   // create a network
+   var container = document.getElementById("mynetwork");
+   var data = {
+     nodes: nodes,
+     edges: edges,
+   };
+   var options = {};
+   var network = new vis.Network(container, data, options);
+
+   
+      network.on("click", function (params) {
+        if (params.nodes.length > 0) {
+            var nodeId = params.nodes[0]; // get the data from selected node
+            document.getElementById("nodeContent").className = "div.nodeContent";
+            document.getElementById("nodeContent").innerHTML = nodes.get(nodeId).info1 + nodes.get(nodeId).info2 + nodes.get(nodeId).info3; // show the data in the div 
+            
+        }
+      });
+      
+      
+ </script>
+
+ </body>
+
+</html>
