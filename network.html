@@ -26,8 +26,7 @@
       width:auto;
       height: 60vh;
       margin: auto;
-      border: 0px solid lightgray;
-      
+      border: 0px solid lightgray; 
     }
 
     #nodeContent {
@@ -40,9 +39,7 @@
       word-break: break-word;
       white-space: pre-wrap;
     }
- #pre-field{
- 
- }
+
     .string {
       color: green;
     }
@@ -76,7 +73,10 @@
      
    // create an array with nodes
    var nodes = new vis.DataSet([
-     { id: 1, label: "Node 1" ,
+     { id: 1, 
+      label: "Node 1" ,
+      widthConstraint: { minimum: 80 },
+      heightConstraint: { minimum:80 },
      info1: "<h3>Title</h3>",
      info2: '<p>paragraph text example.paragraph text example. paragraph text example. paragraph text example.paragraph text example.<br><b>Example of a link:</b> <a href=\"http://bing.com\">Bing</a>. </p>',
      info3: "<b>Example of an image:</b> <br><img src=\"https://www.w3schools.com/images/w3schools_green.jpg\" alt=\"W3Schools.com\"> "
@@ -102,7 +102,29 @@
      nodes: nodes,
      edges: edges,
    };
-   var options = {};
+   var options = {
+        edges: {
+          font: {
+            size: 12,
+          },
+          widthConstraint: {
+            maximum: 90,
+          },
+        },
+        nodes: {
+          shape: "box",
+          color: "rgba(97,195,238,0.5)",
+          margin: 10,
+          widthConstraint: {
+            maximum: 200,
+          },
+        },
+        physics: {
+          enabled: true,
+        },
+        layout: {
+            nodeSpacing: 50}
+      };
    var network = new vis.Network(container, data, options);
 
    
