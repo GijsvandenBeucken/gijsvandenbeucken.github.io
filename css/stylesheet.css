@@ -305,6 +305,7 @@ font-size: 30px;
   #header-network
   {
       width: 50vw;
+      height: auto;
       vertical-align: center;
       text-align: left;
       line-height: 20px;
@@ -315,11 +316,15 @@ font-size: 30px;
     width: 90vw;
     }
   }
+
+
   #nodeContent {
     position: relative;
     border: 1px solid lightgray;
     width: 50vw;
     height: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
     margin: auto;
     padding: 10px;
     word-break: break-word;
@@ -328,10 +333,12 @@ font-size: 30px;
   @media screen and (max-width: 767px) {
     #nodeContent {
     width: 90vw;
+    height: auto;
+    margin: auto;
     }}
        
-    #mynetwork {
-      width: 80vw;
+  #mynetwork {
+      width: 50vw;
       height: 60vh;
       margin: auto;
       border: 0px solid lightgray; 
@@ -339,6 +346,7 @@ font-size: 30px;
     @media screen and (max-width: 767px) {
       #mynetwork {
       width: 90vw;
+      margin: auto;
       }}
 
   input[type=checkbox] + label {

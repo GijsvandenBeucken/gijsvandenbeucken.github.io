@@ -8,6 +8,7 @@
     html, body
     {
         height: 100%;
+        scroll-behavior: smooth;
     }
    
     a:link {
@@ -24,17 +25,27 @@ img {
   max-width: 100%;
   height: auto;
 }
+h3,p {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
   </style>
   </head>
 
   <body>
 <div id="header-network">
-  <p>This is graph of my projects, while I am researching new ways of navigation <br>Click on a node in the network to see more information<br>You can zoom in on the network and drag the nodes (try it :). When scrolling to the info below go outside the nework area otherwise you will zoom in/out.</p></div>
-        <div id="mynetwork"></div>
-        <div id="nodeContent">
+  <h3>Projects</h3>
+  <p>This is graph of my projects.  
+    I am researching new ways of navigation based on the <a href="https://literariness.org/2017/04/26/the-philosophical-concept-of-rhizome/" target="_blank">rhizome</a>
+    <br><br>Click on a node in the network to see more information
+    <br>You can zoom in on the network and drag the nodes around (try it :). When scrolling to the info below go outside the nework area otherwise you will zoom in/out.</p></div>
+        <div id="mynetwork">  </div>
+        
+        <div id="nodeContent"> 
         <pre id="pre-field">Click on a node to show content here</pre>
+        
       </div>
-  
+      
 
 
 <script type="text/javascript">
@@ -46,19 +57,17 @@ img {
       group: "mygroup-design",
       widthConstraint: { minimum: 80 },
       heightConstraint: { minimum:80 },
-      x: 0,
-      y: 0,
      
-     info1: "<h3>Title</h3>",
-     info2: '<p>paragraph text example.paragraph text example. paragraph text example. paragraph text example.paragraph text example.<br><b>Example of a link:</b> <a href=\"http://bing.com\">Bing</a>. </p>',
-     info3: "<b>Example of an image:</b> <br><img src=\"https://www.w3schools.com/images/w3schools_green.jpg\" alt=\"W3Schools.com\" style=\"width:50%\"> "
+     info1: "<p>Click on a node that is connected to Design to show more info on these projects</p>",
+     info2: '<p></p>',
+     info3: " "
       },
     
       { id: 2, 
       label: "van Gogh" , 
       group: "mygroup1", 
       info1: "<h3>van Gogh</h3>" ,
-      info2: "<p>This recycle-based artwork is depicting the girl from The Potato Eaters by Vincent van Gogh.<br>The work was exhibited by the van Gogh museum in Amsterdam. <a href=\"https://www.ad.nl/amsterdam/clubavond-in-melkweg-en-van-gogh-museum~a3d2622f/\">Press</a>.</p>",
+      info2: "<p>This recycle-based artwork is depicting the girl from The Potato Eaters by Vincent van Gogh. It measures two by two metres.<br>The work was exhibited by the van Gogh museum in Amsterdam. <a href=\"https://www.ad.nl/amsterdam/clubavond-in-melkweg-en-van-gogh-museum~a3d2622f/\">Press</a>.</p>",
       info3: "<br> “The recycle-portraits of Vincent van Gogh's Potato Eaters show the urgent matters and challenges concerning reducing plastic waste, the importance of recycling and sustainability through the eyes of a historic masterpiece.” <br><br> <img src=\"images/Door-de-ogen-van-Sien.jpg\">",
     
     },
@@ -66,9 +75,9 @@ img {
     { id: 3, 
       label: "Furniture" ,
       group: "mygroup1",
-      info1: "test2" ,
-      info2: "",
-      info3: "",
+      info1: "<h3>Furniture designs</h3>" ,
+      info2: "<p>Inspired on flexibility I designed and created several pieces of furniture.</p>",
+      info3: '<p>Table<br><br><img src="images/bended-table.jpg"><br><br>Chair without glue or screws <br><br><img src="images/chair.jpg"><br><br>Coffeetable <br><br><img src="images/pile.jpg">',
     
     },
 
@@ -76,16 +85,16 @@ img {
      { id: 4, 
       label: "Clock" ,
       group: "mygroup1",
-      info1: "test2" ,
-      info2: "",
-      info3: "",
+      info1: "<h3>Clock design: Six in the Mix</h3>" ,
+      info2: '<p>Six in the mix is a clock I designed, that was added to the collection of Karlsson, a Dutch clock brand that produces modern clocks that are sold internationally.<br>This design is sold in Europe, Asia and Australia. It responds to touch and sound and automatically dims saving energy.</p>',
+      info3: '<p>There are 3 variants: <br><br><img src="images/karlsson-black.jpg">  <br><br><img src="images/karlsson-wood.jpg"> <br><br><img src="images/karlsson-gold.jpg">',
     },
 
      { id: 5, 
       label: "Knappe padden" ,
       group: "mygroup2",
-      info1: "test2" ,
-      info2: "",
+      info1: "<h3>Knappe Padden</h3>",
+      info2: "<p>What inspired you as a child, what allowed you to dream away or how did you discover something that you really liked?. <br>Knappe padden (Translated Smart toads) is a concept I developed for cultural and scientific education on 100 primary schools to support exploring, doing and enjoying new activities.</p>" ,
       info3: "",
     
     },
@@ -96,25 +105,25 @@ img {
       widthConstraint: { minimum: 80 },
       heightConstraint: { minimum:80 },
      
-     info1: "<h3>Title</h3>",
-     info2: '<p>paragraph text example.paragraph text example. paragraph text example. paragraph text example.paragraph text example.<br><b>Example of a link:</b> <a href=\"http://bing.com\">Bing</a>. </p>',
-     info3: "<b>Example of an image:</b> <br><img src=\"https://www.w3schools.com/images/w3schools_green.jpg\" alt=\"W3Schools.com\"> "
+     info1: "<p>Click on a node that is connected to Develop to show more info on these projects</p>",
+     info2: '<p> </p>',
+     info3: " "
       },
 
       { id: 7, 
       label: "Small data" ,
       group: "mygroup2",
-      info1: "test2" ,
-      info2: "",
+      info1: "<h3>Small Data</h3>" ,
+      info2: "<p>A company offering services for finding an hiring staff in the technical sector asked me to develop a business concept for their new start-up. <br>I researched how potential customers could be facilitated in their needs. It led to interesting insights based on small data.",
       info3: "",
     },
 
     { id: 8, 
       label: "Vredes kroket",
       group: "mygroup2",
-      info1: "test2" ,
-      info2: "",
-      info3: "",
+      info1: "<h3> Vredeskroket</h3>" ,
+      info2: "<p>The vredeskroket is a vegetable croquette I founded and introduced in Utrecht to reflect on historical and cultural aspects of freedom and support human rights organisations.The ingredients were considered to spread love and peace. </p>",
+      info3: '<p>The vredeskroket sponsored Amnesty International and was sold in several food wholesales, restaurants and the city hall.<br><br><a href="https://reportersonline.nl/vredeskroket-verovert-na-utrecht-heel-nederland/">Press</a> <br><br><br><iframe width="420" height="345" src="https://www.youtube.com/embed/NhVP-HGzzF8" </iframe> </p>'
     },
 
     { id: 9, 
@@ -123,17 +132,17 @@ img {
       widthConstraint: { minimum: 80 },
       heightConstraint: { minimum:80 },
      
-     info1: "<h3>Title</h3>",
-     info2: '<p>paragraph text example.paragraph text example. paragraph text example. paragraph text example.paragraph text example.<br><b>Example of a link:</b> <a href=\"http://bing.com\">Bing</a>. </p>',
-     info3: "<b>Example of an image:</b> <br><img src=\"https://www.w3schools.com/images/w3schools_green.jpg\" alt=\"W3Schools.com\"> "
+      info1: "<p>Click on a node that is connected to Research to show more info on these projects</p>",
+     info2: '<p> </p>',
+     info3: " "
       },
 
       { id: 10, 
       label: "Citizen science surveys" ,
       group: "mygroup3",
-      info1: "<h3>Fintech and data</h3>",
-      info2: "<p>Project lead in developing an open source prototype of a survey platform for citizen science catalysed by innovative financial transactions (Interledger).<br>Part of this project was researching how we can use personal online data storages like Solid in citizen science.</P>",
-      info3: "",
+      info1: "<h3>Reciprocal citizen science with linked data surveys</h3>",
+      info2: "<p>A concept for reciprocal citizen science which I developed and was funded by an international foundation. The concept involved a open source prototype of a survey platform for citizen science.<br>It stores data in an innovative way (linked data) and we use innovative financial transactions (Interledger) to incentivize citizens to particpate.<br>Part of this project was researching how we can use personal online data storages like Solid in citizen science. <br>As project lead I developed this concept togheter with a privacy expert and developers.</P>",
+      info3: '<a href="https://community.webmonetization.org/refdhd/reciprocal-ecosystem-for-citizen-science-grant-report-2-final-report-4mhj">Project report</a>',
     },
 
     { id: 11, 
