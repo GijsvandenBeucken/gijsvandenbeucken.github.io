@@ -319,7 +319,7 @@ font-size: 30px;
     position: relative;
     border: 1px solid lightgray;
     width: 50vw;
-    height: 40vh;
+    height: auto;
     margin: auto;
     padding: 10px;
     word-break: break-word;
