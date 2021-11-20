@@ -312,7 +312,7 @@ font-size: 30px;
   }
   @media screen and (max-width: 767px) {
     #header-network {
-    width: 90%;
+    width: 90vw;
     }
   }
   #nodeContent {
@@ -327,18 +327,18 @@ font-size: 30px;
   }
   @media screen and (max-width: 767px) {
     #nodeContent {
-    width: 90%;
+    width: 90vw;
     }}
     
     #mynetwork {
-      width: 70vw;
+      width: 80vw;
       height: 60vh;
       margin: auto;
       border: 0px solid lightgray; 
     }
     @media screen and (max-width: 767px) {
       #mynetwork {
-      width: 90%;
+      width: 90vw;
       }}
 
   input[type=checkbox] + label {
