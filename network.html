@@ -12,11 +12,11 @@
 
     #header
     {
-        width: 100%;
-        background: orange;
-        vertical-align: middle;
-        text-align: center;
-        line-height: 30px;
+        width: 50vw;
+        vertical-align: center;
+        text-align: left;
+        line-height: 20px;
+        margin: auto;
     }
 
     #mynetwork {
@@ -37,28 +37,10 @@
       white-space: pre-wrap;
     }
 
-    .string {
-      color: green;
-    }
-
-    .number {
-      color: darkorange;
-    }
-
-    .boolean {
-      color: blue;
-    }
-
-    .null {
-      color: magenta;
-    }
-
-    .key {
-      color: red;
-    }
   </style>
   </head>
-<div id="header">Sample header region</div>
+<div id="header">
+  <p>This is graph of my projects, while I am researching new ways of navigation <br> Click on a node in the network to see more information</p></div>
         <div id="mynetwork"></div>
         <div id="nodeContent">
         <pre id="pre-field">Click on a node to show content here</pre>
@@ -71,26 +53,142 @@
    // create an array with nodes
    var nodes = new vis.DataSet([
      { id: 1, 
-      label: "Node 1" ,
+      label: "Design" ,
+      group: "mygroup-design",
       widthConstraint: { minimum: 80 },
       heightConstraint: { minimum:80 },
+      x: 0,
+      y: 0,
+     
      info1: "<h3>Title</h3>",
      info2: '<p>paragraph text example.paragraph text example. paragraph text example. paragraph text example.paragraph text example.<br><b>Example of a link:</b> <a href=\"http://bing.com\">Bing</a>. </p>',
      info3: "<b>Example of an image:</b> <br><img src=\"https://www.w3schools.com/images/w3schools_green.jpg\" alt=\"W3Schools.com\"> "
       },
-     { id: 2, label: "Node 2" ,info1: "test2" },
-     { id: 3, label: "Node 3" },
-     { id: 4, label: "Node 4" },
-     { id: 5, label: "Node 5" },
+    
+      { id: 2, 
+      label: "van Gogh" , 
+      group: "mygroup1", 
+      info1: "test2" ,
+      info2: "",
+      info3: "",
+    
+    },
+     
+    { id: 3, 
+      label: "Furniture" ,
+      group: "mygroup1",
+      info1: "test2" ,
+      info2: "",
+      info3: "",
+    
+    },
+
+
+     { id: 4, 
+      label: "Clock" ,
+      group: "mygroup1",
+      info1: "test2" ,
+      info2: "",
+      info3: "",
+    },
+
+     { id: 5, 
+      label: "Knappe padden" ,
+      group: "mygroup2",
+      x: 220,
+      y: 200,
+    
+    },
+
+    { id: 6, 
+      label: "Develop" ,
+      group: "mygroup-develop",
+      widthConstraint: { minimum: 80 },
+      heightConstraint: { minimum:80 },
+     
+     info1: "<h3>Title</h3>",
+     info2: '<p>paragraph text example.paragraph text example. paragraph text example. paragraph text example.paragraph text example.<br><b>Example of a link:</b> <a href=\"http://bing.com\">Bing</a>. </p>',
+     info3: "<b>Example of an image:</b> <br><img src=\"https://www.w3schools.com/images/w3schools_green.jpg\" alt=\"W3Schools.com\"> "
+      },
+
+      { id: 7, 
+      label: "Small data" ,
+      group: "mygroup2",
+      info1: "test2" ,
+      info2: "",
+      info3: "",
+    },
+
+    { id: 8, 
+      label: "Vredes kroket",
+      group: "mygroup2",
+      info1: "test2" ,
+      info2: "",
+      info3: "",
+    },
+
+    { id: 9, 
+      label: "Research" ,
+      group: "mygroup-research",
+      widthConstraint: { minimum: 80 },
+      heightConstraint: { minimum:80 },
+     
+     info1: "<h3>Title</h3>",
+     info2: '<p>paragraph text example.paragraph text example. paragraph text example. paragraph text example.paragraph text example.<br><b>Example of a link:</b> <a href=\"http://bing.com\">Bing</a>. </p>',
+     info3: "<b>Example of an image:</b> <br><img src=\"https://www.w3schools.com/images/w3schools_green.jpg\" alt=\"W3Schools.com\"> "
+      },
+
+      { id: 10, 
+      label: "Citizen science surveys" ,
+      group: "mygroup3",
+      info1: "<h3>Fintech and data</h3>",
+      info2: "<p>Project lead in developing an open source prototype of a survey platform for citizen science catalysed by innovative financial transactions (Interledger).<br>Part of this project was researching how we can use personal online data storages like Solid in citizen science.</P>",
+      info3: "",
+    },
+
+    { id: 11, 
+      label: "Toolkit" ,
+      group: "mygroup3",
+      info1: "test2" ,
+      info2: "",
+      info3: "",
+    },
+
+    { id: 12, 
+      label: "Solid" ,
+      group: "mygroup3",
+      info1: "test2" ,
+      info2: "",
+      info3: "",
+    },
+
+   { id: 13, 
+      label: "Narrative app" ,
+      group: "mygroup3",
+      info1: "test2" ,
+      info2: "",
+      info3: "",
+    },
    ]);
 
    // create an array with edges
    var edges = new vis.DataSet([
-     { from: 1, to: 3 },
      { from: 1, to: 2 },
-     { from: 2, to: 4 },
-     { from: 2, to: 5 },
-     { from: 3, to: 3 },
+     { from: 1, to: 3 },
+     { from: 1, to: 4 },
+     { from: 6, to: 5 },
+     { from: 6, to: 7 },
+     { from: 6, to: 8 },
+     { from: 6, to: 1 },
+     { from: 9, to: 6 },
+     { from: 9, to: 1 },
+     { from: 9, to: 10 },
+     { from: 9, to: 11 },
+     { from: 1, to: 11 },
+     { from: 9, to: 12 },
+     { from: 9, to: 13 },
+    
+
    ]);
  
    // create a network
@@ -102,42 +200,126 @@
    var options = 
       {
         
+          groups: 
+        {
+          "mygroup-design":
+            {color:{
+          background: "rgba(255, 255, 255, 1)",
+          border: "rgba(206, 247, 196, 1)",
+            }
+          },
+// https://rgbacolorpicker.com/
+
+         "mygroup1": 
+          {  color: 
+            { 
+              background: "rgba(88,214,141,1 )",
+              border:   "rgba(88,214,141,1 )",
+            }
+          },
+         
+          "mygroup-develop":
+            {color:{
+          background: "rgba(255, 255, 255, 1)",
+          border: "rgba(202, 116, 205, 0.5)",
+            }
+          },
+
+
+          "mygroup2": 
+          {  color: 
+            {
+            background: 'rgba(202, 116, 205, 1)',
+            border: "rgba(202, 116, 205, 1)",
+            }
+          },
+
+          "mygroup-research":
+            {color:{
+          background: "rgba(255, 255, 255, 1)",
+          border: "rgba(250, 231, 141, 1)",
+            }
+          },
+
+
+          "mygroup3": 
+          {  color: 
+            {
+            background: 'rgba(250, 231, 141, 1)',
+            border: 'rgba(250, 231, 141, 1)'
+            }
+          },
+
+          "mygroup-educate":
+            {color:{
+          background: "rgba(255, 255, 255, 1)",
+          border: "rgba(250, 231, 141, 1)",
+            }
+          },
+
+
+          "mygroup4": 
+          {  color: 
+            {
+            background: 'rgba(250, 231, 141, 1)',
+            border: 'rgba(250, 231, 141, 1)'
+            }
+          },
+
+
+      },
+
+        
+
+
         nodes: 
         {
-            shape: "box",
-            color: "rgba(97,195,238,0.5)",
-            margin: 10,
-            widthConstraint: 
-            {
-            maximum: 200,
-            },
+            shape: "circle",
+            color: "rgba(234, 246, 255, 1)",
+      
+            margin: 5,
+            widthConstraint: { 
+                minimum: 70,
+                maximum: 70 },
+            heightConstraint: { 
+                minimum: 70,
+                maximum: 70 },
+     
         },
         
-        
+       edges: { 
+         color: {
+           inherit: 'to',
+         }},
+
         physics: 
         {
-            enabled: true,
-        },
+          enabled: true,
+          forceAtlas2Based: {
+      theta: 0.5,
+      gravitationalConstant: -50,
+      centralGravity: 0.01,
+      springConstant: 0.08,
+      springLength: 1400,
+      damping: 0.4,
+      avoidOverlap: 1
+          },
+           
+       },
         
-        layout: 
-        {
-            nodeSpacing: 50
-        },
-        
-       
+       stabilization: {
+      enabled: true,
+      iterations: 1000,
+      updateInterval: 100,
+      onlyDynamicEdges: false,
+      fit: true
+    },
         interaction: 
         {
         dragNodes:true,
         dragView: false,
         },
 
-        keyboard: 
-        {
-        enabled: true,
-        speed: {x: 10, y: 10, zoom: 0.02},
-        bindToWindow: false,
-        autoFocus: true,
-        },
 
       };
 
@@ -152,6 +334,7 @@
             
         }
       });
+      
       
       
  </script>
