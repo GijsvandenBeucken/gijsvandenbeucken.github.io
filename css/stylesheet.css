@@ -346,6 +346,7 @@ font-size: 30px;
     @media screen and (max-width: 767px) {
       #mynetwork {
       width: 90vw;
+      height: 40vh;
       margin: auto;
       }}
 
