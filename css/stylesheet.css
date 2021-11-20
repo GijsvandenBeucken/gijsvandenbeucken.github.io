@@ -302,6 +302,44 @@ font-size: 30px;
   }
 
 
+  #header-network
+  {
+      width: 50vw;
+      vertical-align: center;
+      text-align: left;
+      line-height: 20px;
+      margin: auto;
+  }
+  @media screen and (max-width: 767px) {
+    #header-network {
+    width: 90vw;
+    }
+  }
+  #nodeContent {
+    position: relative;
+    border: 1px solid lightgray;
+    width: 50vw;
+    height: 40vh;
+    margin: auto;
+    padding: 10px;
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+  @media screen and (max-width: 767px) {
+    #nodeContent {
+    width: 90vw;
+    }}
+    
+    #mynetwork {
+      width: 70vw;
+      height: 60vh;
+      margin: auto;
+      border: 0px solid lightgray; 
+    }
+    @media screen and (max-width: 767px) {
+      #mynetwork {
+      width: 90vw;
+      }}
 
   input[type=checkbox] + label {
     color: #ccc;
@@ -310,4 +348,4 @@ font-size: 30px;
   input[type=checkbox]:checked + label {
     color: #f00;
     font-style: normal;
-  } 
+  }

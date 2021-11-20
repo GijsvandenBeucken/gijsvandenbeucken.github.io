@@ -2,44 +2,18 @@
 <html>
    <head>
       <script type="text/javascript" src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script>
-
+      <link rel="stylesheet" href="css/stylesheet.css">
 <style>
 
     html, body
     {
         height: 100%;
     }
-
-    #header
-    {
-        width: 50vw;
-        vertical-align: center;
-        text-align: left;
-        line-height: 20px;
-        margin: auto;
-    }
-
-    #mynetwork {
-      width:100%;
-      height: 60vh;
-      margin: auto;
-      border: 0px solid lightgray; 
-    }
-
-    #nodeContent {
-      position: relative;
-      border: 1px solid lightgray;
-      width: 80vw;
-      height: 40vh;
-      margin: auto;
-      padding: 10px;
-      word-break: break-word;
-      white-space: pre-wrap;
-    }
+ 
 
   </style>
   </head>
-<div id="header">
+<div id="header-network">
   <p>This is graph of my projects, while I am researching new ways of navigation <br> Click on a node in the network to see more information</p></div>
         <div id="mynetwork"></div>
         <div id="nodeContent">
@@ -68,9 +42,9 @@
       { id: 2, 
       label: "van Gogh" , 
       group: "mygroup1", 
-      info1: "test2" ,
-      info2: "",
-      info3: "",
+      info1: "<h3>van Gogh</h3>" ,
+      info2: "<p>This recycle-based artwork is depicting the girl from The Potato Eaters by Vincent van Gogh.<br>The work was exhibited by the van Gogh museum in Amsterdam.</p>",
+      info3: "<br> “The recycle-portraits of Vincent van Gogh's Potato Eaters show the urgent matters and challenges concerning reducing plastic waste, the importance of recycling and sustainability through the eyes of a historic masterpiece.” <br><br> <img src=\"images/Door-de-ogen-van-Sien.jpg\">",
     
     },
      
@@ -95,8 +69,9 @@
      { id: 5, 
       label: "Knappe padden" ,
       group: "mygroup2",
-      x: 220,
-      y: 200,
+      info1: "test2" ,
+      info2: "",
+      info3: "",
     
     },
 
@@ -147,9 +122,9 @@
     },
 
     { id: 11, 
-      label: "Toolkit" ,
+      label: "Toolkit Blended Research" ,
       group: "mygroup3",
-      info1: "test2" ,
+      info1: "<h3>Toolkit Blended Research</h3>" ,
       info2: "",
       info3: "",
     },
@@ -157,18 +132,27 @@
     { id: 12, 
       label: "Solid" ,
       group: "mygroup3",
-      info1: "test2" ,
-      info2: "",
+      info1: "<h3>Solid</h3>" ,
+      info2: "<p>Solid is initiative by founder of the web Tim Berners Lee. Solid goal is to take back control over our data.<br>By using Solid your data is stored in your personal data storage and not on the server of the application you use, thereby ccreating more data ownership/control.</p>",
       info3: "",
     },
 
    { id: 13, 
       label: "Narrative app" ,
       group: "mygroup3",
-      info1: "test2" ,
-      info2: "",
+      info1: "<h3>Narrative app</h3>" ,
+      info2: "<p>I designed an application that helps to create a narrative and simplify and create insight into the complexity of someone’s medical history in collaboration with Utrecht University Medical Centre. Result: working POC </p>",
       info3: "",
     },
+
+      { id: 14, 
+      label: "Healthy communities" ,
+      group: "mygroup3",
+      info1: "<h3>Healthy communities</h3>" ,
+      info2: "<p>Part of a research project which examines how a networked approach of health can be introduced in local communities.<br>My role:<br>- Designing an environment where different stakeholders can collaborate.<br>- Researching the user journeys towards a toolkit/library with open source health-standards.<br>- Implementing a design thinking template to keep track of projectupdates.</p>",
+      info3: "",
+    },
+    
    ]);
 
    // create an array with edges
@@ -187,7 +171,7 @@
      { from: 1, to: 11 },
      { from: 9, to: 12 },
      { from: 9, to: 13 },
-    
+     { from: 9, to: 14 },
 
    ]);
  
@@ -279,11 +263,11 @@
       
             margin: 5,
             widthConstraint: { 
-                minimum: 70,
-                maximum: 70 },
+                minimum: 75,
+                maximum: 75 },
             heightConstraint: { 
-                minimum: 70,
-                maximum: 70 },
+                minimum: 75,
+                maximum: 75 },
      
         },
         
