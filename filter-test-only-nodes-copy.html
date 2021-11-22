@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script>
+    <link rel="stylesheet" href="css/stylesheet.css">
+    <style>
+a:link {
+  color: rgb(0, 0, 0);
+  background-color: transparent;
+  text-decoration: underline;
+}
+a:visited {
+  color: rgb(0, 0, 0);
+  background-color: transparent;
+  text-decoration: underline;
+}
+#mynetwork {
+      width:100%;
+      height: 60vh;
+      margin: auto;
+      border: 0px solid lightgray; 
+    }
+
+#wrapper{
+  margin: auto;
+  position: relative;
+    border: 1px solid lightgray;
+    width: 50vw;
+    height: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin: auto;
+    padding: 10px;
+}
+
+#label {
+  padding: 10px;  
+}
+
+input[name="nodeFilter"] {
+  display: none;
+}
+
+input[type=checkbox] + label {
+  background-color: rgb(248, 248, 248);
+  font-style: italic;
+} 
+input[type=checkbox]:checked + label {
+  background-color: dimgrey;
+  font-style: normal;
+} 
+
+
+    </style>
+</head>
+
+
+<body>
+    <h1>Dynamic filtering</h1>
+      <div id=wrapper>
+
+        
+        
+          <input type="checkbox" id="male" name="nodeFilter" value="male" >
+          <label for="male" id="label">male</label>
+    
+        
+          <input type="checkbox"  id="female"name="nodeFilter" value="female" checked="">
+          <label for="female" id="label">female</label>
+       
+          <input type="checkbox"  id="female"name="nodeFilter" value="adult" checked="">
+          <label for="adult">adult</label>
+
+          <input type="checkbox"  id="female"name="nodeFilter" value="kid" checked="">
+          <label for="kid">kid</label>
+
+
+
+
+    </div>
+    <br>
+    <br>
+    <div id="mynetwork"><div class="vis-network" tabindex="0" style="position: relative; overflow: hidden; touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); width: 100%; height: 100%;"><canvas width="600" style="position: relative; touch-action: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); width: 100%; height: 100%;" height="400"></canvas></div></div> 
+    
+    
+    
+    
+    
+    
+    <script type="text/javascript">
+
+
+      
+
+      function startNetwork(data) {
+        const container = document.getElementById("mynetwork");
+        const options = {};
+        new vis.Network(container, data, options);
+      }
+
+      /**
+       * In this example we do not mutate nodes or edges source data.
+       */
+      const nodes = new vis.DataSet([
+        { id: 1, label: "Eric Cartman", age: "kid", gender: "male" },
+        { id: 2, label: "Stan Marsh", age: "kid", gender: "male" },
+        { id: 3, label: "Wendy Testaburger", age: "kid", gender: "female" },
+        { id: 4, label: "Mr Mackey", age: "adult", gender: "male" },
+        { id: 5, label: "Sharon Marsh", age: "adult", gender: "female" },
+      ]);
+
+      const edges = new vis.DataSet([
+        {
+          from: 1,
+          to: 2,
+ 
+        },
+        {
+          from: 1,
+          to: 3,
+
+        },
+        {
+          from: 2,
+          to: 3,
+
+        },
+        {
+          from: 5,
+          to: 2,
+
+        },
+        {
+          from: 4,
+          to: 1,
+
+        },
+        {
+          from: 4,
+          to: 2,
+
+        },
+        {
+          from: 4,
+          to: 3,
+
+        },
+      ]);
+
+
+
+     
+      /**
+       * filter values are updated in the outer scope.
+       * in order to apply filters to new values, DataView.refresh() should be called
+       */
+
+      /*
+      filter function should return true or false
+      based on whether item in DataView satisfies a given condition.
+      */
+      const nodeFilters = document.getElementsByName("nodeFilter");
+
+       const nodeFilterValues = {
+        male: true,
+        female: true,
+        adult: true,
+        kid: true,
+      };
+
+      const nodesFilter = (node) => {
+        return nodeFilterValues[node.gender];
+      };
+     
+      const nodesView = new vis.DataView(nodes, { filter: nodesFilter });
+      
+
+
+     nodeFilters.forEach((filter) =>
+        filter.addEventListener("change", (e) => {
+          const { value, checked } = e.target;
+          nodeFilterValues[value] = checked;
+          nodesView.refresh();
+        })
+      );
+
+      startNetwork({ nodes: nodesView, edges });
+    
+      </script>
+</body>
+</html>
