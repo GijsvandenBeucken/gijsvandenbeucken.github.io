@@ -1,0 +1,48 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function(){
+        $("button").click(function(){
+          $.getJSON("https://sheets.googleapis.com/v4/spreadsheets/1O5-CD0PLnlFdfQndYDTJ-cGkHwEwoY9uAH3CdoGCVdY/values/Blad1?alt=json&key=AIzaSyDd3_aSWZ0NDnAxBc1m8Jpx80pHVqp-JTE", function(result){
+            $.each(result, function(i, field){
+              $("div").append(field + " ");
+            });
+          });
+        });
+      });
+      </script>
+      </head>
+
+      <body>
+      
+      <button>Get JSON data</button>
+      
+      <div></div>
+    
+    //https://stackoverflow.com/questions/42722856/import-json-file-to-create-a-network-in-vis-js
+    
+    //https://nocodeapi.com/convert-json-to-google-spreadsheet
+
+    //https://community.n8n.io/t/json-arrays-split-comma-separated-string-into-google-sheets-rows/8381/7
+
+
+    //https://learningactors.com/3-ways-to-create-your-own-api/
+
+    goal is find or create api that serves nested json and import it in sheets as an example
+
+    https://mocki.io/fake-json-api
+
+    https://spreadsimple.com/tools/importjson/
+    
+    https://gist.github.com/jalcantarab/0eb43b13c97e4f784bd0be327f6ced52
+
+    https://stackoverflow.com/questions/69045745/how-do-i-fetch-google-spreadsheet-data-from-javascript-in-sheets-v4-api-as-json
+</body>
+</html>
+
+
