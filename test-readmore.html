@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+.more {
+  display: none;
+}
+
+.service-item.open .more {
+  display: inline;
+}
+
+.service-item.open .dots {
+  display: none;
+}
+
+
+    </style>
+</head>
+<body>
+    <!-- Services Section -->
+<div id="services" class="section page-split">
+  
+    <div class="section-content-holder">
+      <div class="content-wrapper">
+        <div class="one_third animate wait-07s">
+          <div class="service-item">
+            <img class="service-icon" src="images/pile.png" alt="">
+            <p class="service-title"><strong>Web Designing Services</strong></p>
+            <p>Our Web Design Team consists of Professionals who have been designing websites for decades. With a wealth of experience and knowledge, we aim to provide.our clients with engaging interactive .
+                <span class="dots">...</span>
+                <span class="more">lightning .and speed websites.Our Web Design Services in Portland, USA will surely improve your website ranking as well as traffic.Contact us today for a free consultation.</span>
+            </p>
+            <button id="myBtn1" class="btn">Read More</button>
+          </div>
+        </div>
+      </div>
+      <div class="one_third animate wait-05s">
+        <div class="service-item">
+          <img class="service-icon" src="images/webdev.png" alt="">
+          <p class="service-title"><strong>Web Development Services</strong></p>
+          <p>Searching for quality Web Development Services in Portland, USA? If yes, then are experts are here to offer you the best web development services.<span class="dots">...</span><span class="more">Our team consists of skilled and experienced full stack designers and developers. We have the expertise to provide high-end web solutions. Each and every website developed by us is tailored as per the requirements of your business and also as per the requirements in the market.</span>
+          </p>
+          <button id="myBtn2" class="btn">Read More</button>
+        </div>
+      </div>
+      <div class="one_third last animate wait-04s">
+        <div class="service-item">
+          <img class="service-icon" src="images/ecomm.png" alt="">
+          <p class="service-title"><strong>E-commerce Website Development</strong></p>
+          <p>Codevelop has been operating in the digital marketing sector for several years.We have been fortunate enough to have worked with several clients..<span class="dots">...</span><span class="more">from all around the world who are now successfully commencing business in the Ecommerce world..The primary objective of our company is to meet all your Ecommerce website development requirements so that you can attract more customers and simultaneously maximize your sales in the long run.Codevelop is the best Ecommerce website developer in all of Portland, USA as our company now aims to give you the best possible digital marketing solutions at affordable pricing points.</span>
+          </p>
+          <button id="myBtn3" class="btn">Read More</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+var services = document.querySelector('#services');
+
+services.addEventListener('click', function(e) {
+  var target = e.target;
+  if (target.classList.contains('btn')) {
+    var serviceItem = target.parentNode;
+    var open = target.dataset.open === 'true';
+    target.dataset.open = !open;
+    if (open) {
+      target.innerText = 'Read more';
+      serviceItem.classList.remove('open');
+    } else {
+      target.innerText = 'Read less';
+      serviceItem.classList.add('open');
+    }
+  }
+});
+
+  </script>
+</body>
+</html>

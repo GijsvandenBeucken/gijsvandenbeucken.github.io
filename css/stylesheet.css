@@ -111,9 +111,10 @@ background-color: rgb(255, 255, 255);
 	flex: 0 auto;
 	font-family: 'Open Sans', sans-serif;
 	color: #fff;
-	font-size: 40px;
-	line-height: 40px;
+	font-size: 36px;
+	line-height: 36px;
 	text-align: center;
+  padding-bottom: 10px;
 }
 @media screen and (max-width: 767px) {
 .text-block-name{
@@ -121,18 +122,21 @@ font-size: 30px;
 }
 }
 .text-block-tagline {
-	margin-top: 18px;
+	margin-top: 20x;
 	font-family: 'Open Sans', sans-serif;
 	color: #fff;
 	font-size: 20px;
-	line-height: 20px;
+	line-height: 24px;
 	font-style: normal;
 	text-align: center;
   text-decoration: none;
+
+}
+@media screen and (max-width: 767px) {
+  .text-block-tagline{
   font-size: 18px;
-  line-height: 18px;}
-
-
+  }
+}
 
 .link-block-projects {
     margin-top: 17px;
@@ -289,7 +293,7 @@ font-size: 30px;
 	padding-right: 3px;
 	padding-left: 3px;
 	font-family: 'Open Sans', sans-serif;
-	color: #fff;
+	color: rgba(255, 255, 255, 0.76);
 	font-size: 16px;
 	text-align: center;
 }
@@ -347,7 +351,3 @@ font-size: 30px;
       height: 30vh;
       margin: auto;
       }}
-
-
-      
-      

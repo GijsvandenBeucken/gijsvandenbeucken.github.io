@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stories Connect </title>
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.divsearcher {
+    display: flex;
+    justify-content: center;
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    min-height: 300px;
+    border: 1px solid rgb(199, 198, 198);
+}
+.divmatching{
+    display: flex;
+    justify-content: center;
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    height: 100%;
+    margin-top: 30px;
+    border: 1px solid rgb(199, 199, 199);
+}
+
+.inner{
+    width: 400px;
+    padding: 10px;
+    text-align: center;
+}
+#searchtext{
+    display: none;
+    text-align: left;
+}
+#searchresult {
+    width: 400px;
+    border: 1px solid rgb(182, 182, 182);
+    padding: 5px;
+    text-align: left;
+}
+#invite{
+    display: none;
+    text-align: left;
+    padding: 5px;
+}
+#inbox{
+    min-height: 120px;
+    border: 1px solid green;
+}
+.headerimage img{
+    float: left;
+    width: 80px;
+}
+
+</style>    
+</head>
+<body>
+
+<div class="container">
+    <div class= "divsearcher">
+        <div class="inner">
+            <div class="headerimage"><img src="connect.svg"></div>
+            <div class="headertext"><h3>Welcome to Stories connect</h3></div>
+            <button onClick="setTimeout( myFunction, delay );">Connect my story</button>
+            <div id="searchtext">
+                <div> <p>Search results</p> </div>
+                <div id="searchresult">
+                    <p>Match 1: Characteristics with 95% similarity</p>
+                    <button onClick="setTimeout( myFunction2, delay );">Invite this person</button>
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="divmatching">
+        <div class="inner">
+            <div id="inbox">
+                <h3>Inbox of other person</h3>
+                <div id="invite">
+                    <p style="border: 1px solid rgb(190, 190, 190); padding: 3px;">You have one new invite! </p>
+                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function myFunction() {
+  var x = document.getElementById("searchtext");
+    x.style.display = "block";
+    }
+    var delay = 250;
+
+ setTimeout( myfunction, delay )
+
+    function myFunction2() {
+  var x = document.getElementById("invite");
+    x.style.display = "block";
+    }
+</script>
+
+</body>
+</html>
