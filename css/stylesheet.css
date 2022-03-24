@@ -196,7 +196,8 @@ font-size: 30px;
   .div-block-131 {
     position: absolute;
     opacity: 1;
-    display: block;
+    display: none;
+     /*display: block;*/
     left: 0%;
     top: 90%;
     right: 0%;
