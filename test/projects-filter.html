@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head><title>Projects</title>
+  <meta content="Projects" name="Gijs van den Beucken">
+  <meta content="Projects" property="og:title">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+/* Style for searchbar */
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+/* Style for list */
+#myUL {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+
+
+#myUL li a:hover:not(.header) {
+  background-color: #eee;
+}
+
+
+/* Style of the filterbuttons */
+.btn {
+  border: none;
+  outline: none;
+  padding: 12px 16px;
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #ddd;
+}
+
+.btn.active {
+  background-color: #666;
+  color: white;
+}
+/* Style for read more button */
+.myBtn {
+  border: none;
+  outline: none;
+  padding: 12px 16px;
+  background-color: #f1f1f1;
+
+}
+/* Style for read more script */
+.more {
+  display: none;
+}
+.service-item .image-item {
+    margin-right: 15px;
+    float: left;
+}
+
+
+.service-item.open .more {
+  display: inline;
+  transition: opacity 1s ease-out;
+  height: auto;
+}
+
+.service-item.open .dots {
+  display: none;
+  transition: opacity 1s ease-out;
+  height: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+.image-item {
+    float: left;
+    overflow:hidden;
+    width: 20%;
+    display: block;
+    }
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+.service-item{
+  overflow: hidden;
+  width: 80%;
+  padding-left: 5px;
+  min-height: 100px;
+}
+
+.card {
+  border: 1px solid rgb(228, 228, 228);
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 10px;
+  margin: 2px;
+  width: 80vw;
+  display: none;
+  transition: opacity 1s ease-out;
+  height: auto;
+}
+
+.show {
+  display: block;
+  align-content: center;
+  
+}
+
+</style>
+</head>
+<body>
+
+<h2>My Phonebook</h2>
+
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search.." title="Type in a name">
+
+<div id="myBtnContainer">
+    <button class="btn active" onclick="filterSelection('all')"> Show all</button>
+    <button class="btn" onclick="filterSelection('cars')"> Cars</button>
+    <button class="btn" onclick="filterSelection('animals')"> Animals</button>
+    <button class="btn" onclick="filterSelection('fruits')"> Fruits</button>
+    <button class="btn" onclick="filterSelection('colors')"> Colors</button>
+  </div>
+
+
+        
+  <div id="services" class="section page-split">
+<ul id="myUL">
+    <li><div class="card cars">
+      <img class="image-item" style="height: 70px; width: 75px;" src="images/pile.jpg" alt=""> 
+      <div class="service-item">
+        
+        <h4>Projectnaam 1</h4>
+       
+        
+            Budapest is the capital city of Hungary. It is best known for its arts and culture. It is a relatively small city, however there are much to see and do.
+            <span class="dots">...</span>
+            <span class="more" >Situated on thermal springs, there are many naturally heated baths to relax in, the Széchenyi baths are the largest with 15 indoor baths and 3 outdoor. There are many spectacular viewpoints in Budapest, great for capturing the views of the city. From 360 panoramic views up at St Stephens Basilica to a wide view of the parliament and the River at Fisherman’s Bastion. Visit the Museum of Fine Arts and enjoy a day amongst famous European art. Classical music lovers will appreciate a performance at the Academy of Music.</span>
+        
+        <button class="myBtn" id="myBtn1">Read more</button>
+      
+    </div></div></li>
+
+
+    <li><div class="card fruits colors">
+      <div class="service-item">
+        <h4>Project 2</h4>
+        
+        <p>
+            Lorem
+            <span class="dots">...</span>
+            <span class="more" >more text.</span>
+        </p>
+        <button class="myBtn" id="myBtn2">Read more</button>    
+      </div></div></li>
+
+
+        <li>
+          <div class="card cars">
+      <div class="service-item">
+
+          <h4>van Gogh</h4>
+          This recycle-based artwork is depicting the girl from The Potato Eaters by Vincent van Gogh.
+            <span class="dots">...</span>
+            <span class="more" > I used waste material to construct the artwork. <br>It contains waste material, packaging and discarded products from our modern society like an old i-phone (can you spot it?), an lp of una paloma blanco etc. The artwork measures two by two metres.<br>The work was exhibited by the van Gogh museum in Amsterdam. <a href="https://www.ad.nl/amsterdam/clubavond-in-melkweg-en-van-gogh-museum~a3d2622f/" target="_blank">Press</a>
+          <br><br>“The recycle-portraits of Vincent van Goghs Potato Eaters show the urgent matters and challenges concerning reducing plastic waste, the importance of recycling and sustainability through the eyes of a historic masterpiece."<br><br> <img src="images/Door-de-ogen-van-Sien.jpg"><br></span>
+        
+          <button class="myBtn" id="myBtn3">Read more</button>
+          
+        </div></div></li>
+
+        <li>
+          <div class="card cars">
+      <div class="service-item">
+        <img class="image-item" style="height: 70px; width: 75px;" src="images/pile.jpg" alt="">
+          <h4>Furniture designs</h4>
+          Inspired by the concept of flexibility I designed and created several pieces of furniture.
+            <span class="dots">...</span>
+            <span class="more" > 
+              <br><br><h4>Table</h4><br><br><img src="images/bended-table.jpg"><br><br>Chair without glue or screws <br><br><img src="images/chair.jpg"><br><br>Coffeetable <br><br><img src="images/pile.jpg">
+        </span>
+        
+          <button class="myBtn" id="myBtn4">Read more</button>
+          
+        </div></div></li>
+    
+  
+  </ul>
+</div>
+
+
+<script>
+
+//script for read more/less button
+
+var services = document.querySelector('#services');
+
+services.addEventListener('click', function(e) {
+  var target = e.target;
+  if (target.classList.contains('myBtn')) {
+    var serviceItem = target.parentNode;
+    var open = target.dataset.open === 'true';
+    target.dataset.open = !open;
+    if (open) {
+      target.innerText = 'Read more';
+      serviceItem.classList.remove('open');
+    } else {
+      target.innerText = 'Read less';
+      serviceItem.classList.add('open');
+    }
+  }
+});
+
+
+
+//script for filter search
+
+function myFunction() {
+    var input, filter, ul, li, div, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("myUL");
+    li = ul.getElementsByTagName("li");
+    for (i = 0; i < li.length; i++) {
+        div = li[i].getElementsByTagName("div")[0];
+        txtValue = div.textContent || div.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
+
+//script for filter with buttons
+
+filterSelection("all")
+function filterSelection(c) {
+  var x, i;
+  x = document.getElementsByClassName("card");
+  if (c == "all") c = "";
+  for (i = 0; i < x.length; i++) {
+    w3RemoveClass(x[i], "show");
+    if (x[i].className.indexOf(c) > -1) w3AddClass(x[i], "show");
+  }
+}
+
+function w3AddClass(element, name) {
+  var i, arr1, arr2;
+  arr1 = element.className.split(" ");
+  arr2 = name.split(" ");
+  for (i = 0; i < arr2.length; i++) {
+    if (arr1.indexOf(arr2[i]) == -1) {element.className += " " + arr2[i];}
+  }
+}
+
+function w3RemoveClass(element, name) {
+  var i, arr1, arr2;
+  arr1 = element.className.split(" ");
+  arr2 = name.split(" ");
+  for (i = 0; i < arr2.length; i++) {
+    while (arr1.indexOf(arr2[i]) > -1) {
+      arr1.splice(arr1.indexOf(arr2[i]), 1);     
+    }
+  }
+  element.className = arr1.join(" ");
+}
+
+// Add active class to the current button (highlight it)
+var btnContainer = document.getElementById("myBtnContainer");
+var btns = btnContainer.getElementsByClassName("btn");
+for (var i = 0; i < btns.length; i++) {
+  btns[i].addEventListener("click", function(){
+    var current = document.getElementsByClassName("active");
+    current[0].className = current[0].className.replace(" active", "");
+    this.className += " active";
+  });
+}
+
+</script>
+
+</body>
+</html>

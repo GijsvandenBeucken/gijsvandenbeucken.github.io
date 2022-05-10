@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Vis Network | Other | Clustering</title>
+    
+   <script type="text/javascript" src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script>
+
+    
+        <style type="text/css">
+          #mynetwork {
+            width: 600px;
+            height: 600px;
+            border: 1px solid lightgray;
+          }
+          p {
+            max-width: 600px;
+          }
+    
+          h4 {
+            margin-bottom: 3px;
+          }
+        </style>
+
+</head>
+
+body>
+    <p>
+      Click any of the buttons below to cluster the network. On every push the
+      network will be reinitialized first. You can click on a cluster to open
+      it.
+    </p>
+
+    <input type="button" onclick="clusterByCid()" value="Cluster all nodes with CID = 1">
+    <br>
+    <input type="button" onclick="clusterByColor()" value="Cluster by color">
+    <br>
+    <input type="button" onclick="clusterByConnection()" value="Cluster 'node 1' by connections">
+    <br>
+    <input type="button" onclick="clusterOutliers()" value="Cluster outliers">
+    <br>
+    <input type="button" onclick="clusterByHubsize()" value="Cluster by hubsize">
+    <br>
+
+    <div id="mynetwork"><div class="vis-network" tabindex="0" style="position: relative; overflow: hidden; touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); width: 100%; height: 100%;"><canvas width="600" style="position: relative; touch-action: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); width: 100%; height: 100%;" height="600"></canvas></div></div>
+
+    <script type="text/javascript">
+      // create an array with nodes
+      var nodes = [
+        { id: 1, label: "Node 1", color: "orange" },
+        {
+          id: 2,
+          label: "Node 2",
+          color: "DarkViolet",
+          font: { color: "white" },
+        },
+        { id: 3, label: "Node 3", color: "orange" },
+        {
+          id: 4,
+          label: "Node 4",
+          color: "DarkViolet",
+          font: { color: "white" },
+        },
+        { id: 5, label: "Node 5", color: "orange" },
+        { id: 6, label: "cid = 1", cid: 1, color: "orange" },
+        {
+          id: 7,
+          label: "cid = 1",
+          cid: 1,
+          color: "DarkViolet",
+          font: { color: "white" },
+        },
+        { id: 8, label: "cid = 1", cid: 1, color: "lime" },
+        { id: 9, label: "cid = 1", cid: 1, color: "orange" },
+        { id: 10, label: "cid = 1", cid: 1, color: "lime" },
+      ];
+
+      // create an array with edges
+      var edges = [
+        { from: 1, to: 2 },
+        { from: 1, to: 3 },
+        { from: 10, to: 4 },
+        { from: 2, to: 5 },
+        { from: 6, to: 2 },
+        { from: 7, to: 5 },
+        { from: 8, to: 6 },
+        { from: 9, to: 7 },
+        { from: 10, to: 9 },
+      ];
+
+      // create a network
+      var container = document.getElementById("mynetwork");
+      var data = {
+        nodes: nodes,
+        edges: edges,
+      };
+      var options = { layout: { randomSeed: 8 } };
+      var network = new vis.Network(container, data, options);
+      network.on("selectNode", function (params) {
+        if (params.nodes.length == 1) {
+          if (network.isCluster(params.nodes[0]) == true) {
+            network.openCluster(params.nodes[0]);
+          }
+        }
+      });
+
+      function clusterByCid() {
+        network.setData(data);
+        var clusterOptionsByData = {
+          joinCondition: function (childOptions) {
+            return childOptions.cid == 1;
+          },
+          clusterNodeProperties: {
+            id: "cidCluster",
+            borderWidth: 3,
+            shape: "database",
+          },
+        };
+        network.cluster(clusterOptionsByData);
+      }
+      
+    </script>
+  
+
+</body>
+</html>
