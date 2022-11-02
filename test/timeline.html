@@ -1,0 +1,99 @@
+<html><head>
+    <title>Timeline | styling | Custom styling</title>
+  
+    <script src="https://unpkg.com/vis-timeline/standalone/umd/vis-timeline-graph2d.min.js"></script>
+    <link href="timeline.css" rel="stylesheet" type="text/css">
+  
+    <style type="text/css">
+      body {
+        font-family:  purisa, 'comic sans', cursive;
+      }
+  
+      .vis-timeline {
+        border: 2px solid purple;
+        font-family:  purisa, 'comic sans', cursive;
+        font-size: 12pt;
+        background: #ffecea;
+      }
+  
+      .vis-item {
+        border-color: #F991A3;
+        background-color: pink;
+        font-size: 15pt;
+        color: purple;
+        box-shadow: 5px 5px 20px rgba(128,128,128, 0.5);
+      }
+  
+      .vis-item,
+      .vis-item.vis-line {
+        border-width: 3px;
+      }
+  
+      .vis-item.vis-dot {
+        border-width: 10px;
+        border-radius: 10px;
+      }
+  
+      .vis-item.vis-selected {
+        border-color: green;
+        background-color: lightgreen;
+      }
+  
+      .vis-time-axis .vis-text {
+        color: purple;
+        padding-top: 10px;
+        padding-left: 10px;
+      }
+  
+      .vis-time-axis .vis-text.vis-major {
+        font-weight: bold;
+      }
+  
+      .vis-time-axis .vis-grid.vis-minor {
+        border-width: 2px;
+        border-color: pink;
+      }
+  
+      .vis-time-axis .vis-grid.vis-major {
+        border-width: 2px;
+        border-color: #F991A3;
+      }
+    </style>
+  
+    
+  </head>
+  <body>
+  
+  <p>
+    The style of the Timeline can be fully customized via CSS:
+  </p>
+  <div id="visualization" style="position: relative;"><div class="vis-timeline vis-bottom vis-ltr" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); visibility: visible; height: 351px;"><div class="vis-panel vis-background" style="height: 351px; width: 706px; left: 0px; top: 0px;"></div><div class="vis-panel vis-background vis-vertical" style="height: 351px; width: 708px; left: 0px; top: 0px;"><div class="vis-axis" style="top: 279px; left: 0px;"><div class="vis-group"><div class="vis-item vis-dot vis-editable" style="transform: translate(18.788px, -10px);"></div><div class="vis-item vis-dot vis-editable" style="transform: translate(69.437px, -10px);"></div><div class="vis-item vis-dot vis-editable" style="transform: translate(106.873px, -10px);"></div><div class="vis-item vis-dot vis-editable" style="transform: translate(283.044px, -10px);"></div><div class="vis-item vis-dot vis-editable" style="transform: translate(335.895px, -10px);"></div><div class="vis-item vis-dot vis-editable" style="transform: translate(679.427px, -10px);"></div></div></div><div class="vis-time-axis vis-background"><div class="vis-grid vis-vertical vis-minor vis-day21 vis-august vis-saturday  vis-even" style="width: 105.702px; height: 316px; transform: translate(-77.4142px, -1px);"></div><div class="vis-grid vis-vertical vis-minor vis-day23 vis-august vis-monday  vis-odd" style="width: 105.702px; height: 316px; transform: translate(28.288px, -1px);"></div><div class="vis-grid vis-vertical vis-minor vis-day25 vis-august vis-wednesday  vis-even" style="width: 105.702px; height: 316px; transform: translate(133.99px, -1px);"></div><div class="vis-grid vis-vertical vis-minor vis-day27 vis-august vis-friday  vis-odd" style="width: 105.702px; height: 316px; transform: translate(239.693px, -1px);"></div><div class="vis-grid vis-vertical vis-minor vis-day29 vis-august vis-sunday  vis-even" style="width: 105.702px; height: 316px; transform: translate(345.395px, -1px);"></div><div class="vis-grid vis-vertical vis-minor vis-day31 vis-august vis-tuesday  vis-odd" style="width: 52.8511px; height: 316px; transform: translate(451.097px, -1px);"></div><div class="vis-grid vis-vertical vis-major vis-day1 vis-september vis-wednesday  vis-even" style="width: 105.702px; height: 352px; transform: translate(503.948px, -1px);"></div><div class="vis-grid vis-vertical vis-minor vis-day3 vis-september vis-friday  vis-odd" style="width: 105.702px; height: 316px; transform: translate(609.65px, -1px);"></div></div><div class="vis-current-time" title="Current time: Friday, June 3rd 2022, 17:31:27" style="position: absolute; top: 0px; height: 100%; transform: translateX(227433px);"></div></div><div class="vis-panel vis-background vis-horizontal" style="height: 280px; width: 706px; left: 0px; top: -1px;"></div><div class="vis-panel vis-center" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); height: 280px; width: 708px; left: -1px; top: -1px;"><div class="vis-content" style="left: 0px; transform: translateY(0px);"><div class="vis-itemset" style="height: 278px;"><div class="vis-background"><div class="vis-group" style="height: 278px;"><div style="visibility: hidden; position: absolute;"></div><div class="vis-item vis-line vis-editable" style="transform: translateX(27.288px); bottom: 0px; height: 196px;"></div><div class="vis-item vis-line vis-editable" style="transform: translateX(77.937px); bottom: 0px; height: 104px;"></div><div class="vis-item vis-line vis-editable" style="transform: translateX(115.373px); bottom: 0px; height: 40px;"></div><div class="vis-item vis-line vis-editable" style="transform: translateX(291.544px); bottom: 0px; height: 104px;"></div><div class="vis-item vis-line vis-editable" style="transform: translateX(344.395px); bottom: 0px; height: 196px;"></div><div class="vis-item vis-line vis-editable" style="transform: translateX(687.927px); bottom: 0px; height: 40px;"></div></div><div class="vis-group" style="height: 0px;"><div style="visibility: hidden; position: absolute;"></div></div></div><div class="vis-foreground"><div class="vis-group" style="height: 278px;"><div class="vis-item vis-box vis-editable" style="transform: translate(-38.712px, 10px);"><div class="vis-item-content"><div>Conversation</div><img src="../resources/img/community-users-icon.png"></div></div><div class="vis-item vis-box vis-editable" style="transform: translate(1.93703px, 102px);"><div class="vis-item-content"><div>Mail from boss</div><img src="../resources/img/mail-icon.png"></div></div><div class="vis-item vis-box vis-editable" style="transform: translate(76.8732px, 194px);"><div class="vis-item-content">Report</div></div><div class="vis-item vis-range vis-editable" style="transform: translateX(187.341px); width: 369.958px; top: 194px;"><div class="vis-item-overflow"><div class="vis-item-content" style="transform: translateX(0px);">Traject A</div></div><div class="vis-item-visible-frame"></div></div><div class="vis-item vis-box vis-editable" style="transform: translate(257.544px, 102px);"><div class="vis-item-content"><div>Memo</div><img src="../resources/img/notes-edit-icon.png"></div></div><div class="vis-item vis-box vis-editable" style="transform: translate(292.395px, 10px);"><div class="vis-item-content"><div>Phone call</div><img src="../resources/img/Hardware-Mobile-Phone-icon.png"></div></div><div class="vis-item vis-range vis-editable" style="transform: translateX(451.597px); width: 158.553px; top: 130px;"><div class="vis-item-overflow"><div class="vis-item-content" style="transform: translateX(0px);">Traject B</div></div><div class="vis-item-visible-frame"></div></div><div class="vis-item vis-box vis-editable" style="transform: translate(649.427px, 166px);"><div class="vis-item-content"><div>Report</div><img src="../resources/img/attachment-icon.png"></div></div></div></div></div></div><div class="vis-shadow vis-top" style="visibility: hidden;"></div><div class="vis-shadow vis-bottom" style="visibility: hidden;"></div></div><div class="vis-panel vis-left" style="touch-action: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); height: 280px; left: 0px; top: -1px;"><div class="vis-content" style="left: 0px; top: 0px;"><div class="vis-labelset"><div class="vis-label vis-group-level-0" title="" style="height: 278px;"><div class="vis-inner vis-hidden"></div></div></div></div><div class="vis-shadow vis-top" style="visibility: hidden;"></div><div class="vis-shadow vis-bottom" style="visibility: hidden;"></div></div><div class="vis-panel vis-right" style="height: 280px; left: 707px; top: -1px;"><div class="vis-content" style="left: 0px; top: 0px;"></div><div class="vis-shadow vis-top" style="visibility: hidden;"></div><div class="vis-shadow vis-bottom" style="visibility: hidden;"></div></div><div class="vis-panel vis-top" style="width: 708px; left: -1px; top: 0px;"></div><div class="vis-panel vis-bottom" style="width: 708px; left: -1px; top: 279px;"><div class="vis-time-axis vis-foreground" style="height: 72px;"><div class="vis-text vis-minor vis-measure" style="position: absolute;">0</div><div class="vis-text vis-major vis-measure" style="position: absolute;">0</div><div class="vis-text vis-minor vis-day21 vis-august vis-saturday  vis-even" style="transform: translate(-76.9142px, 0px); width: 105.702px;">21</div><div class="vis-text vis-minor vis-day23 vis-august vis-monday  vis-odd" style="transform: translate(28.788px, 0px); width: 105.702px;">23</div><div class="vis-text vis-major vis-day1 vis-september vis-wednesday  vis-even" style="transform: translate(504.448px, 36px);"><div>September 2010</div></div><div class="vis-text vis-minor vis-day25 vis-august vis-wednesday  vis-even" style="transform: translate(134.49px, 0px); width: 105.702px;">25</div><div class="vis-text vis-minor vis-day27 vis-august vis-friday  vis-odd" style="transform: translate(240.193px, 0px); width: 105.702px;">27</div><div class="vis-text vis-minor vis-day29 vis-august vis-sunday  vis-even" style="transform: translate(345.895px, 0px); width: 105.702px;">29</div><div class="vis-text vis-minor vis-day31 vis-august vis-tuesday  vis-odd" style="transform: translate(451.597px, 0px); width: 52.8511px;">31</div><div class="vis-text vis-minor vis-day1 vis-september vis-wednesday  vis-even" style="transform: translate(504.448px, 0px); width: 105.702px;">1</div><div class="vis-text vis-major vis-day3 vis-september vis-friday  vis-odd" style="transform: translate(0px, 36px);"><div>August 2010</div></div><div class="vis-text vis-minor vis-day3 vis-september vis-friday  vis-odd" style="transform: translate(610.15px, 0px); width: 105.702px;">3</div></div></div><div class="vis-rolling-mode-btn" style="visibility: hidden;"></div></div></div>
+  
+  <script type="text/javascript">
+    var container = document.getElementById('visualization');
+  
+    // note that months are zero-based in the JavaScript Date object
+    var items = new vis.DataSet([
+      {start: new Date(2010,7,23), content: '<div>Conversation</div><img src="../resources/img/community-users-icon.png" style="width:32px; height:32px;">'},
+      {start: new Date(2010,7,23,23,0,0), content: '<div>Mail from boss</div><img src="../resources/img/mail-icon.png" style="width:32px; height:32px;">'},
+      {start: new Date(2010,7,24,16,0,0), content: 'Report'},
+      {start: new Date(2010,7,26), end: new Date(2010,8,2), content: 'Traject A'},
+      {start: new Date(2010,7,28), content: '<div>Memo</div><img src="../resources/img/notes-edit-icon.png" style="width:48px; height:48px;">'},
+      {start: new Date(2010,7,29), content: '<div>Phone call</div><img src="../resources/img/Hardware-Mobile-Phone-icon.png" style="width:32px; height:32px;">'},
+      {start: new Date(2010,7,31), end: new Date(2010,8,3), content: 'Traject B'},
+      {start: new Date(2010,8,4,12,0,0), content: '<div>Report</div><img src="../resources/img/attachment-icon.png" style="width:32px; height:32px;">'}
+    ]);
+  
+    var options = {
+      editable: true,
+      margin: {
+        item: 20,
+        axis: 40
+      }
+    };
+  
+    var timeline = new vis.Timeline(container, items, options);
+  </script>
+  
+  
+  </body></html>
