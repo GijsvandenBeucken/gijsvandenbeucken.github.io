@@ -1,0 +1,442 @@
+<!doctype html>
+<html>
+   <head>
+      <script type="text/javascript" src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script>
+      <link rel="stylesheet" href="css/stylesheet.css">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+a:link {
+  color: rgb(0, 0, 0);
+  background-color: transparent;
+  text-decoration: underline;
+}
+a:visited {
+  color: rgb(0, 0, 0);
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+h3,p {
+  font-family: Arial, Helvetica, sans-serif;
+}
+.topnav {
+        overflow: hidden;
+        background-color: #333;
+      }
+      
+.topnav a {
+        float: left;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+        text-decoration: none;
+      }
+      
+.topnav a:hover {
+background-color: #ddd;
+color: black;
+      }
+
+      #scrollhelp {
+    position: relative;
+    width: 50vw;
+    height: auto;
+    margin: auto;
+    padding: 10px;
+    word-break: break-word;
+    white-space: pre-wrap;
+    display: none;
+  }   
+   
+  </style>
+  </head>
+
+  <body>
+<div class="topnav">
+  <a href="index.html">Home</a>
+  <a href="network.html" class="active">Projects</a>
+</div>
+
+<div id="header-network">
+  <h2>Projects</h2>
+  <p><br>This is graph of my projects.  
+    I am exploring and researching new ways of navigation based on the <a href="https://literariness.org/2017/04/26/the-philosophical-concept-of-rhizome/" target="_blank">rhizome.</a>
+    <br><br>Click on a node in the network to see more information
+    <br>You can zoom in on the network and drag the nodes around (try it :). When scrolling to the info below go outside the nework area otherwise you will zoom in/out.</p></div>
+        <div id="mynetwork">  </div>
+        <div id="scrollhelp"><p>When scrolling go outside the network area otherwhise you will zoom in/out</p></div>
+        <div id="nodeContent" class="nodeContent"> 
+        <pre id="pre-field" class="nodeContent"><p>Click on a node to show content here</p></pre>
+        
+      </div>
+      
+
+
+<script type="text/javascript">
+     
+   // create an array with nodes
+   var nodes = new vis.DataSet([
+     { id: 1, 
+      label: "Design" ,
+      group: "mygroup-design",
+      widthConstraint: { minimum: 80 },
+      heightConstraint: { minimum:80 },
+     
+     info1: "<p>Click on a node that is connected to Design to show more info on these projects</p>",
+     info2: '<p></p>',
+     info3: " "
+      },
+    
+      { id: 2, 
+      label: "van Gogh" , 
+      group: "mygroup1", 
+      info1: "<h3>van Gogh</h3>" ,
+      info2: '<p>This recycle-based artwork is depicting the girl from The Potato Eaters by Vincent van Gogh. I used waste material to construct the artwork. It contains waste material, packaging and discarded products from our modern society like an old i-phone (can you spot it?), an lp of una paloma blanco etc. The artwork measures two by two metres.<br>The work was exhibited by the van Gogh museum in Amsterdam. <a href="https://www.ad.nl/amsterdam/clubavond-in-melkweg-en-van-gogh-museum~a3d2622f/" target="_blank"">Press</a></p>',
+      info3: '<p>“The recycle-portraits of Vincent van Goghs Potato Eaters show the urgent matters and challenges concerning reducing plastic waste, the importance of recycling and sustainability through the eyes of a historic masterpiece."<br><br> <img src="images/Door-de-ogen-van-Sien.jpg"></p>',
+    
+    },
+     
+    { id: 3, 
+      label: "Furniture" ,
+      group: "mygroup1",
+      info1: "<h3>Furniture designs</h3>" ,
+      info2: "<p>Inspired by the concept of flexibility I designed and created several pieces of furniture.</p>",
+      info3: '<p>Table<br><br><img src="images/bended-table.jpg"><br><br>Chair without glue or screws <br><br><img src="images/chair.jpg"><br><br>Coffeetable <br><br><img src="images/pile.jpg">',
+    
+    },
+
+
+     { id: 4, 
+      label: "Clock" ,
+      group: "mygroup1",
+      info1: "<h3>Clock design: Six in the Mix</h3>" ,
+      info2: '<p>Six in the mix is a clock I designed, that was added to the collection of Karlsson, a Dutch clock brand that produces modern clocks that are sold internationally.<br>This design is sold in Europe, Asia and Australia. It responds to touch and sound and automatically dims saving energy.</p>',
+      info3: '<p>There are 3 variants: <br><br><img src="images/karlsson-black.jpg">  <br><br><img src="images/karlsson-wood.jpg"> <br><br><img src="images/karlsson-gold.jpg">',
+    },
+
+     { id: 5, 
+      label: "Knappe padden" ,
+      group: "mygroup2",
+      info1: "<h3>Knappe Padden</h3>",
+      info2: "<p>What inspired you as a child, what allowed you to dream away or how did you discover something that you really liked?. <br>Knappe padden (translated Smart toads) is a concept I developed for cultural and scientific education on 100 primary schools to support exploring, doing and enjoying new activities.</p>" ,
+      info3: "",
+    
+    },
+
+    { id: 6, 
+      label: "Develop" ,
+      group: "mygroup-develop",
+      widthConstraint: { minimum: 80 },
+      heightConstraint: { minimum:80 },
+     
+     info1: "<p>Click on a node that is connected to Develop to show more info on these projects</p>",
+     info2: '<p> </p>',
+     info3: " "
+      },
+
+      { id: 7, 
+      label: "HR Small data" ,
+      group: "mygroup2",
+      info1: "<h3>Human Resources and Small Data</h3>" ,
+      info2: "<p>A company offering services for finding an hiring staff in the technical sector asked me to develop a business concept for their new start-up. <br>I researched how potential customers could be facilitated in their needs. It led to interesting insights based on small data.",
+      info3: "",
+    },
+
+    { id: 8, 
+      label: "Vredes kroket",
+      group: "mygroup2",
+      info1: "<h3> Vredeskroket</h3>" ,
+      info2: "<p>The vredeskroket is a vegetable croquette I founded and introduced in Utrecht to reflect on historical and cultural aspects of freedom and support human rights organisations. I did a lot of research on the history of the snack and the ingredients. The first croquette was made by Francois Massialot, the cook of Louis XIV in 1701. The ingredients of the vredeskroket were considered to spread love and peace back in the days.</p>",
+      info3: '<p>The vredeskroket sponsored Amnesty International and was sold in several food wholesales, restaurants and even the city hall. It was also sold on military base to sponsor Warchild.<br><br><a href="https://reportersonline.nl/vredeskroket-verovert-na-utrecht-heel-nederland/" target="_blank">Press</a> <br><br><br><iframe width="420" height="345" src="https://www.youtube.com/embed/NhVP-HGzzF8" </iframe> </p>'
+    },
+
+    { id: 9, 
+      label: "Research" ,
+      group: "mygroup-research",
+      widthConstraint: { minimum: 80 },
+      heightConstraint: { minimum:80 },
+     
+      info1: "<p>Click on a node that is connected to Research to show more info on these projects</p>",
+     info2: '<p> </p>',
+     info3: " "
+      },
+
+      { id: 10, 
+      label: "Citizen science surveys" ,
+      group: "mygroup3",
+      info1: "<h3>Reciprocal citizen science with linked data surveys</h3>",
+      info2: "<p>I wrote a proposal for a research and development project about reciprocal citizen science which was funded by an international foundation. The concept involves a open source prototype of a survey platform for citizen science.<br>It stores data in an innovative way (linked data) and we use innovative financial transactions (Interledger) to incentivize citizens to particpate.<br>Part of this project was researching how we can use personal online data storages like Solid in citizen science. <br>As project lead I developed this concept together with a privacy expert and developers.</P>",
+      info3: '<p><a href="https://community.webmonetization.org/refdhd/reciprocal-ecosystem-for-citizen-science-grant-report-2-final-report-4mhj" target="_blank">Project report</a></p>',
+    },
+
+    { id: 11, 
+      label: "Toolkit Blended Research" ,
+      group: "mygroup3",
+      info1: "<h3>Toolkit Blended Research</h3>" ,
+      info2: "In progress :)",
+      info3: "",
+    },
+
+    { id: 12, 
+      label: "Privacy Data ownership Solid" ,
+      group: "mygroup3",
+      info1: "<h3>Solid</h3>" ,
+      info2: "<p>Solid (Social Linked Data) is an initiative by founder of the world wide web Tim Berners Lee. Solid's goal is to give people back control over their data.<br>Solid makes it possible to store your data in your personal data storage instead of the server of an application. This creates more data ownership and control.</p>",
+      info3: "<p>Together with members of the core team of Solid I looked for funding and shared ideas. Also I researched whats the benefit of using Solid in potential use cases like health, e-commerce, surveys etc. Also I researched and visualised how Solid and applications can work together from a users point of view.</p>",
+    },
+
+   { id: 13, 
+      label: "Narrative app" ,
+      group: "mygroup3",
+      info1: "<h3>Narrative app</h3>" ,
+      info2: "<p>The narrative app is an application that helps users to describe their life narrative, and simplify and create insight into the complexity of their medical history.<br>I designed the application and Utrecht University Medical Centre funded a working proof of concept of my idea. To take the next step I am looking to collaborate with developers and researchers in the health sector.</p>",
+      info3: "",
+    },
+
+      { id: 14, 
+      label: "Healthy communities" ,
+      group: "mygroup3",
+      info1: "<h3>Healthy communities</h3>" ,
+      info2: "<p>Part of a research project which examines how a networked approach of health can be introduced in local communities.<br>My role:<br>- Designing an environment where different stakeholders can collaborate.<br>- Researching the user journeys towards a toolkit/library with open source health-standards.<br>- Implementing a design thinking template to keep track of projectupdates.</p>",
+      info3: "",
+    },
+   
+    { id: 15, 
+      label: "Inspire Students",
+      group: "mygroup2",
+      info1: "<h3> Inspire Students</h3>" ,
+      info2: "<p>I like to inspire people with new ideas. In the context of students I was asked to act as a Dragons Den to give feedback on assignments of students from the University of Applied Sciences in Utrecht. Also I participated in brainstorm sessions with international students for their minor inclusive design to co-design new ways of collaborating in a digital world.</p>",
+      info3: '<p></p>'
+    },
+
+   ]);
+
+   // create an array with edges
+   // 1= design  6= develop  9= research 
+   var edges = new vis.DataSet([
+     { from: 1, to: 2 },
+     { from: 1, to: 3 },
+     { from: 1, to: 4 },
+     { from: 6, to: 5 },
+     { from: 6, to: 7 },
+     { from: 6, to: 8 },
+     { from: 6, to: 1 },
+     { from: 9, to: 6 },
+     { from: 9, to: 1 },
+     { from: 9, to: 10 },
+     { from: 9, to: 11 },
+     { from: 1, to: 11 },
+     { from: 9, to: 12 },
+     { from: 9, to: 13 },
+     { from: 9, to: 14 },
+     { from: 6, to: 10 },
+     { from: 6, to: 15 },
+
+   ]);
+ 
+   // create a network
+   var container = document.getElementById("mynetwork");
+   var data = {
+     nodes: nodes,
+     edges: edges,
+   };
+   var options = 
+      {
+        clickToUse: false,
+       
+
+          groups: 
+        {
+          "mygroup-design":
+            {color:{
+          background: "rgba(255, 255, 255, 1)",
+          border: "rgba(206, 247, 196, 1)",
+            }
+          },
+// https://rgbacolorpicker.com/
+
+         "mygroup1": 
+          {  color: 
+            { 
+              background: "rgba(88,214,141,1 )",
+              border:   "rgba(88,214,141,1 )",
+            }
+          },
+         
+          "mygroup-develop":
+            {color:{
+          background: "rgba(255, 255, 255, 1)",
+          border: "rgba(202, 116, 205, 0.5)",
+            }
+          },
+
+
+          "mygroup2": 
+          {  color: 
+            {
+            background: 'rgba(202, 116, 205, 1)',
+            border: "rgba(202, 116, 205, 1)",
+            }
+          },
+
+          "mygroup-research":
+            {color:{
+          background: "rgba(255, 255, 255, 1)",
+          border: "rgba(250, 231, 141, 1)",
+            }
+          },
+
+
+          "mygroup3": 
+          {  color: 
+            {
+            background: 'rgba(250, 231, 141, 1)',
+            border: 'rgba(250, 231, 141, 1)'
+            }
+          },
+
+          "mygroup-educate":
+            {color:{
+          background: "rgba(255, 255, 255, 1)",
+          border: "rgba(250, 231, 141, 1)",
+            }
+          },
+
+
+          "mygroup4": 
+          {  color: 
+            {
+            background: 'rgba(250, 231, 141, 1)',
+            border: 'rgba(250, 231, 141, 1)'
+            }
+          },
+
+
+      },
+
+        
+
+
+        nodes: 
+        {
+            shape: "circle",
+            color: "rgba(234, 246, 255, 1)",
+      
+            margin: 5,
+            widthConstraint: { 
+                minimum: 75,
+                maximum: 75 },
+            heightConstraint: { 
+                minimum: 75,
+                maximum: 75 },
+     
+        },
+        
+       edges: { 
+          dashes: false,
+         color: {
+           inherit: 'to',
+         }},
+
+        physics: 
+        {
+          enabled: true,
+          forceAtlas2Based: {
+      theta: 0.5,
+      gravitationalConstant: -50,
+      centralGravity: 0.01,
+      springConstant: 0.08,
+      springLength: 1400,
+      damping: 0.4,
+      avoidOverlap: 1
+          },
+           
+       },
+        
+       stabilization: {
+      enabled: true,
+      iterations: 1000,
+      updateInterval: 100,
+      onlyDynamicEdges: false,
+      fit: true
+    },
+        interaction: 
+        {
+        dragNodes:true,
+        dragView: true,
+        },
+
+
+      };
+
+   var network = new vis.Network(container, data, options);
+
+   
+      network.on("click", function (params) {
+        if (params.nodes.length > 0) {
+            var nodeId = params.nodes[0]; // get the data from selected node
+            document.getElementById("nodeContent").className = "div.nodeContent";
+            document.getElementById("nodeContent").innerHTML = nodes.get(nodeId).info1 + nodes.get(nodeId).info2 + nodes.get(nodeId).info3; // show the data in the div 
+            
+        }
+      });
+      
+      	// get original positions
+	var positions = network.getPositions();
+	
+	// animation properties
+	var k = 0, lambda = 0, tick = 10, totalTime = 500;
+		
+	// toy example start x, y coordinates nodes
+	var x_start = 0, y_start = 0
+
+	// nr of steps, given tick time and total animation time
+	var nrOfSteps = Math.floor( totalTime / tick);
+
+	// perform moveNode every tick nr of milliseconds
+	timer = setInterval(function(){
+		
+		// iteration counter
+		k++;
+
+		// lambda (for convex combination)
+		var l = k / nrOfSteps;
+
+		for (i = 1; i < nodes.length; i++) { 
+		
+			// get target positions 
+			var x_target = positions[i].x;
+			var y_target = positions[i].y;
+			
+			// compute the convex combination of x_start and x_target to find intermediate x and move node to it, same for y
+			var xt = x_start * (1 - l) + x_target * l;
+			var yt = y_start * (1 - l) + y_target * l;
+			
+			// move node
+		    network.moveNode(i,xt,yt);
+		}
+	
+		// stop if we have reached nr of steps
+		if(k == nrOfSteps){
+			clearInterval(timer)
+		} 
+	},tick);
+      
+ </script>
+
+ </body>
+
+</html>
