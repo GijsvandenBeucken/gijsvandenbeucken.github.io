@@ -62562,6 +62562,22 @@ readForm.addEventListener("submit", event => {
   event.preventDefault();
   readProfile();
 });
+document.getElementById("myBtn").addEventListener("click", mypost);
+function mypost() {
+  fetch('https://gijs.solidcommunity.net/inbox', {
+    method: 'Post',
+    body: 'Aanvraag is goedgekeurd: Gegevens: Woonplaats Utrecht'
+  });
+}
+document.getElementById("myBtn").addEventListener("click", mycheckmark);
+function mycheckmark() {
+  var x = document.getElementById("myDIV");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
 },{"@inrupt/solid-client":"node_modules/@inrupt/solid-client/dist/index.es.js","@inrupt/solid-client-authn-browser":"node_modules/@inrupt/solid-client-authn-browser/dist/index.js","@inrupt/vocab-common-rdf":"node_modules/@inrupt/vocab-common-rdf/dist/index.es.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -62587,7 +62603,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65313" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58147" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
