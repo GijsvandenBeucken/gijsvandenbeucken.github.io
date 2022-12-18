@@ -62547,6 +62547,7 @@ async function readProfile() {
   if (formattedName === 'Utrecht') {
     // 👇️ this runs
     document.getElementById("demo").textContent = `🎉U krijgt toeslag `;
+    document.getElementById("aanvraagdiv").style.cssText = "display: block;";
   } else {
     document.getElementById("demo").textContent = `😒U krijgt geen toeslag`;
   }
@@ -62603,7 +62604,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58147" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60469" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
