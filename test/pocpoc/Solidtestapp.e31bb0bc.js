@@ -62450,6 +62450,7 @@ async function handleRedirectAfterLogin() {
     document.getElementById("labelStatus").innerHTML = `✅Je bent ingelogd met het volgende WebID [<a target="_blank" href="${session.info.webId}">${session.info.webId}</a>].`;
     document.getElementById("labelStatus").setAttribute("role", "alert");
     document.getElementById("webID").value = session.info.webId;
+    //document.getElementById("demo2").href = session.info.webId;
   }
 }
 
@@ -62604,7 +62605,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60739" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62994" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
