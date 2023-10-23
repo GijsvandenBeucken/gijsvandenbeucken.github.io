@@ -1,1 +1,99 @@
+    
+ <!DOCTYPE html>
+ <html>
+   <head>
+     <meta charset="utf-8">
+     <title>POCPOC</title>
+     <script defer="" src="Solidtestapp.e31bb0bc.js"></script>
+     <link rel="stylesheet" href="my-demo.4eccdcf0.css">
+   <script src="my-demo.4eccdcf0.js"></script></head>
 
+   <body>
+     <header>
+       <h2>POCPOC2🐦🐦</h2>
+       <h3></h3>
+     </header>
+     <h2>1. Login</h2>
+     <section id="login" class="panel">
+      <p>Als je nog geen SolidPod hebt maak deze dan aan op <a target="_blank" href="https://solidcommunity.net/">solidcommunity.net</a></p><br>
+       <div class="row">
+         <label id="labelLogin" for="btnLogin">
+           Klik op login om in te loggen via  
+           <span id="solid_identity_provider">...provided by the JavaScript code...</span>:
+         </label>
+         <button name="btnLogin" id="btnLogin">Login</button>
+         <p id="labelStatus" class="labelStatus"></p>
+         
+       </div>
+     </section>
+     <h2>2. Linked data editor</h2>
+     <div id="read" class="panel">
+      <p>In deze test halen we nog geen gegevens op vanuit bronnen zoals het persoonregsiter.<br>
+        Dit simuleren we door zelf data in te voeren in je SolidPod.<br> 
+        In het onderstaande veld kun je jouw woonplaats invoeren. <br>
+        De input wordt weggeschreven naar je SolidPod.<br><br>
+        Kijk mee in je SolidPOD door in te loggen op <a target="_blank" href="https://podpro.dev/">PodPro</a>.<br>
+        Ga in PodPro in het linkerscherm vervolgens naar de map <i>profile</i> en klik op <i>card</i>.<br>
+        Je ziet in het rechterscherm de inhoud van je profielkaart.<br>
+        Op <i>regel 17 of 18</i> schrijf jij zodadelijk je woonplaats als vcard:locality. <br>
+        Dit is een manier om je woonplaats te beschrijven</p><br>
+       <div class="row">
+         <form id="writeForm">
+           <label id="writelabel" for="input_name">Waar woont u:   </label>
+           <input type="text" id="input_name" name="name" size="50" placeholder="Vul hier uw woonplaats in (Utrecht=toeslag)">
+           <button type="submit">
+             Schrijf naar profiel
+           </button>
+         </form>
+       
+         <p class="display">
+          
+          <span id="labelWriteStatus" class="labelStatus"> Schrijfstatus:&nbsp...nog niets weggeschreven...</span>
+         </p>
+       </div>
+       <p>
+        Om de getoonde gegevens in PodPro te verversen klik je in het linkerscherm in de map <i>profile</i> op <i>card</i>.<br> 
+        Op <i>regel 17 of 18</i> in het rechterscherm zie je nu dat je woonplaats is toegevoegd als vcard:locality. <br>
+        </p>
+       
+     </div>
+
+     <h2>3. Individuele Inkomenstoeslag applicatie</h2>
+     <div id="read" class="panel">
+       <div class="row">
+         <form id="readForm">
+           <label id="readlabel" for="webID">Lees de woonplaats uit je SolidPod en bekijk wat de uitkomst van je aanvraag is:<br><br>
+           </label>
+           <input type="url" id="webID" name="webID" size="50" placeholder="...je bent nog niet ingelogd...">
+           <button type="submit" name="btnRead" id="btnRead">
+             Lees profiel
+           </button>
+         </form>
+       </div>
+       <p class="display">
+         
+         <span id="labelFN"> Woonplaats (vcard:locality):&nbsp...nog niet uitgelezen...</span>
+      </p><br><br>
+       <h3 class="uitkomst" ;=""><b>Uitkomst Aanvraag:</b></h3>
+       <p id="demo"><i>Vul eerst uw gegevens in</i></p>
+       
+       <div id="aanvraagdiv">
+        <h3 class="uitkomst"><b>Stuur aanvraag in:</b></h3>
+        <p>Om de aanvraag in te sturen wordt een formulier verzonden aan de gemeente Solidpod-inbox.<br>
+           Om de werking inzichtelijk te maken gaat dit formulier ook als kopie naar je eigen inbox.<br>
+           Zodra je op onderstaande knop hebt gedrukt: Ga in PodPro in het linkerscherm naar de map <i>inbox</i> om je aanvraag terug te vinden.</p>
+        <button id="myBtn" value="Submit">Stuur aanvraag in</button>
+          <div id="myDIV" style="display: none;"><br>
+        ✅ Aanvraag verstuurd naar inbox<br>
+          </div>
+          <p id="labelStatus" class="labelStatus"></p>
+      </div>
+     </div>
+
+     
+
+
+
+     
+   </body>
+ </html>
