@@ -1,0 +1,7 @@
+{
+  "condition": {
+    "field": "locality",
+    "operator": "===",
+    "value": "Utrecht"
+  }
+}
