@@ -26119,7 +26119,7 @@ function loginToSelectedIdP() {
   const SELECTED_IDP = document.getElementById("select-idp").value;
   return (0, _solidClientAuthnBrowser.login)({
     oidcIssuer: SELECTED_IDP,
-    redirectUrl: new URL("/", window.location.href).toString(),
+    redirectUrl: window.location.href,
     clientName: "Getting started app"
   });
 }
