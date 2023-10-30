@@ -86,7 +86,7 @@ dd {
 }
 
 .card-header {
-  background-color: #00000008;
+  background-color: #c2f0a8;
   border-bottom: 1px solid #00000020;
   height: 20px;
   padding: .75rem 1.25rem;
@@ -175,6 +175,7 @@ table {
 }
 
 #btnCreate {
+  background-color: #c2f0a8;
   width: 200px;
   margin-bottom: 10px;
   padding: 6px;
