@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Medication interaction checker</title>
+  <script defer="" src="/index.f3dab904.js"></script>
+  <link rel="stylesheet" href="/index.306758e2.css">
+</head>
+
+<body>
+  <header>
+    <h3 class="header-title">Medication interaction checker</h3>
+    <button name="btnLogin" id="btnLogin">Login</button>
+  </header>
+  <section id="login" style="display: none">
+    <div class="row">
+      <label id="labelIdP" for="select-idp"></label>
+      <select id="select-idp" name="select-idp" style="display: none">
+        <option value="https://solidcommunity.net">https://solidcommunity.net</option>
+      </select>
+    </div>
+  </section>
+  <section class="hero" id="hero">
+    <div>
+      <img src="/hero3.6ab1f986.png" alt="" class="hero-photo">
+      <div class="hero-text"></div>
+    </div>
+  </section>
+
+ 
+
+  <div id="read" class="panel" style="display: none">
+    <div class="row">
+      <label id="readlabel" for="myWebID">2. Logged in with your WebID: </label>
+      <input type="text" id="myWebID" name="myWebID" size="50" disabled="">
+
+      <button name="btnRead" id="btnRead">Get Pod URL(s)</button>
+    </div>
+  </div>
+
+
+
+
+
+
+  <section id="rendered-ips" class="panel" style="display: none">
+      
+    <button name="btnCreate" id="btnCreate">Collect my Patient Summary and medication data</button>
+
+  </section>
+
+
+ 
+  <section id="summary" class="panel" style="display: none">
+  
+   
+    <div class="card-body collapse show" id="medications-body">
+       
+              <span>Medication Statement </span>
+              <br>
+              				                  <span class="badge badge-primary"></span> 
+                                        <p>Medication event</p>
+                                        <p id="displayValue"></p>
+                                        <pre id="medicationData"></pre>      
+                          
+      <button id="btnCheck">Check for interactions</button>                                  
+
+</div></section>
+
+<section id="interactions" class="panel" style="display: none">
+    <div class="contentBox">
+        <h1>Anastrozole Disease Interactions</h1>
+                    <p>There are <b>4 disease interactions</b> with anastrozole.</p>
+            
+            
+                    <div class="interactions-reference">
+                    <div id="Cardiovascular" class="ddc-anchor-offset interactions-reference-header">
+                        <span class="ddc-status-label status-category-moderate">Moderate</span>
+                        <h3>Anastrozole <span class="ddc-text-weight-normal">(applies to anastrozole)</span> <svg class="ddc-icon ddc-icon-arrows-horizontal" width="20" height="20" viewbox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 3 21 7.5 16.5 12l-1.057-1.057 2.685-2.693H3v-1.5h15.128l-2.685-2.692L16.5 3ZM5.872 17.25l2.685 2.692L7.5 21 3 16.5 7.5 12l1.057 1.057-2.685 2.693H21v1.5H5.872Z"></path></svg> cardiovascular</h3>
+                        <p>Moderate Potential Hazard, Moderate plausibility. Applicable conditions: Ischemic Heart Disease</p>
+                    </div>
+                    <p>In studies of women with preexisting ischemic heart disease, an increased incidence of ischemic cardiovascular events was observed with the use of anastrozole.  Caution should be exercised when prescribing anastrozole to these patients.</p>
+                    <div class="ddc-reference-list ddc-list-cropped">
+            <h2>References</h2>
+            <ol>
+                            <li>
+                                        "Product Information. Arimidex (anastrozole)." Astra-Zeneca Pharmaceuticals 
+                         (2001): 							</li>
+                    </ol>
+            </div>
+                </div>
+                    <div class="interactions-reference">
+                    <div id="Cholesterol" class="ddc-anchor-offset interactions-reference-header">
+                        <span class="ddc-status-label status-category-moderate">Moderate</span>
+                        <h3>Anastrozole <span class="ddc-text-weight-normal">(applies to anastrozole)</span> <svg class="ddc-icon ddc-icon-arrows-horizontal" width="20" height="20" viewbox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 3 21 7.5 16.5 12l-1.057-1.057 2.685-2.693H3v-1.5h15.128l-2.685-2.692L16.5 3ZM5.872 17.25l2.685 2.692L7.5 21 3 16.5 7.5 12l1.057 1.057-2.685 2.693H21v1.5H5.872Z"></path></svg> cholesterol</h3>
+                        <p>Moderate Potential Hazard, Moderate plausibility. Applicable conditions: Hyperlipidemia</p>
+                    </div>
+                    <p>During a clinical trial, more patients receiving anastrozole were reported to have elevated serum cholesterol compared to patients receiving tamoxifen (9% versus 3.5%, respectively).  Caution should be taken when this agent is prescribed to these patients.</p>
+                    <div class="ddc-reference-list ddc-list-cropped">
+            <h2>References</h2>
+            <ol>
+                            <li>
+                                        "Product Information. Arimidex (anastrozole)." Astra-Zeneca Pharmaceuticals 
+                         (2001): 							</li>
+                    </ol>
+            </div>
+                </div>
+                    <div class="interactions-reference">
+                    <div id="Hepatic_Dysfunction" class="ddc-anchor-offset interactions-reference-header">
+                        <span class="ddc-status-label status-category-moderate">Moderate</span>
+                        <h3>Anastrozole <span class="ddc-text-weight-normal">(applies to anastrozole)</span> <svg class="ddc-icon ddc-icon-arrows-horizontal" width="20" height="20" viewbox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 3 21 7.5 16.5 12l-1.057-1.057 2.685-2.693H3v-1.5h15.128l-2.685-2.692L16.5 3ZM5.872 17.25l2.685 2.692L7.5 21 3 16.5 7.5 12l1.057 1.057-2.685 2.693H21v1.5H5.872Z"></path></svg> hepatic dysfunction</h3>
+                        <p>Moderate Potential Hazard, Moderate plausibility. Applicable conditions: Liver Disease</p>
+                    </div>
+                    <p>Anastrozole is extensively metabolized by the liver.  Analysis of the pharmacokinetic disposition of anastrozole in patients with hepatic cirrhosis indicates that dosage adjustments of anastrozole are not necessary in patients with mild to moderate hepatic impairment.  Clinical monitoring for toxicity associated with anastrozole therapy is recommended.  Therapy with anastrozole should be administered cautiously in patients with severe hepatic impairment.</p>
+                    <div class="ddc-reference-list ddc-list-cropped">
+            <h2>References</h2>
+            <ol>
+                            <li>
+                         Lonning PE, Geisler J, Dowsett M 				"Pharmacological and clinical profile of anastrozole." Breast Cancer Res Treat 49
+                         (1998): 				 s53-7 			</li>
+                            <li>
+                                        "Product Information. Arimidex (anastrozole)." Astra-Zeneca Pharmaceuticals 
+                         (2001): 							</li>
+                    </ol>
+            </div>
+                </div>
+                    <div class="interactions-reference">
+                    <div id="Osteoporosis" class="ddc-anchor-offset interactions-reference-header">
+                        <span class="ddc-status-label status-category-moderate">Moderate</span>
+                        <h3>Anastrozole <span class="ddc-text-weight-normal">(applies to anastrozole)</span> <svg class="ddc-icon ddc-icon-arrows-horizontal" width="20" height="20" viewbox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 3 21 7.5 16.5 12l-1.057-1.057 2.685-2.693H3v-1.5h15.128l-2.685-2.692L16.5 3ZM5.872 17.25l2.685 2.692L7.5 21 3 16.5 7.5 12l1.057 1.057-2.685 2.693H21v1.5H5.872Z"></path></svg> osteoporosis</h3>
+                        <p>Moderate Potential Hazard, Moderate plausibility.</p>
+                    </div>
+                    <p>Results from the clinical trial bone substudy at 12 and 24 months demonstrated that patients receiving anastrozole had a mean decrease in both lumbar spine and total hip bone mineral density (BMD) compared to baseline.  Caution should exercise when prescribing this agent to patients with a risk of fractures, such as the elderly and patients with osteoporosis.  Consider bone mineral density monitoring in patients treated with anastrozole.</p>
+                    <div class="ddc-reference-list ddc-list-cropped">
+            <h2>References</h2>
+            <ol>
+                            <li>
+                                        "Product Information. Arimidex (anastrozole)." Astra-Zeneca Pharmaceuticals 
+                         (2001): 							</li>
+                    </ol>
+            </div>
+                </div>
+                        <h3>Anastrozole drug interactions</h3>
+                <p>There are <a href="">20 drug interactions</a> with anastrozole.</p>
+                            <h3>Anastrozole alcohol/food interactions</h3>
+                <p>There is <a href="">1 alcohol/food interaction</a> with anastrozole.</p>
+                      <hr class="ddc-mgt-4">
+          <div class="ddc-inc-report-options">
+            
+
+</div></div></section>
+            
+
+</body>
+
+</html>
