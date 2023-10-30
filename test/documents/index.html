@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Health documents</title>
+  <script defer="" src="/index.20cc3555.js"></script>
+  <link rel="stylesheet" href="/index.3fae93f6.css">
+</head>
+
+<body>
+  <header>
+    <h3 class="header-title">Health documents</h3>
+    <button name="btnLogin" id="btnLogin">Login</button>
+  </header>
+  <section id="login" style="display: none">
+    <div class="row">
+      <label id="labelIdP" for="select-idp"></label>
+      <select id="select-idp" name="select-idp" style="display: none">
+        <option value="https://solidcommunity.net">https://solidcommunity.net</option>
+      </select>
+    </div>
+  </section>
+  <section class="hero" id="hero">
+    <div>
+      <img src="/hero4.ca38bc69.png" alt="" class="hero-photo">
+      <div class="hero-text"></div>
+    </div>
+  </section>
+
+ 
+
+  <div id="read" class="panel" style="display: none">
+    <div class="row">
+      <label id="readlabel" for="myWebID">2. Logged in with your WebID: </label>
+      <input type="text" id="myWebID" name="myWebID" size="50" disabled="">
+
+      <button name="btnRead" id="btnRead">Get Pod URL(s)</button>
+    </div>
+  </div>
+
+
+
+
+
+
+  <section id="rendered-ips" class="panel" style="display: none">
+      
+    <button name="btnCreate" id="btnCreate">View my documents</button>
+    <textarea id="humanReadableIPS" style="display: none"></textarea>
+  </section>
+
+
+ 
+  <section id="summary" class="panel" style="display: none">
+  
+   
+    <div class="card-body collapse show" id="medications-body">
+       
+              <h2>Documents</h2>
+              <br>
+              				                  <span class="badge badge-primary"></span> 
+                                        <p style="display: none">Medication event</p>
+                                        <p id="displayValue" style="display: none"></p>
+                                        <pre id="medicationData" style="display: none"></pre>      
+                          
+      <button id="btnCheck" style="display: none">Check for interactions</button>                                  
+      <div id="labelCreateStatus" style="display: none"></div>
+
+
+      <iframe src="https://gijs.solidcommunity.net/healthinsurance.pdf" frameborder="0" id="pdfIframe" style="display: none"></iframe>
+
+      <div class="app">
+        <a href="https://gijs.solidcommunity.net/healthinsurance.pdf" target="_blank">
+            <img src="/5.52c740fc.png" alt="App 3">
+            <p>Health insurance</p>
+        </a>
+    </div>
+</div></section>
+
+
+            
+
+</body>
+
+</html>
