@@ -8,14 +8,14 @@ body * {
 }
 
 header {
-  border-bottom: solid #5795b9;
+  border-bottom: solid #4a8429;
   flex-flow: wrap;
   place-content: center space-between;
   display: flex;
 }
 
 .header-title {
-  color: #005b81;
+  color: #64b536;
 }
 
 .hero {
@@ -183,7 +183,7 @@ table {
 #btnLogin {
   color: #f1f1f1;
   cursor: pointer;
-  background-color: #005b81;
+  background-color: #64b536;
   border: #e6f4f9;
   width: 200px;
   margin-bottom: 10px;
