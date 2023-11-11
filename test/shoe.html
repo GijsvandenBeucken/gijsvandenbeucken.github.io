@@ -1,56 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Model Viewer</title>
-    <!-- Include Three.js from CDN -->
-    <script src="https://unpkg.com/three@0.125.2/build/three.min.js"></script>
-    <!-- Include GLTFLoader from CDN -->
-    <script src="https://unpkg.com/three@0.125.2/examples/jsm/loaders/GLTFLoader.js"></script>
-    <!-- Include OrbitControls from CDN -->
-    <script src="https://unpkg.com/three@0.125.2/examples/jsm/controls/OrbitControls.js"></script>
+    <title>3D Shoe Model Viewer</title>
     <style>
         body { margin: 0; }
-        #3d-model-container { width: 100vw; height: 100vh; }
+        canvas { display: block; }
     </style>
 </head>
 <body>
-    <div id="3d-model-container"></div>
-    <script>
-        // Set up the scene, camera, and renderer
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('3d-model-container').appendChild(renderer.domElement);
+    <script type="module">
+        // Import necessary classes from three.js
+        import * as THREE from 'https://unpkg.com/three@0.125.2/build/three.module.js';
+        import { OrbitControls } from 'https://unpkg.com/three@0.125.2/examples/jsm/controls/OrbitControls.js';
+        import { GLTFLoader } from 'https://unpkg.com/three@0.125.2/examples/jsm/loaders/GLTFLoader.js';
 
-        // Load the GLB file
-        const loader = new THREE.GLTFLoader();
+        let scene = new THREE.Scene();
+        let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        let renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        let loader = new GLTFLoader();
         loader.load('shoe.glb', function(gltf) {
             scene.add(gltf.scene);
         }, undefined, function(error) {
             console.error(error);
         });
 
-        // Set the camera position
-        camera.position.z = 5;
+        let controls = new OrbitControls(camera, renderer.domElement);
+        camera.position.set(0, 1, 2);
+        controls.update();
 
-        // Add orbit controls
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        let ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
 
-        // Animation loop
+        let directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        scene.add(directionalLight);
+
         function animate() {
             requestAnimationFrame(animate);
-            controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+            controls.update();
             renderer.render(scene, camera);
         }
         animate();
 
-        // Handle window resizing
-        window.addEventListener('resize', () => {
+        window.addEventListener('resize', onWindowResize, false);
+
+        function onWindowResize() {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+        }
     </script>
 </body>
 </html>
