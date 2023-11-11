@@ -4,6 +4,83 @@
   <script src="https://preview.babylonjs.com/viewer/babylon.viewer.js"></script> 
 </head>
 <body>
-    <babylon model="shoe.glb" templates.main.params.fill-screen="true"></babylon>
+ <div id="canvasZone">
+   <canvas id="renderCanvas" width="854" height="1083" data-engine="Babylon.js v6.29.1" touch-action="none" tabindex="1" style="touch-action: none; -webkit-tap-highlight-color: transparent;"></canvas>
+ </div>
+
+<script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var startRenderLoop = function (engine, canvas) {
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        }
+
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
+        var createScene = function () {
+
+    var scene = new BABYLON.Scene(engine);
+    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
+    camera.setTarget(BABYLON.Vector3.Zero());
+    camera.attachControl(canvas, true);
+    var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+    light.intensity = 0.7;
+
+
+
+    // example of trying to load glb with array buffer
+    var oReq = new XMLHttpRequest();
+
+    oReq.onload = function(e) {
+        var arrayBuffer = oReq.response; // not responseText
+        console.log(arrayBuffer)
+        let file = new File([arrayBuffer], "shoe.glb")
+
+        BABYLON.SceneLoader.LoadAssetContainer("", file, scene, function (container) {
+            container.addAllToScene();
+        });
+    }
+
+    oReq.open("GET", "shoe.glb");
+    oReq.responseType = "arraybuffer";
+    oReq.send();
+
+
+
+
+
+    return scene;
+};
+                window.initFunction = async function() {
+                    
+                    
+                    
+                    var asyncEngineCreation = async function() {
+                        try {
+                        return createDefaultEngine();
+                        } catch(e) {
+                        console.log("the available createEngine function failed. Creating the default engine instead");
+                        return createDefaultEngine();
+                        }
+                    }
+
+                    window.engine = await asyncEngineCreation();
+        if (!engine) throw 'engine should not be null.';
+        startRenderLoop(engine, canvas);
+        window.scene = createScene();};
+        initFunction().then(() => {sceneToRender = scene                    
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
 </body>
 </html>
