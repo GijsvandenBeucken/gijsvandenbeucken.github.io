@@ -1,85 +1,55 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Babylon.js Viewer - Display a 3D model</title>
-  <script src="https://preview.babylonjs.com/viewer/babylon.viewer.js"></script> 
+    <title>3D Model Viewer</title>
+    <!-- Include Three.js from CDN -->
+    <script src="https://unpkg.com/three@0.125.2/build/three.min.js"></script>
+    <!-- Include GLTFLoader from CDN -->
+    <script src="https://unpkg.com/three@0.125.2/examples/jsm/loaders/GLTFLoader.js"></script>
+    <!-- Include OrbitControls from CDN -->
+    <script src="https://unpkg.com/three@0.125.2/examples/jsm/controls/OrbitControls.js"></script>
+    <style>
+        body { margin: 0; }
+        #3d-model-container { width: 100vw; height: 100vh; }
+    </style>
 </head>
 <body>
- <div id="canvasZone">
-   <canvas id="renderCanvas" width="854" height="1083" data-engine="Babylon.js v6.29.1" touch-action="none" tabindex="1" style="touch-action: none; -webkit-tap-highlight-color: transparent;"></canvas>
- </div>
+    <div id="3d-model-container"></div>
+    <script>
+        // Set up the scene, camera, and renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('3d-model-container').appendChild(renderer.domElement);
 
-<script>
-        var canvas = document.getElementById("renderCanvas");
+        // Load the GLB file
+        const loader = new THREE.GLTFLoader();
+        loader.load('shoe.glb', function(gltf) {
+            scene.add(gltf.scene);
+        }, undefined, function(error) {
+            console.error(error);
+        });
 
-        var startRenderLoop = function (engine, canvas) {
-            engine.runRenderLoop(function () {
-                if (sceneToRender && sceneToRender.activeCamera) {
-                    sceneToRender.render();
-                }
-            });
+        // Set the camera position
+        camera.position.z = 5;
+
+        // Add orbit controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+            renderer.render(scene, camera);
         }
+        animate();
 
-        var engine = null;
-        var scene = null;
-        var sceneToRender = null;
-        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
-        var createScene = function () {
-
-    var scene = new BABYLON.Scene(engine);
-    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
-    camera.setTarget(BABYLON.Vector3.Zero());
-    camera.attachControl(canvas, true);
-    var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-    light.intensity = 0.7;
-
-
-
-    // example of trying to load glb with array buffer
-    var oReq = new XMLHttpRequest();
-
-    oReq.onload = function(e) {
-        var arrayBuffer = oReq.response; // not responseText
-        console.log(arrayBuffer)
-        let file = new File([arrayBuffer], "shoe.glb")
-
-        BABYLON.SceneLoader.LoadAssetContainer("", file, scene, function (container) {
-            container.addAllToScene();
-        });
-    }
-
-    oReq.open("GET", "shoe.glb");
-    oReq.responseType = "arraybuffer";
-    oReq.send();
-
-
-
-
-
-    return scene;
-};
-                window.initFunction = async function() {
-                    
-                    
-                    
-                    var asyncEngineCreation = async function() {
-                        try {
-                        return createDefaultEngine();
-                        } catch(e) {
-                        console.log("the available createEngine function failed. Creating the default engine instead");
-                        return createDefaultEngine();
-                        }
-                    }
-
-                    window.engine = await asyncEngineCreation();
-        if (!engine) throw 'engine should not be null.';
-        startRenderLoop(engine, canvas);
-        window.scene = createScene();};
-        initFunction().then(() => {sceneToRender = scene                    
-        });
-
-        // Resize
-        window.addEventListener("resize", function () {
-            engine.resize();
+        // Handle window resizing
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
         });
     </script>
 </body>
