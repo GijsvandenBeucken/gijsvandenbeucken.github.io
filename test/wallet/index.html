@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="NL">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="./icon-192.png" type="image/png">
   <title>QR Credential Wallet</title>
   <style>
     body {
@@ -38,7 +37,7 @@
       padding: 15px;
       text-align: center;
       cursor: pointer;
-      height: 150px; /* Fixed height for card */
+      height: 150px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -77,7 +76,7 @@
       box-sizing: border-box;
     }
     #details h3 {
-      margin-top: 60px; /* To ensure space for the close and delete buttons */
+      margin-top: 60px;
     }
     .close-btn, .delete-btn {
       background-color: #f0f0f0;
@@ -96,7 +95,7 @@
       right: 10px;
     }
     .close-btn, .delete-btn {
-      width: 40px; /* Ensure circular shape */
+      width: 40px;
       height: 40px;
       display: flex;
       align-items: center;
@@ -145,7 +144,7 @@
 
     const readerDiv = document.getElementById('reader'); // QR code scanner element
 
-    let credentials = [];
+    let credentials = []; // Wallet om kaartjes op te slaan
 
     // Load credentials from localStorage
     function loadCredentials() {
@@ -211,18 +210,36 @@
         { facingMode: "environment" },
         { fps: 10, qrbox: 250 },
         (decodedText) => {
-          const data = JSON.parse(decodedText);
-          credentials.push({ name: data.name || "Unknown", validUntil: 'N/A', data: data });
-          saveCredentials(); // Save new credential to localStorage
-          displayCredentials();
-          // Stop the QR scanner
-          html5QrCode.stop().then(() => {
-            readerDiv.style.display = 'none';
-          });
+          try {
+            // Als de QR-code van een issuer komt, bevat deze JSON-gegevens
+            const data = JSON.parse(decodedText);
 
-          // Automatically share data with the verifier
-          if (decodedText.includes('v.html')) {
-            window.location.href = `https://gijsvandenbeucken.nl/test/wallet/v.html?name=${data.name}&validUntil=${data.validUntil}`;
+            // Voeg het kaartje toe aan de wallet
+            credentials.push({ name: data.name || "Unknown", validUntil: 'N/A', data: data });
+            saveCredentials(); // Sla het kaartje op in localStorage
+            displayCredentials(); // Toon het kaartje in de wallet
+
+            html5QrCode.stop().then(() => {
+              readerDiv.style.display = 'none'; // Verberg de QR-scanner
+            });
+
+          } catch (error) {
+            // Als de QR-code geen JSON is, controleer of het een URL is (verifier scenario)
+            if (decodedText.includes('v.html')) {
+              const card = credentials[0]; // Gebruik het eerste kaartje uit de wallet
+
+              // Vraag de gebruiker of hij het kaartje wil delen
+              if (confirm(`Wil je je kaartje delen met de verifier?`)) {
+                // Deel het kaartje via de URL
+                window.location.href = `${decodedText}?name=${card.name}&validUntil=${card.validUntil}`;
+              }
+
+              html5QrCode.stop().then(() => {
+                readerDiv.style.display = 'none'; // Verberg de QR-scanner
+              });
+            } else {
+              console.error(`QR-code parse error: ${error}`);
+            }
           }
         },
         (errorMessage) => {
