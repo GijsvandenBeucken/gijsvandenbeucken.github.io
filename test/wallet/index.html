@@ -131,7 +131,7 @@
     <h3 id="details-title"></h3>
     <div id="details-content"></div>
   </div>
-
+<button id="install-button" style="display: none;">Installeer App</button>
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script>
     const scanButton = document.getElementById('scan-button');
@@ -226,6 +226,34 @@
     // Initial load of credentials and display them
     loadCredentials();
     displayCredentials();
+
+let deferredPrompt;
+const installButton = document.getElementById('install-button');
+
+// Luister naar de beforeinstallprompt gebeurtenis
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Voorkom dat de standaardprompt direct verschijnt
+  e.preventDefault();
+  deferredPrompt = e;
+  // Maak de installatieknop zichtbaar
+  installButton.style.display = 'block';
+
+  installButton.addEventListener('click', () => {
+    // Verberg de knop
+    installButton.style.display = 'none';
+    // Toon de install prompt
+    deferredPrompt.prompt();
+    // Wacht op de keuze van de gebruiker
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('Gebruiker accepteerde de install prompt');
+      } else {
+        console.log('Gebruiker weigerde de install prompt');
+      }
+      deferredPrompt = null;
+    });
+  });
+});
   </script>
 </body>
 </html>
