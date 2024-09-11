@@ -6,22 +6,20 @@
   <title>Verifier Pagina</title>
 </head>
 <body>
-  <h2>Verifier Webpagina</h2>
-  <p>Scan de onderstaande QR-code met je wallet om je kaartje te delen:</p>
+  <h2>Scan de QR-code met je wallet</h2>
+  <p>Na het scannen zal je kaartje hier worden weergegeven:</p>
   
-  <!-- QR-code om te scannen door de wallet -->
-  <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://gijsvandenbeucken.nl/test/wallet/v.html?request=verifier123&size=200x200" alt="QR Code">
-
+  <!-- QR-code -->
+  <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://gijsvandenbeucken.nl/test/wallet/v.html&size=200x200" alt="Verifier QR Code">
 
   <div id="verifier-result"></div>
 
   <script>
-    // Haal de queryparameters uit de URL (de gegevens van het gedeelde kaartje)
+    // Haal de kaartje-gegevens op uit de URL
     const params = new URLSearchParams(window.location.search);
     const name = params.get('name');
     const validUntil = params.get('validUntil');
 
-    // Als er gegevens in de URL staan, toon die dan in de verifier interface
     if (name && validUntil) {
       document.getElementById('verifier-result').innerHTML = `
         <h3>Ontvangen Kaartje:</h3>
