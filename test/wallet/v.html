@@ -6,29 +6,41 @@
   <title>Verifier Pagina</title>
 </head>
 <body>
-  <h2>Scan de QR-code met je wallet</h2>
-  <p>Na het scannen zal je kaartje hier worden weergegeven:</p>
-  
-  <!-- QR-code -->
-  <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://gijsvandenbeucken.nl/test/wallet/v.html&size=200x200" alt="Verifier QR Code">
+  <h2>Verifier-pagina met QR-code en gedeelde gegevens</h2>
 
+  <!-- QR-code voor de wallet om te scannen -->
+  <div>
+    <p>Scan de onderstaande QR-code met je wallet:</p>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://gijsvandenbeucken.nl/test/wallet/v.html&size=200x200" alt="QR Code">
+  </div>
+
+  <!-- Gedeelde gegevens worden hier getoond -->
   <div id="verifier-result"></div>
 
   <script>
-    // Haal de kaartje-gegevens op uit de URL
-    const params = new URLSearchParams(window.location.search);
-    const name = params.get('name');
-    const validUntil = params.get('validUntil');
+    // Functie om de kaartje-gegevens uit de URL-queryparameters op te halen
+    function updateVerifierData() {
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get('name');
+      const validUntil = params.get('validUntil');
 
-    if (name && validUntil) {
-      document.getElementById('verifier-result').innerHTML = `
-        <h3>Ontvangen Kaartje:</h3>
-        <p><strong>Naam:</strong> ${name}</p>
-        <p><strong>Geldig tot:</strong> ${validUntil}</p>
-      `;
-    } else {
-      document.getElementById('verifier-result').innerText = 'Nog geen gegevens ontvangen.';
+      // Als er gegevens zijn gedeeld, deze weergeven in de pagina
+      if (name && validUntil) {
+        document.getElementById('verifier-result').innerHTML = `
+          <h3>Ontvangen Kaartje:</h3>
+          <p><strong>Naam:</strong> ${name}</p>
+          <p><strong>Geldig tot:</strong> ${validUntil}</p>
+        `;
+      } else {
+        document.getElementById('verifier-result').innerText = 'Nog geen gegevens ontvangen.';
+      }
     }
+
+    // Ververs automatisch de verifier-pagina elke 5 seconden om nieuwe gegevens te controleren
+    setInterval(updateVerifierData, 5000);
+
+    // Voer de functie meteen uit om te controleren of er al gegevens zijn
+    updateVerifierData();
   </script>
 </body>
 </html>
