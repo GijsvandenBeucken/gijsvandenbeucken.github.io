@@ -114,7 +114,7 @@
         navigator.serviceWorker.register('./service-worker.js').then(registration => {
           console.log('ServiceWorker registration successful with scope: ', registration.scope);
         }, err => {
-          console.log('ServiceWorker registration failed: ', err);
+           console.error('Caching failed:', error); // Log fouten, maar stop niet de hele installatie
         });
       });
     }
