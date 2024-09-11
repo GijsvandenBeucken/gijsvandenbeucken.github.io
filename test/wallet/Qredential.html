@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code for Wallet</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+    #qrcode {
+      margin-top: 20px;
+      text-align: center;
+    }
+    #description {
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="qrcode">
+    <div id="description">Scan deze QR-code met je Wallet:</div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?data=%7B%22name%22%3A%22John%20Doe%22%2C%22role%22%3A%22Developer%22%2C%22credential%22%3A%22European%20Identity%20Wallet%20Demonstration%22%7D&size=200x200" alt="QR Code">
+  </div>
+
+</body>
+</html>
