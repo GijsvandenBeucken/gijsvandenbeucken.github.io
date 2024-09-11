@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./icon-192.png" type="image/png">
   <title>QR Credential Wallet</title>
   <style>
@@ -133,7 +132,7 @@
     <h3 id="details-title"></h3>
     <div id="details-content"></div>
   </div>
-<button id="install-button" style="display: none;">Installeer App</button>
+
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script>
     const scanButton = document.getElementById('scan-button');
@@ -203,6 +202,7 @@
       }
     });
 
+    // Handle QR code scanning
     scanButton.addEventListener('click', () => {
       readerDiv.style.display = 'block';
       const html5QrCode = new Html5Qrcode("reader");
@@ -215,9 +215,15 @@
           credentials.push({ name: data.name || "Unknown", validUntil: 'N/A', data: data });
           saveCredentials(); // Save new credential to localStorage
           displayCredentials();
+          // Stop the QR scanner
           html5QrCode.stop().then(() => {
             readerDiv.style.display = 'none';
           });
+
+          // Automatically share data with the verifier
+          if (decodedText.includes('v.html')) {
+            window.location.href = `https://g.nl/test/wallet/v.html?name=${data.name}&validUntil=${data.validUntil}`;
+          }
         },
         (errorMessage) => {
           console.error(`QR scan failed: ${errorMessage}`);
@@ -228,34 +234,6 @@
     // Initial load of credentials and display them
     loadCredentials();
     displayCredentials();
-
-let deferredPrompt;
-const installButton = document.getElementById('install-button');
-
-// Luister naar de beforeinstallprompt gebeurtenis
-window.addEventListener('beforeinstallprompt', (e) => {
-  // Voorkom dat de standaardprompt direct verschijnt
-  e.preventDefault();
-  deferredPrompt = e;
-  // Maak de installatieknop zichtbaar
-  installButton.style.display = 'block';
-
-  installButton.addEventListener('click', () => {
-    // Verberg de knop
-    installButton.style.display = 'none';
-    // Toon de install prompt
-    deferredPrompt.prompt();
-    // Wacht op de keuze van de gebruiker
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        console.log('Gebruiker accepteerde de install prompt');
-      } else {
-        console.log('Gebruiker weigerde de install prompt');
-      }
-      deferredPrompt = null;
-    });
-  });
-});
   </script>
 </body>
 </html>
