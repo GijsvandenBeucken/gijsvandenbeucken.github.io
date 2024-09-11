@@ -3,11 +3,11 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open('qr-wallet-cache').then(cache => {
       return cache.addAll([
-        '/index.html',
-        '/manifest.json',
-        '/service-worker.js',
-        '/icon-192.png',
-        '/icon-512.png',
+        './index.html',
+        './manifest.json',
+        './service-worker.js',
+        './icon-192.png',
+        './icon-512.png',
         'https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js'
       ]);
     })
