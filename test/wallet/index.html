@@ -89,6 +89,11 @@
     .delete-btn {
       right: 10px;
     }
+    #reader {
+      display: none;
+      width: 300px;
+      margin: auto;
+    }
   </style>
 </head>
 <body>
@@ -101,11 +106,12 @@
     <!-- Cards will be dynamically added here -->
   </div>
 
+  <div id="reader"></div> <!-- QR Code Scanner element -->
+
   <div class="footer">
     <button class="scan-btn" id="scan-button">Scan QR Code</button>
   </div>
 
-  <!-- Details view for individual cards -->
   <div id="details">
     <button class="close-btn" id="close-details">&times;</button>
     <button class="delete-btn" id="delete-details">&#128465;</button>
@@ -123,14 +129,14 @@
     const closeDetailsBtn = document.getElementById('close-details');
     const deleteDetailsBtn = document.getElementById('delete-details');
 
-    // Dummy data for testing
+    const readerDiv = document.getElementById('reader'); // QR code scanner element
+
     const credentials = [
       { name: 'National ID', validUntil: '7 Dec 2024' },
       { name: 'Driving License', validUntil: '15 Sept 2024' }
     ];
-    let selectedCredentialIndex = null; // Keep track of the selected credential index
+    let selectedCredentialIndex = null;
 
-    // Function to display credentials as cards
     function displayCredentials() {
       walletGrid.innerHTML = '';
       credentials.forEach((cred, index) => {
@@ -142,9 +148,8 @@
       });
     }
 
-    // Show the details of the card
     function showDetails(credential, index) {
-      selectedCredentialIndex = index; // Track which credential is being viewed
+      selectedCredentialIndex = index;
       detailsTitle.textContent = credential.name;
       detailsContent.innerHTML = `
         <p>Valid Until: ${credential.validUntil}</p>
@@ -155,32 +160,33 @@
       detailsView.style.display = 'block';
     }
 
-    // Close the details view
     closeDetailsBtn.addEventListener('click', () => {
       detailsView.style.display = 'none';
     });
 
-    // Delete the selected card
     deleteDetailsBtn.addEventListener('click', () => {
       if (selectedCredentialIndex !== null) {
-        credentials.splice(selectedCredentialIndex, 1); // Remove the credential from the array
-        selectedCredentialIndex = null; // Reset the selected index
-        detailsView.style.display = 'none'; // Close the details view
-        displayCredentials(); // Refresh the card display
+        credentials.splice(selectedCredentialIndex, 1);
+        selectedCredentialIndex = null;
+        detailsView.style.display = 'none';
+        displayCredentials();
       }
     });
 
-    // Start QR Code scanner
     scanButton.addEventListener('click', () => {
+      readerDiv.style.display = 'block';
       const html5QrCode = new Html5Qrcode("reader");
+
       html5QrCode.start(
         { facingMode: "environment" },
         { fps: 10, qrbox: 250 },
         (decodedText) => {
-          const data = JSON.parse(decodedText); // Assuming QR contains JSON
+          const data = JSON.parse(decodedText);
           credentials.push({ name: data.name, validUntil: 'N/A' });
           displayCredentials();
-          html5QrCode.stop();
+          html5QrCode.stop().then(() => {
+            readerDiv.style.display = 'none';
+          });
         },
         (errorMessage) => {
           console.error(`QR scan failed: ${errorMessage}`);
@@ -188,7 +194,6 @@
       );
     });
 
-    // Initial display of credentials
     displayCredentials();
   </script>
 </body>
