@@ -230,8 +230,11 @@
 
               // Vraag de gebruiker of hij het kaartje wil delen
               if (confirm(`Wil je je kaartje delen met de verifier?`)) {
-                // Deel het kaartje via de URL
-                window.location.href = `${decodedText}?name=${card.name}&validUntil=${card.validUntil}`;
+               // Gebruik een onzichtbare iframe om de gegevens via URL-query naar de verifier te sturen
+              const iframe = document.createElement('iframe');
+              iframe.style.display = 'none'; // Zorg ervoor dat de iframe onzichtbaar is
+              iframe.src = `${decodedText}?name=${card.name}&validUntil=${card.validUntil}`;
+              document.body.appendChild(iframe); // Voeg de iframe toe aan de pagina
               }
 
               html5QrCode.stop().then(() => {
