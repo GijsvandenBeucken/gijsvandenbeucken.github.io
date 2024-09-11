@@ -144,12 +144,22 @@
 
     const readerDiv = document.getElementById('reader'); // QR code scanner element
 
-    let credentials = [
-      { name: 'National ID', validUntil: '7 Dec 2024', data: {} },
-      { name: 'Driving License', validUntil: '15 Sept 2024', data: {} }
-    ];
-    let selectedCredentialIndex = null;
+    let credentials = [];
 
+    // Load credentials from localStorage
+    function loadCredentials() {
+      const storedCredentials = localStorage.getItem('credentials');
+      if (storedCredentials) {
+        credentials = JSON.parse(storedCredentials);
+      }
+    }
+
+    // Save credentials to localStorage
+    function saveCredentials() {
+      localStorage.setItem('credentials', JSON.stringify(credentials));
+    }
+
+    // Display all the credentials in the wallet grid
     function displayCredentials() {
       walletGrid.innerHTML = '';
       credentials.forEach((cred, index) => {
@@ -161,6 +171,7 @@
       });
     }
 
+    // Show the details of the card
     function showDetails(credential, index) {
       selectedCredentialIndex = index;
       detailsTitle.textContent = credential.name;
@@ -182,10 +193,11 @@
 
     deleteDetailsBtn.addEventListener('click', () => {
       if (selectedCredentialIndex !== null) {
-        credentials.splice(selectedCredentialIndex, 1);
+        credentials.splice(selectedCredentialIndex, 1); // Remove from array
+        saveCredentials(); // Save updated list to localStorage
         selectedCredentialIndex = null;
         detailsView.style.display = 'none';
-        displayCredentials();
+        displayCredentials(); // Refresh the card display
       }
     });
 
@@ -199,6 +211,7 @@
         (decodedText) => {
           const data = JSON.parse(decodedText);
           credentials.push({ name: data.name || "Unknown", validUntil: 'N/A', data: data });
+          saveCredentials(); // Save new credential to localStorage
           displayCredentials();
           html5QrCode.stop().then(() => {
             readerDiv.style.display = 'none';
@@ -210,6 +223,8 @@
       );
     });
 
+    // Initial load of credentials and display them
+    loadCredentials();
     displayCredentials();
   </script>
 </body>
