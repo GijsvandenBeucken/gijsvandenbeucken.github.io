@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="QR Credential Wallet">
+  <link rel="manifest" href="manifest.json">
+  <title>QR Credential Wallet</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      text-align: center;
+    }
+    #wallet {
+      display: none;
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 15px;
+      background-color: #ffffff;
+    }
+    #wallet h3 {
+      text-align: center;
+      margin: 0;
+      color: #4CAF50;
+    }
+    #wallet pre {
+      background-color: #e0e0e0;
+      padding: 10px;
+      border-radius: 5px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    #scan-button {
+      display: block;
+      width: 100%;
+      max-width: 300px;
+      margin: 20px auto;
+      padding: 15px;
+      background-color: #4CAF50;
+      color: white;
+      text-align: center;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #reader {
+      width: 100%;
+      max-width: 500px;
+      margin: 20px auto;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>QR Credential Wallet</h1>
+
+  <!-- Scan QR Code Button -->
+  <button id="scan-button">Scan QR Code</button>
+
+  <!-- QR Code Reader -->
+  <div id="reader"></div>
+
+  <!-- Wallet -->
+  <div id="wallet">
+    <h3>Credential</h3>
+    <pre id="result">Scan een QR-code om de credential te tonen...</pre>
+  </div>
+
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+  <script>
+    const scanButton = document.getElementById('scan-button');
+    const readerDiv = document.getElementById('reader');
+    const walletDiv = document.getElementById('wallet');
+    const resultElement = document.getElementById('result');
+
+    // Start QR Code Scanner when button is clicked
+    scanButton.addEventListener('click', function() {
+      readerDiv.style.display = 'block';
+      scanButton.style.display = 'none';
+
+      // Start the QR Code Scanner
+      const html5QrCode = new Html5Qrcode("reader");
+      html5QrCode.start(
+        { facingMode: "environment" }, // Use the back camera
+        { fps: 10, qrbox: 250 },
+        (decodedText) => {
+          // On success
+          resultElement.innerText = decodedText;
+          walletDiv.style.display = 'block';
+          readerDiv.style.display = 'none'; // Hide the QR reader after scan
+          html5QrCode.stop(); // Stop scanning
+        },
+        (errorMessage) => {
+          // On failure (optional)
+          console.log(`QR scan failed: ${errorMessage}`);
+        }
+      ).catch(err => {
+        console.error(`Unable to start scanning: ${err}`);
+      });
+    });
+  </script>
+
+  <script>
+    // Register Service Worker for offline functionality
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').then(registration => {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, err => {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
