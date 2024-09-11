@@ -18,11 +18,9 @@
   <div id="verifier-result"></div>
 
   <script>
-    // Functie om de kaartje-gegevens uit de URL-queryparameters op te halen
-    function updateVerifierData() {
-      const params = new URLSearchParams(window.location.search);
-      const name = params.get('name');
-      const validUntil = params.get('validUntil');
+    // Functie om berichten van de wallet te ontvangen
+    window.addEventListener('message', function(event) {
+      const { name, validUntil } = event.data;
 
       // Als er gegevens zijn gedeeld, deze weergeven in de pagina
       if (name && validUntil) {
@@ -34,13 +32,7 @@
       } else {
         document.getElementById('verifier-result').innerText = 'Nog geen gegevens ontvangen.';
       }
-    }
-
-    // Ververs automatisch de verifier-pagina elke 5 seconden om nieuwe gegevens te controleren
-    setInterval(updateVerifierData, 5000);
-
-    // Voer de functie meteen uit om te controleren of er al gegevens zijn
-    updateVerifierData();
+    }, false);
   </script>
 </body>
 </html>
