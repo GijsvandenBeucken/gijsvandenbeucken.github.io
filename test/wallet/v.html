@@ -15,11 +15,13 @@
   </div>
 
   <!-- Gedeelde gegevens worden hier getoond -->
-  <div id="verifier-result"></div>
+  <div id="verifier-result">Nog geen gegevens ontvangen.</div> <!-- Standaardtekst bij geen gegevens -->
 
   <script>
     // Functie om berichten van de wallet te ontvangen
     window.addEventListener('message', function(event) {
+      console.log('Bericht ontvangen:', event.data); // Log het ontvangen bericht voor debuggen
+
       const { name, validUntil } = event.data;
 
       // Als er gegevens zijn gedeeld, deze weergeven in de pagina
