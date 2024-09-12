@@ -22,10 +22,12 @@ function saveCredentials() {
 function displayCredentials() {
   walletGrid.innerHTML = '';
   credentials.forEach((cred) => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `<h3>${cred.name}</h3><p>Valid until ${cred.validUntil}</p>`;
-    walletGrid.appendChild(card);
+    if (!cred.isShareAction) { // Alleen normale kaartjes tonen, geen deelacties
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `<h3>${cred.name}</h3><p>Valid until ${cred.validUntil}</p>`;
+      walletGrid.appendChild(card);
+    }
   });
 }
 
@@ -45,22 +47,26 @@ scanButton.addEventListener('click', () => {
           const requestedCard = data.requestedCard;
           const requester = data.requester;
 
-          // Toon vraag in het scherm
-          readerDiv.style.display = 'none';
+          // Stop the QR scanner when the question screen is shown
+          html5QrCode.stop().then(() => {
+            readerDiv.style.display = 'none'; // Verberg de QR-scanner
+          });
+
+          // Toon vraag in full screen
           questionScreen.style.display = 'block';
           shareQuestion.innerText = `Wil je het kaartje "${requestedCard}" delen met ${requester}?`;
 
           // Handle Yes/No response
           yesButton.onclick = () => {
-            // Sla de deelactie op in localStorage
+            // Sla de deelactie op in localStorage zonder deze als kaartje te tonen
             const timestamp = new Date().toLocaleString();
             credentials.push({
               name: `Kaartje "${requestedCard}" gedeeld met ${requester}`,
-              validUntil: timestamp
+              validUntil: timestamp,
+              isShareAction: true // Markeer als deelactie
             });
             saveCredentials();
-            displayCredentials();
-            questionScreen.style.display = 'none'; // Ga terug naar het hoofscherm
+            questionScreen.style.display = 'none'; // Ga terug naar het hoofscherm zonder de actie te tonen
           };
 
           noButton.onclick = () => {
@@ -68,15 +74,11 @@ scanButton.addEventListener('click', () => {
           };
 
         } else {
-          // Verwerk issuer-QR-code
+          // Verwerk issuer-QR-code (normaal kaartje opslaan)
           credentials.push({ name: data.name || "Unknown", validUntil: 'N/A', data: data });
           saveCredentials();
           displayCredentials();
         }
-
-        html5QrCode.stop().then(() => {
-          readerDiv.style.display = 'none';
-        });
 
       } catch (error) {
         console.error(`QR-code parse error: ${error}`);
