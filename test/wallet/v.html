@@ -6,33 +6,14 @@
   <title>Verifier Pagina</title>
 </head>
 <body>
-  <h2>Verifier-pagina met QR-code om een specifiek kaartje te vragen</h2>
+  <h2>Verifier-pagina met QR-code</h2>
 
   <!-- QR-code voor de wallet om te scannen -->
   <div>
     <p>Scan de onderstaande QR-code met je wallet:</p>
 
     <!-- QR-code die de wallet vraagt om een specifiek kaartje te delen -->
-    <img src="https://api.qrserver.com/v1/create-qr-code/?data=%7B%22verifier%22%3Atrue%2C%22requestedCard%22%3A%22JohnDoe%22%7D&size=200x200" alt="Verifier QR Code">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?data=%7B%22verifier%22%3Atrue%2C%22requestedCard%22%3A%22VOG%20namens%20bedrijf%20L%22%2C%22requester%22%3A%22Bedrijf%20L%22%7D&size=200x200" alt="Verifier QR Code">
   </div>
-
-  <!-- Gedeelde gegevens worden hier getoond -->
-  <div id="verifier-result"></div>
-
-  <script>
-    // Functie om de QR-code te genereren voor een specifiek kaartje
-    function generateQrCode(cardName) {
-      const qrData = {
-        verifier: true,
-        requestedCard: cardName
-      };
-
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(JSON.stringify(qrData))}&size=200x200`;
-      document.getElementById('qr-code').src = qrUrl;
-    }
-
-    // Toon standaard een QR-code die vraagt om het kaartje van "John Doe"
-    generateQrCode('John Doe');
-  </script>
 </body>
 </html>
