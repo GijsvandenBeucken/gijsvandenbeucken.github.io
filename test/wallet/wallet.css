@@ -83,8 +83,15 @@ body {
 
 #question-screen {
   display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
   padding: 20px;
   text-align: center;
+  z-index: 200;
 }
 
 .yes-btn, .no-btn {
