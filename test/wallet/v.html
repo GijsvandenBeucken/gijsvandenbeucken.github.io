@@ -6,35 +6,33 @@
   <title>Verifier Pagina</title>
 </head>
 <body>
-  <h2>Verifier-pagina met QR-code en gedeelde gegevens</h2>
+  <h2>Verifier-pagina met QR-code om een specifiek kaartje te vragen</h2>
 
   <!-- QR-code voor de wallet om te scannen -->
   <div>
     <p>Scan de onderstaande QR-code met je wallet:</p>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://gijsvandenbeucken.nl/test/wallet/v.html&size=200x200" alt="QR Code">
+
+    <!-- QR-code die de wallet vraagt om een specifiek kaartje te delen -->
+    <img src="https://api.qrserver.com/v1/create-qr-code/?data=%7B%22verifier%22%3Atrue%2C%22requestedCard%22%3A%22JohnDoe%22%7D&size=200x200" alt="Verifier QR Code">
   </div>
 
   <!-- Gedeelde gegevens worden hier getoond -->
-  <div id="verifier-result">Nog geen gegevens ontvangen.</div> <!-- Standaardtekst bij geen gegevens -->
+  <div id="verifier-result"></div>
 
   <script>
-    // Functie om berichten van de wallet te ontvangen
-    window.addEventListener('message', function(event) {
-      console.log('Bericht ontvangen:', event.data); // Log het ontvangen bericht voor debuggen
+    // Functie om de QR-code te genereren voor een specifiek kaartje
+    function generateQrCode(cardName) {
+      const qrData = {
+        verifier: true,
+        requestedCard: cardName
+      };
 
-      const { name, validUntil } = event.data;
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(JSON.stringify(qrData))}&size=200x200`;
+      document.getElementById('qr-code').src = qrUrl;
+    }
 
-      // Als er gegevens zijn gedeeld, deze weergeven in de pagina
-      if (name && validUntil) {
-        document.getElementById('verifier-result').innerHTML = `
-          <h3>Ontvangen Kaartje:</h3>
-          <p><strong>Naam:</strong> ${name}</p>
-          <p><strong>Geldig tot:</strong> ${validUntil}</p>
-        `;
-      } else {
-        document.getElementById('verifier-result').innerText = 'Nog geen gegevens ontvangen.';
-      }
-    }, false);
+    // Toon standaard een QR-code die vraagt om het kaartje van "John Doe"
+    generateQrCode('John Doe');
   </script>
 </body>
 </html>
