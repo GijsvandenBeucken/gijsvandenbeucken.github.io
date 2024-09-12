@@ -203,57 +203,52 @@
 
     // Handle QR code scanning
     scanButton.addEventListener('click', () => {
-        readerDiv.style.display = 'block';
-        const html5QrCode = new Html5Qrcode("reader");
-      
-        html5QrCode.start(
-          { facingMode: "environment" },
-          { fps: 10, qrbox: 250 },
-          (decodedText) => {
-            try {
-              // Probeer de QR-code te parsen als JSON (issuer QR-code)
-              const data = JSON.parse(decodedText);
-      
-              // Voeg het kaartje toe aan de wallet (issuer-scenario)
-              credentials.push({ name: data.name || "Unknown", validUntil: data.validUntil || 'N/A', data: data });
+      readerDiv.style.display = 'block';
+      const html5QrCode = new Html5Qrcode("reader");
+
+      html5QrCode.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: 250 },
+        (decodedText) => {
+          try {
+            const data = JSON.parse(decodedText);
+
+            // Als de QR-code van een issuer komt, kaartje opslaan
+            if (data.issuer) {
+              credentials.push({ name: data.name || "Unknown", validUntil: 'N/A', data: data });
               saveCredentials(); // Sla het kaartje op in localStorage
               displayCredentials(); // Toon het kaartje in de wallet
-      
-              html5QrCode.stop().then(() => {
-                readerDiv.style.display = 'none'; // Verberg de QR-scanner
-              });
-      
-            } catch (error) {
-              // Als de QR-code geen JSON is, controleer of het een verifier-QR is
-              if (decodedText.includes('verifier')) {
-                const verifierRequest = JSON.parse(decodedText); // Verifier vraagt specifiek kaartje op
-      
-                // Zoek het juiste kaartje in de wallet dat overeenkomt met de verifier-request
-                const cardToShare = credentials.find(card => card.name === verifierRequest.requestedName);
-      
-                if (cardToShare) {
-                  // Vraag de gebruiker of hij dit specifieke kaartje wil delen
-                  if (confirm(`Verifier vraagt om het delen van het kaartje: ${cardToShare.name}. Wil je dit delen?`)) {
-                    // Deel het kaartje (bijv. met een postMessage of URL-query, afhankelijk van hoe je het wilt implementeren)
-                    console.log("Gegevens delen met verifier:", cardToShare);
-                  }
-                } else {
-                  alert('Het gevraagde kaartje is niet beschikbaar in je wallet.');
+            } 
+
+            // Als de QR-code van een verifier komt, een vraag tonen
+            if (data.verifier) {
+              const requestedCardName = data.requestedCard;
+              const cardToShare = credentials.find(card => card.name === requestedCardName);
+
+              if (cardToShare) {
+                // Vraag aan de gebruiker of hij/zij het kaartje wil delen
+                if (confirm(`Wil je het kaartje van ${cardToShare.name} delen met de verifier?`)) {
+                  console.log(`Kaartje ${cardToShare.name} wordt gedeeld met de verifier.`);
+                  // Hier kun je de logica toevoegen om de gegevens naar de verifier te sturen
                 }
-      
-                html5QrCode.stop().then(() => {
-                  readerDiv.style.display = 'none'; // Verberg de QR-scanner
-                });
               } else {
-                console.error(`QR-code parse error: ${error}`);
+                alert(`Kaartje ${requestedCardName} niet gevonden in de wallet.`);
               }
             }
-          },
-          (errorMessage) => {
-            console.error(`QR scan failed: ${errorMessage}`);
+
+            html5QrCode.stop().then(() => {
+              readerDiv.style.display = 'none'; // Verberg de QR-scanner
+            });
+
+          } catch (error) {
+            console.error(`QR-code parse error: ${error}`);
           }
-        );
-      });
+        },
+        (errorMessage) => {
+          console.error(`QR scan failed: ${errorMessage}`);
+        }
+      );
+    });
 
     // Initial load of credentials and display them
     loadCredentials();
