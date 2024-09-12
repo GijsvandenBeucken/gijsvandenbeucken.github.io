@@ -78,33 +78,26 @@
     #details h3 {
       margin-top: 60px;
     }
-    .close-btn, .delete-btn {
-      background-color: #f0f0f0;
+    #question-screen {
+      display: none;
+      padding: 20px;
+      text-align: center;
+    }
+    .yes-btn, .no-btn {
+      margin: 20px;
+      padding: 10px 20px;
       border: none;
-      padding: 10px;
-      border-radius: 50%;
+      border-radius: 5px;
       font-size: 18px;
       cursor: pointer;
-      position: absolute;
-      top: 10px;
     }
-    .close-btn {
-      left: 10px;
+    .yes-btn {
+      background-color: #4CAF50;
+      color: white;
     }
-    .delete-btn {
-      right: 10px;
-    }
-    .close-btn, .delete-btn {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #reader {
-      display: none;
-      width: 300px;
-      margin: auto;
+    .no-btn {
+      background-color: #f44336;
+      color: white;
     }
   </style>
 </head>
@@ -124,29 +117,25 @@
     <button class="scan-btn" id="scan-button">Scan QR Code</button>
   </div>
 
-  <!-- Details view for individual cards -->
-  <div id="details">
-    <button class="close-btn" id="close-details">&times;</button>
-    <button class="delete-btn" id="delete-details">&#128465;</button>
-    <h3 id="details-title"></h3>
-    <div id="details-content"></div>
+  <!-- Question screen for sharing a specific card -->
+  <div id="question-screen">
+    <h3 id="share-question"></h3>
+    <button class="yes-btn" id="yes-button">Ja</button>
+    <button class="no-btn" id="no-button">Nee</button>
   </div>
 
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script>
     const scanButton = document.getElementById('scan-button');
     const walletGrid = document.getElementById('wallet-grid');
-    const detailsView = document.getElementById('details');
-    const detailsTitle = document.getElementById('details-title');
-    const detailsContent = document.getElementById('details-content');
-    const closeDetailsBtn = document.getElementById('close-details');
-    const deleteDetailsBtn = document.getElementById('delete-details');
+    const readerDiv = document.getElementById('reader');
+    const questionScreen = document.getElementById('question-screen');
+    const shareQuestion = document.getElementById('share-question');
+    const yesButton = document.getElementById('yes-button');
+    const noButton = document.getElementById('no-button');
 
-    const readerDiv = document.getElementById('reader'); // QR code scanner element
+    let credentials = [];
 
-    let credentials = []; // Wallet om kaartjes op te slaan
-
-    // Load credentials from localStorage
     function loadCredentials() {
       const storedCredentials = localStorage.getItem('credentials');
       if (storedCredentials) {
@@ -154,54 +143,20 @@
       }
     }
 
-    // Save credentials to localStorage
     function saveCredentials() {
       localStorage.setItem('credentials', JSON.stringify(credentials));
     }
 
-    // Display all the credentials in the wallet grid
     function displayCredentials() {
       walletGrid.innerHTML = '';
-      credentials.forEach((cred, index) => {
+      credentials.forEach((cred) => {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `<h3>${cred.name}</h3><p>Valid until ${cred.validUntil}</p>`;
-        card.addEventListener('click', () => showDetails(cred, index));
         walletGrid.appendChild(card);
       });
     }
 
-    // Show the details of the card
-    function showDetails(credential, index) {
-      selectedCredentialIndex = index;
-      detailsTitle.textContent = credential.name;
-      let detailsHTML = '';
-
-      for (const key in credential.data) {
-        if (credential.data.hasOwnProperty(key)) {
-          detailsHTML += `<p><strong>${key}:</strong> ${credential.data[key]}</p>`;
-        }
-      }
-
-      detailsContent.innerHTML = detailsHTML;
-      detailsView.style.display = 'block';
-    }
-
-    closeDetailsBtn.addEventListener('click', () => {
-      detailsView.style.display = 'none';
-    });
-
-    deleteDetailsBtn.addEventListener('click', () => {
-      if (selectedCredentialIndex !== null) {
-        credentials.splice(selectedCredentialIndex, 1); // Remove from array
-        saveCredentials(); // Save updated list to localStorage
-        selectedCredentialIndex = null;
-        detailsView.style.display = 'none';
-        displayCredentials(); // Refresh the card display
-      }
-    });
-
-    // Handle QR code scanning
     scanButton.addEventListener('click', () => {
       readerDiv.style.display = 'block';
       const html5QrCode = new Html5Qrcode("reader");
@@ -213,31 +168,42 @@
           try {
             const data = JSON.parse(decodedText);
 
-            // Als de QR-code van een issuer komt, kaartje opslaan
-            if (data.issuer) {
-              credentials.push({ name: data.name || "Unknown", validUntil: 'N/A', data: data });
-              saveCredentials(); // Sla het kaartje op in localStorage
-              displayCredentials(); // Toon het kaartje in de wallet
-            } 
-
-            // Als de QR-code van een verifier komt, een vraag tonen
+            // If the QR-code is from a verifier, ask to share specific card
             if (data.verifier) {
-              const requestedCardName = data.requestedCard;
-              const cardToShare = credentials.find(card => card.name === requestedCardName);
+              const requestedCard = data.requestedCard;
+              const requester = data.requester;
 
-              if (cardToShare) {
-                // Vraag aan de gebruiker of hij/zij het kaartje wil delen
-                if (confirm(`Wil je het kaartje van ${cardToShare.name} delen met de verifier?`)) {
-                  console.log(`Kaartje ${cardToShare.name} wordt gedeeld met de verifier.`);
-                  // Hier kun je de logica toevoegen om de gegevens naar de verifier te sturen
-                }
-              } else {
-                alert(`Kaartje ${requestedCardName} niet gevonden in de wallet.`);
-              }
+              // Toon vraag in het scherm
+              readerDiv.style.display = 'none';
+              questionScreen.style.display = 'block';
+              shareQuestion.innerText = `Wil je het kaartje "${requestedCard}" delen met ${requester}?`;
+
+              // Handle Yes/No response
+              yesButton.onclick = () => {
+                // Sla de deelactie op in localStorage
+                const timestamp = new Date().toLocaleString();
+                credentials.push({
+                  name: `Kaartje "${requestedCard}" gedeeld met ${requester}`,
+                  validUntil: timestamp
+                });
+                saveCredentials();
+                displayCredentials();
+                questionScreen.style.display = 'none'; // Ga terug naar het hoofscherm
+              };
+
+              noButton.onclick = () => {
+                questionScreen.style.display = 'none'; // Ga terug naar het hoofscherm
+              };
+
+            } else {
+              // Verwerk issuer-QR-code
+              credentials.push({ name: data.name || "Unknown", validUntil: 'N/A', data: data });
+              saveCredentials();
+              displayCredentials();
             }
 
             html5QrCode.stop().then(() => {
-              readerDiv.style.display = 'none'; // Verberg de QR-scanner
+              readerDiv.style.display = 'none';
             });
 
           } catch (error) {
@@ -250,7 +216,6 @@
       );
     });
 
-    // Initial load of credentials and display them
     loadCredentials();
     displayCredentials();
   </script>
