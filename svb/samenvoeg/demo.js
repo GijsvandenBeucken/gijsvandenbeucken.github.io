@@ -98,7 +98,7 @@ if (notifWijzigingEl) {
     const routingContinueButton = document.getElementById('routing-continue');
     if (routingContinueButton) {
       routingContinueButton.addEventListener('click', () => {
-        goToStep(6);
+        goToStep(7);
       });
     }
   
