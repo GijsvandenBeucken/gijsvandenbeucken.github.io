@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Demo BOMOS Self Assessment</title>
+
+  <!-- Verwijs naar de aparte CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="header-container">
+        <h1>Demo EDI Self Assessment volgens BOMOS</h1>
+        <p>Welkom bij de self assessment. Vul de vragen in per thema.</p>
+      </div>
+
+<!-- 
+  =====================
+  THEMA: STRATEGIE
+  =====================
+-->
+<div id="thema-strategie" class="thema-container active">
+  <h2>Thema: Strategie</h2>
+
+  <h3>Subthema: Governance</h3>
+  <div id="subGovernance"></div>
+  
+  <h3>Subthema: Visie</h3>
+  <div id="subVisie"></div>
+  
+  <h3>Subthema: Business Case</h3>
+  <div id="subBusCase"></div>
+
+  <h3>Subthema: Financiën</h3>
+  <div id="subFinancien"></div>
+
+  <h3>Subthema: Toezicht</h3>
+  <div id="subToezicht"></div>
+  <div class="button-container">
+  <button type="button" onclick="gotoNextThema('thema-strategie','thema-tactiek')">
+    Volgende (Tactiek) &raquo;
+  </button>
+</div>
+</div>
+
+<!-- 
+  =====================
+  THEMA: TACTIEK
+  =====================
+-->
+<div id="thema-tactiek" class="thema-container">
+  <h2>Thema: Tactiek</h2>
+
+  <h3>Subthema: Community</h3>
+  <div id="subCommunity"></div>
+
+  <h3>Subthema: Adoptie en Erkenning</h3>
+  <div id="subAdoptie"></div>
+
+  <h3>Subthema: Architectuur</h3>
+  <div id="subArchitectuur"></div>
+
+  <h3>Subthema: Roadmapping</h3>
+  <div id="subRoadmapping"></div>
+
+  <h3>Subthema: Risicoanalyse</h3>
+  <div id="subRisicoanalyse"></div>
+
+   <!-- Vorige en Volgende knoppen -->
+   <div class="button-container">
+   <button type="button" onclick="gotoPrevThema('thema-tactiek','thema-strategie')">
+    &laquo; Vorige
+  </button>
+  <button type="button" onclick="gotoNextThema('thema-tactiek','thema-operationeel')">
+    Volgende (Operationeel) &raquo;
+  </button>
+</div>
+</div>
+
+
+<!-- 
+  =====================
+  THEMA: OPERATIONEEL
+  =====================
+-->
+<div id="thema-operationeel" class="thema-container">
+  <h2>Thema: Operationeel</h2>
+
+  <h3>Subthema: Wensen en eisen</h3>
+  <div id="subWensenEisen"></div>
+
+  <h3>Subthema: Ontwikkeling</h3>
+  <div id="subOntwikkeling"></div>
+
+  <h3>Subthema: Uitvoering</h3>
+  <div id="subUitvoering"></div>
+
+  <h3>Subthema: Documentatie</h3>
+  <div id="subDocumentatie"></div>
+
+  <div class="button-container">
+  <button type="button" onclick="gotoPrevThema('thema-operationeel','thema-tactiek')">
+    &laquo; Vorige
+  </button>
+  <button type="button" onclick="gotoNextThema('thema-operationeel','thema-implementatie')">
+    Volgende (Implementatie ondersteuning) &raquo;
+  </button>
+</div>
+</div>
+
+
+<!-- 
+  =====================
+  THEMA: IMPLEMENTATIE ONDERSTEUNING
+  =====================
+-->
+<div id="thema-implementatie" class="thema-container">
+  <h2>Thema: Implementatie ondersteuning</h2>
+
+  <h3>Subthema: Helpdesk</h3>
+  <div id="subHelpdesk"></div>
+
+  <h3>Subthema: Module Ontwikkeling</h3>
+  <div id="subModuleOntwikkeling"></div>
+
+  <h3>Subthema: Pilot/vernieuwing</h3>
+  <div id="subPilotVernieuwing"></div>
+
+  <h3>Subthema: Validatie en Certificatie</h3>
+  <div id="subValidatieCertificatie"></div>
+
+  <div class="button-container">
+  <button type="button" onclick="gotoPrevThema('thema-implementatie','thema-operationeel')">
+    &laquo; Vorige
+  </button>
+  <button type="button" onclick="gotoNextThema('thema-implementatie','thema-communicatie')">
+    Volgende (Communicatie) &raquo;
+  </button>
+</div>
+</div>
+
+
+<!-- 
+  =====================
+  THEMA: COMMUNICATIE
+  =====================
+-->
+<div id="thema-communicatie" class="thema-container">
+  <h2>Thema: Communicatie</h2>
+
+  <h3>Subthema: Promotie</h3>
+  <div id="subPromotie"></div>
+
+  <h3>Subthema: Publicatie</h3>
+  <div id="subPublicatie"></div>
+
+  <h3>Subthema: Klachtenafhandeling</h3>
+  <div id="subKlachtenafhandeling"></div>
+
+   <!-- Navigatieknoppen -->
+   <div class="button-container">
+   <button type="button" onclick="gotoPrevThema('thema-communicatie','thema-implementatie')">
+    &laquo; Vorige
+  </button>
+  <!-- Nieuwe Volgende-knop -->
+  <button type="button" onclick="gotoNextThema('thema-communicatie','results')">
+    Volgende (Resultaten) &raquo;
+  </button>
+</div>
+</div>
+
+<!-- 
+  ==============
+  Resultaat
+  ==============
+-->
+<!-- Resultaten -->
+<div id="results" class="thema-container" style="display: none; margin-top:30px;">
+    <h2>Uw resultaten</h2>
+    <div class="button-container">
+      <button type="button" onclick="goBackFromResults()">
+        &laquo; Vorige
+      </button>
+      <button type="button" class="btn-results" onclick="showResults()">
+        Toon Resultaten
+      </button>
+    </div>
+    <div id="resultsContent"></div>
+  </div>
+
+<!-- Verwijs naar de aparte JS-file -->
+<script src="assessment.js"></script>
+
+</body>
+</html>

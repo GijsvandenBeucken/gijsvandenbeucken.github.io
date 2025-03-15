@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BurgerConnect Context-Bewuste Telefonie Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <section id="step-1" class="step">
+        <h1>Context-Bewuste Telefonie Demo</h1>
+        <hr>
+        <div class="step-content">
+            <div class="phone-column">
+                <div class="phone-container">
+                    <div class="phone-frame">
+                        <div class="phone-header">
+                            <div class="app-title">BurgerConnect</div>
+                            <div class="secure-indicator">
+                                🔒 <span class="secure-flag">🇳🇱</span>
+                            </div>
+                        </div>
+                        <div class="phone-content">
+                            <h2 class="routing-title">Hoe wilt u contact opnemen?</h2>
+                            <div class="routing-options">
+                                <div class="option-card selected contact-option">
+                                    <div class="option-icon">
+                                        <i class="fas fa-phone-alt"></i>
+                                    </div>
+                                    <div class="option-text">Bellen</div>
+                                </div>
+                                <div class="option-card contact-option">
+                                    <div class="option-icon">
+                                        <i class="fas fa-comments"></i>
+                                    </div>
+                                    <div class="option-text">Chatten</div>
+                                </div>
+                            </div>
+                            <button class="continue-button contact-continue">
+                                Doorgaan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-column">
+                <h4><strong>BurgerConnect | Context-Bewuste Telefonie</strong></h4>
+                <p>
+                    Deze demo toont hoe BurgerConnect burgers helpt met context-bewuste telefonie voor overheidsdiensten.
+                    Gebruikers kunnen telefoongesprekken voeren met dienstverleners waarbij de context van hun verzoek vooraf wordt meegestuurd,
+                    zonder frustrerende keuzemenu's.
+                </p>
+                <p>
+                    In deze demo laten we zien hoe een burger via BurgerConnect contact opneemt met de Sociale Verzekeringsbank (SVB).
+                </p>
+            </div>
+        </div>
+        <div class="button-container">
+            <button class="next standard-button">Volgende stap <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </section>
+
+    <section id="step-2" class="step">
+        <h1>Context-Bewuste Telefonie Demo</h1>
+        <hr>
+        <div class="step-content">
+            <div class="phone-column">
+                <div class="phone-container">
+                    <div class="phone-frame">
+                        <div class="phone-header">
+                            <div class="app-title">BurgerConnect</div>
+                            <div class="secure-indicator">
+                                🔒 <span class="secure-flag">🇳🇱</span>
+                            </div>
+                        </div>
+                        <div class="phone-content">
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <div>
+                                        <h3 class="service-title">Sociale Verzekeringsbank</h3>
+                                        <p class="service-subtitle">
+                                            <span class="verified-icon">✓</span> Geverifieerde dienst
+                                        </p>
+                                    </div>
+                                </div>
+                                <div style="text-align: center; margin-top: 10px;">
+                                    <img src="svb.png" alt="SVB Logo" style="width: 120px; height: auto;">
+                                </div>
+                                <p>De Sociale Verzekeringsbank (SVB) verzorgt financiële regelingen van de overheid, zoals Kinderbijslag, AOW en Nabestaandenuitkering.</p>
+                            </div>
+
+                            <button class="call-button" id="phone-call-button">
+                                <i class="fas fa-phone-alt"></i>
+                            </button>
+                            <p class="call-text">Druk op de belknop om het gesprek te starten</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-column">
+                <h4><strong>BurgerConnect | Bellen naar SVB</strong></h4>
+                <p>
+                    De burger kan nu de Sociale Verzekeringsbank (SVB) bellen via de beveiligde BurgerConnect omgeving.
+                    BurgerConnect zal de gegevens van de burger beveiligd delen met de SVB tijdens het gesprek.
+                </p>
+            </div>
+        </div>
+        <div class="button-container">
+            <button class="prev standard-button"><i class="fas fa-arrow-left"></i> Vorige stap</button>
+            <button class="next standard-button">Volgende stap <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </section>
+
+    <section id="step-3" class="step">
+        <h1>Context-Bewuste Telefonie Demo</h1>
+        <hr>
+        <div class="step-content">
+            <div class="phone-column">
+                <div class="phone-container">
+                    <div class="phone-frame">
+                        <div class="phone-header">
+                            <div class="app-title">BurgerConnect</div>
+                            <div class="secure-indicator">
+                                🔒 <span class="secure-flag">🇳🇱</span>
+                            </div>
+                        </div>
+                        <div class="phone-content">
+                            <h2 class="routing-title">Waarmee kan ik u helpen?</h2>
+                            <div class="routing-options">
+                                <div class="option-card selected">
+                                    <div class="option-icon">
+                                        <i class="fas fa-child"></i>
+                                    </div>
+                                    <div class="option-text">Kinderbijslag</div>
+                                </div>
+                                <div class="option-card">
+                                    <div class="option-icon">
+                                        <i class="fas fa-user-clock"></i>
+                                    </div>
+                                    <div class="option-text">AOW Pensioen</div>
+                                </div>
+                                <div class="option-card">
+                                    <div class="option-icon">
+                                        <i class="fas fa-heart"></i>
+                                    </div>
+                                    <div class="option-text">Nabestaandenuitkering</div>
+                                </div>
+                            </div>
+                            <button class="continue-button" id="routing-continue">
+                                Doorgaan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-column">
+                <h4><strong>BurgerConnect | Routering zonder keuzemenu's</strong></h4>
+                <p>
+                    In plaats van een gesproken keuzemenu, krijgt de burger een duidelijk visueel overzicht van keuzes.
+                    BurgerConnect stuurt vervolgens de gemaakte keuze mee bij het doorverbinden, zodat de burger direct bij de juiste afdeling terecht komt.
+                </p>
+            </div>
+        </div>
+        <div class="button-container">
+            <button class="prev standard-button"><i class="fas fa-arrow-left"></i> Vorige stap</button>
+            <button class="next standard-button">Volgende stap <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </section>
+
+    <section id="step-4" class="step">
+        <h1>Context-Bewuste Telefonie Demo</h1>
+        <hr>
+        <div class="step-content">
+            <div class="phone-column">
+                <div class="phone-container">
+                    <div class="phone-frame">
+                        <div class="phone-header active-call-header">
+                            <div class="app-title">Actief gesprek</div>
+                            <div class="secure-indicator">
+                                🔒 <span class="secure-flag">🇳🇱</span>
+                            </div>
+                        </div>
+                        <div class="phone-content call-screen">
+                            <div class="call-status">
+                                <div class="call-connecting">U wordt verbonden met:</div>
+                                <div class="call-department">Sociale Verzekeringsbank - Kinderbijslag</div>
+                            </div>
+                            
+                            <div class="call-avatar">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            
+                            <div class="call-timer">00:00</div>
+                            
+                            <div class="call-actions">
+                                <button class="call-action-button call-speaker-button">
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                                <button class="call-action-button call-end-button">
+                                    <i class="fas fa-phone-slash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-column">
+                <h4><strong>BurgerConnect | Actief gesprek</strong></h4>
+                <p>
+                    De burger wordt direct verbonden met de juiste afdeling. De context van het gesprek 
+                    (in dit geval Kinderbijslag) is al meegestuurd, waardoor de medewerker meteen weet waar 
+                    het gesprek over gaat.
+                </p>
+            </div>
+        </div>
+        <div class="button-container">
+            <button class="prev standard-button"><i class="fas fa-arrow-left"></i> Vorige stap</button>
+            <button class="next standard-button">Volgende stap <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </section>
+
+
+    <section id="step-5" class="step">
+        <h1>Context-Bewuste Telefonie Demo</h1>
+        <hr>
+        <div class="step-content">
+            <div class="svb-screen-column">
+                <div class="svb-screen-container">
+                    <div class="svb-screen-header">
+                        <div class="svb-logo">
+                            <img src="svb.png" alt="SVB Logo" style="height: 40px;">
+                            <span>Medewerker Portal</span>
+                        </div>
+                        <div class="svb-user">
+                            <span>Ingelogd als: Alina Habouchi</span>
+                            <div class="svb-user-icon">AH</div>
+                        </div>
+                    </div>
+                    <div class="svb-screen-body">
+                        <div class="svb-alert">
+                            <div><i class="fas fa-phone-alt"></i>
+                                <span>Inkomend gesprek via BurgerConnect - Klant is doorverbonden naar Kinderbijslag</span>
+                            </div>
+                            <div >
+                                <i class="fas fa-user-shield"></i>
+                                BurgerConnect authenticatie actief - Klantgegevens automatisch geladen
+                            </div>
+                            
+                        </div>
+                        <div class="svb-content">
+                            <div class="svb-column left">
+                                <div class="svb-panel">
+                                    <div class="svb-panel-header">
+                                        <h3>Klantgegevens</h3>
+                                    </div>
+                                    <div class="svb-panel-body">
+                                        <div class="svb-data-row">
+                                            <div class="svb-label">Naam:</div>
+                                            <div class="svb-value">de Bruijn, Marieke</div>
+                                        </div>
+                                        <div class="svb-data-row">
+                                            <div class="svb-label">Geboortedatum:</div>
+                                            <div class="svb-value">10-03-1980</div>
+                                        </div>
+                                        <div class="svb-data-row">
+                                            <div class="svb-label">Leeftijd:</div>
+                                            <div class="svb-value">45 jaar</div>
+                                        </div>
+                                        <div class="svb-data-row">
+                                            <div class="svb-label">BSN:</div>
+                                            <div class="svb-value">999999990</div>
+                                        </div>
+                                        <div class="svb-data-row">
+                                            <div class="svb-label">Adres:</div>
+                                            <div class="svb-value">Lindenlaan 42, 2583 AB Den Haag</div>
+                                        </div>
+                                        <div class="svb-data-row">
+                                            <div class="svb-label">Email:</div>
+                                            <div class="svb-value">m.debruijn@email.nl</div>
+                                        </div>
+                                        <div class="svb-data-row">
+                                            <div class="svb-label">Telefoon:</div>
+                                            <div class="svb-value">06-12345678</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="svb-panel">
+                                    <div class="svb-panel-header">
+                                        <h3>Contactmomenten</h3>
+                                    </div>
+                                    <div class="svb-panel-body">
+                                        <div class="svb-contact-row">
+                                            <div class="svb-contact-date">14-03-2025</div>
+                                            <div class="svb-contact-type phone">
+                                                <i class="fas fa-phone-alt"></i> Telefonisch
+                                            </div>
+                                            <div class="svb-contact-desc">Vraag over uitbetaling maart</div>
+                                        </div>
+                                        <div class="svb-contact-row">
+                                            <div class="svb-contact-date">02-02-2025</div>
+                                            <div class="svb-contact-type letter">
+                                                <i class="fas fa-envelope"></i> Brief
+                                            </div>
+                                            <div class="svb-contact-desc">Jaaropgave 2024 verzonden</div>
+                                        </div>
+                                        <div class="svb-contact-row">
+                                            <div class="svb-contact-date">15-01-2025</div>
+                                            <div class="svb-contact-type app">
+                                                <i class="fas fa-comment-dots"></i> App
+                                            </div>
+                                            <div class="svb-contact-desc">Adreswijziging bevestigd</div>
+                                        </div>
+                                        <div class="svb-contact-row">
+                                            <div class="svb-contact-date">18-11-2024</div>
+                                            <div class="svb-contact-type phone">
+                                                <i class="fas fa-phone-alt"></i> Telefonisch
+                                            </div>
+                                            <div class="svb-contact-desc">Vraag over wijziging situatie</div>
+                                        </div>
+                                        <div class="svb-contact-row">
+                                            <div class="svb-contact-date">05-10-2024</div>
+                                            <div class="svb-contact-type app">
+                                                <i class="fas fa-comment-dots"></i> App
+                                            </div>
+                                            <div class="svb-contact-desc">Status aanvraag opgevraagd</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="svb-column right">
+                                <div class="svb-panel">
+                                    <div class="svb-panel-header">
+                                        <h3>Kinderbijslag Dossiers</h3>
+                                    </div>
+                                    <div class="svb-panel-body">
+                                        <div class="svb-dossier active">
+                                            <div class="svb-dossier-icon">
+                                                <i class="fas fa-folder-open"></i>
+                                            </div>
+                                            <div class="svb-dossier-content">
+                                                <div class="svb-dossier-title">Kinderbijslag 2025</div>
+                                                <div class="svb-dossier-details">
+                                                    <span>Aantal kinderen: 2</span>
+                                                    <span>Status: Actief</span>
+                                                </div>
+                                                <div class="svb-dossier-badge">Actueel</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="svb-dossier">
+                                            <div class="svb-dossier-icon">
+                                                <i class="fas fa-folder"></i>
+                                            </div>
+                                            <div class="svb-dossier-content">
+                                                <div class="svb-dossier-title">Kinderbijslag 2024</div>
+                                                <div class="svb-dossier-details">
+                                                    <span>Aantal kinderen: 2</span>
+                                                    <span>Status: Afgerond</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="svb-dossier">
+                                            <div class="svb-dossier-icon">
+                                                <i class="fas fa-folder"></i>
+                                            </div>
+                                            <div class="svb-dossier-content">
+                                                <div class="svb-dossier-title">Kinderbijslag 2023</div>
+                                                <div class="svb-dossier-details">
+                                                    <span>Aantal kinderen: 2</span>
+                                                    <span>Status: Afgerond</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="svb-panel uitbetalingen">
+                                    <div class="svb-panel-header">
+                                        <h3>Uitbetalingen 2025</h3>
+                                    </div>
+                                    <div class="svb-panel-body">
+                                        <table class="svb-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Kwartaal</th>
+                                                    <th>Datum</th>
+                                                    <th>Bedrag</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Q1</td>
+                                                    <td>05-01-2025</td>
+                                                    <td>€ 674,20</td>
+                                                    <td><span class="svb-status paid">Betaald</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Q2</td>
+                                                    <td>05-04-2025</td>
+                                                    <td>€ 674,20</td>
+                                                    <td><span class="svb-status pending">Gepland</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Q3</td>
+                                                    <td>05-07-2025</td>
+                                                    <td>€ 674,20</td>
+                                                    <td><span class="svb-status pending">Gepland</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Q4</td>
+                                                    <td>05-10-2025</td>
+                                                    <td>€ 674,20</td>
+                                                    <td><span class="svb-status pending">Gepland</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="svb-screen-footer">
+                        
+                        
+                            <button class="svb-btn-action secondary">Notitie toevoegen</button>
+                            <button class="svb-btn-action">Gesprek beëindigen</button>
+                            
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="button-container">
+            <button class="prev standard-button"><i class="fas fa-arrow-left"></i> Vorige stap</button>
+            <button class="next standard-button">Volgende stap <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </section>
+
+    <section id="step-6" class="step">
+        <h1>Context-Bewuste Telefonie Demo</h1>
+        <hr>
+        <div class="step-content">
+            <div class="phone-column">
+                <div class="phone-container">
+                    <div class="phone-frame">
+                        <div class="phone-header">
+                            <div class="app-title">BurgerConnect</div>
+                            <div class="secure-indicator">
+                                🔒 <span class="secure-flag">🇳🇱</span>
+                            </div>
+                        </div>
+                        <div class="phone-content success-call-screen">
+                            <div class="success-icon-large">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="success-title">
+                                Gesprek succesvol afgerond
+                            </div>
+                            <img src="svb.png" alt="SVB Logo" style="width: 120px; height: auto; margin-bottom: 20px;">
+                            <p style="text-align: center; margin-bottom: 30px;">
+                                U heeft gesproken met:<br>
+                                <strong>Sociale Verzekeringsbank - Kinderbijslag</strong>
+                            </p>
+                            <div class="call-timer" style="margin-top: 0;">
+                                Gespreksduur: 04:21
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-column">
+                <h4><strong>BurgerConnect | Voordelen Context-Bewuste Telefonie</strong></h4>
+                <p>
+                    De context-bewuste telefonie in BurgerConnect biedt belangrijke voordelen voor zowel burgers als overheidsorganisaties.
+                </p>
+
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="benefit-text">
+                            Geen frustrerende keuzemenus
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="benefit-text">
+                            Direct bij de juiste persoon
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="benefit-text">
+                            Korte wachttijd door efficiënte routering
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="benefit-text">
+                            Hoger klanttevredenheid
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="benefit-text">
+                            Medewerker heeft direct uw gegevens bij de hand
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="button-container">
+            <button class="prev standard-button"><i class="fas fa-arrow-left"></i> Vorige stap</button>
+        </div>
+    </section>
+
+    <script src="demo.js"></script>
+
+</body>
+</html>

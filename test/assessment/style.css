@@ -1,0 +1,166 @@
+/* style.css */
+
+/* 1) Body-opmaak blijft ongeveer gelijk */
+body {
+    font-family: helvetica;
+    margin: 20px;
+  }
+
+  .header-container {
+    width: calc(100vh - 368px);
+    margin: 20px auto;  /* De 20px marge sluit goed aan op je body-margin */
+    text-align: center; /* Centreert de tekst */
+  }
+  
+  
+  /* 
+    THEMA-CONTAINER
+    ---------------
+    - Breedte: calc(100vh - 368px), gecentreerd
+    - tekst en dropdown naar rechts uitgelijnd 
+    - bij schermen < 762px: width = calc(100% - 20px)
+  */
+  .thema-container {
+    display: none; /* standaard verborgen; active voegt zichtbaar */
+    margin-bottom: 2em;
+    border: 1px solid #ccc;
+    padding: 1em;
+    background: #f9f9f9;
+  
+    /* Breedte: calc(100vh - 368px) en centreren m.b.v. auto-marges */
+    width: calc(100vh - 368px);
+    margin-left: auto;
+    margin-right: auto;
+  
+    /* tekst rechts uitgelijnd (incl. dropdown) */
+    text-align: left;
+  }
+  
+  /* 
+     Media query: als scherm kleiner is dan 762px, 
+     neem je breedte = calc(100% - 20px) (links+rechts 10px).
+  */
+  @media screen and (max-width: 762px) {
+    .thema-container {
+      width: calc(100% - 20px);
+    }
+  }
+  
+  /* Met .active-class maak je een thema zichtbaar */
+  .active {
+    display: block !important; 
+  }
+  
+  /* Koppen */
+  h1, h2, h3 {
+    margin-top: 0.5em;
+  }
+  
+  /* 
+     5) subthema-koppen (h3) 
+        tekstkleur = rgb(83,83,83), fontsize = 22px 
+  */
+  .thema-container h3 {
+    color: rgb(83, 83, 83);
+    font-size: 22px;
+    margin-bottom: 0.5em; /* een beetje ruimte onder de subthema-titel */
+  }
+  
+  
+  /* 
+     4) Vragen een indent t.o.v. de subthema-kop 
+     => We kunnen dat doen door de direct child <div> (of p) 
+        wat padding-left te geven.
+  */
+  .thema-container > div {
+    padding-left: 2em; /* indent voor de vragenblokken */
+    margin-bottom: 25px; /* 3) meer ruimte tussen de dropdown van een vraag en de volgende */
+  }
+  
+  /* 
+     6) Teksten van vragen en dropdownmenu => fontsize = 16px 
+     - We doen p en select.
+  */
+  .thema-container p {
+    font-size: 20px;
+    margin-bottom: 15px; /* evt. kleine marge */
+  }
+  
+  /* Dropdowns */
+  select {
+    font-size: 20px; /* i.p.v. 1rem, nu expliciet 16px */
+    width: 260px;
+    height: 32px;
+    margin: 0.3em 0;
+    margin-bottom: 40px;
+  }
+  
+  /* Buttons */
+  button {
+    margin-top: 1em;
+    cursor: pointer;
+  }
+  
+  /* 2) Tabel van het resultaat- scherm => breedte fullscreen
+     We geven #resultsContent > table => width: 100%
+  */
+
+  
+
+  #resultsContent table {
+    margin-top: 50px;
+    width: 100% !important;
+  }
+
+  #resultsContent table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #resultsContent th, #resultsContent td {
+    border: 1px solid #ccc;
+    padding: 6px;
+  }
+
+  
+  /* Score-box voor de (subthema-)uitkomsten */
+  .score-box {
+    background: #fff;
+    margin: 1em 0;
+    padding: 0.5em;
+    border-left: 3px solid #bbb;
+  }
+  
+  .button-container {
+    text-align: center;
+    margin-top: 1em;
+  }
+  
+  /* Algemene styling voor knoppen */
+  button {
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px 20px;
+    margin: 0 5px;       /* Horizontale ruimte tussen knoppen */
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Hover-effect voor knoppen */
+  button:hover {
+    background-color: #ddd;
+  }
+  
+  /* Specifieke styling voor de 'Toon Resultaten' knop */
+  .btn-results {
+    background-color: #007bff; /* Bijvoorbeeld blauw */
+    color: #fff;
+    border: none;
+  }
+  
+  /* Optioneel: hover-effect voor btn-results */
+  .btn-results:hover {
+    background-color: #0056b3;
+  }
