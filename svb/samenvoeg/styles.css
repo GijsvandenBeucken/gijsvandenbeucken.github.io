@@ -398,7 +398,7 @@ option-card:hover, .option-card.selected {
 }
 
 .form-input {
-    width: 100%;
+    width: 250px;
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -406,7 +406,7 @@ option-card:hover, .option-card.selected {
 }
 
 .form-select {
-    width: 100%;
+    width: 250px;
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -415,7 +415,7 @@ option-card:hover, .option-card.selected {
 }
 
 .form-textarea {
-    width: 100%;
+    width: 250px;
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 8px;
