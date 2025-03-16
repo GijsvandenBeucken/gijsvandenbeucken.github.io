@@ -113,11 +113,11 @@ button.prev:hover, button.next:hover, button.standard-button:hover, button.go-ex
 .phone-header {
     position: relative;
     height: 60px;
-    background-color: #1f8ee7;
+    background-color: #b6c9df;
     color: white;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 0 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -686,17 +686,6 @@ button.prev:hover, button.next:hover, button.standard-button:hover, button.go-ex
 
 /* Notch removed */
 
-.phone-header {
-    position: relative;
-    height: 60px;
-    background-color: #1f8ee7;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
 
 .app-title {
     font-weight: bold;
