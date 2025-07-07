@@ -1,60 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head> 
- <title>Gijs van den Beucken</title>
-<meta content="Conceptontwikkeling" name="Gijs van den Beucken">
-<meta content="Gijs van den Beucken" property="og:title">
-<meta content="Conceptontwikkeling" property="og:description">
-<meta content="Gijs van den Beucken" property="twitter:title">
-<meta content="Conceptontwikkeling" property="twitter:description">
-<meta property="og:type" content="website">
-<meta content="summary_large_image" name="twitter:card">
-<meta content="width=device-width, initial-scale=1" name="viewport">
-<link rel="stylesheet" href="css/stylesheet.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Gijs van den Beucken - Conceptontwikkeling & Innovatie</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Ik help organisaties innovatie te adopteren op het snijvlak van service design, technologie en netwerken. Conceptontwikkeling en strategisch advies.">
+    <meta name="keywords" content="conceptontwikkeling, service design, innovatie, technologie, netwerken, strategie, consultancy">
+    <meta name="author" content="Gijs van den Beucken">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Dutch">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Gijs van den Beucken - Conceptontwikkeling & Innovatie">
+    <meta property="og:description" content="Ik help organisaties innovatie te adopteren op het snijvlak van service design, technologie en netwerken.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gijsvandenbeucken.nl">
+    <meta property="og:site_name" content="Gijs van den Beucken">
+    <meta property="og:locale" content="nl_NL">
+    <!-- <meta property="og:image" content="https://gijsvandenbeucken.nl/images/og-image.jpg"> -->
+    <!-- <meta property="og:image:width" content="1200"> -->
+    <!-- <meta property="og:image:height" content="630"> -->
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Gijs van den Beucken - Conceptontwikkeling & Innovatie">
+    <meta name="twitter:description" content="Ik help organisaties innovatie te adopteren op het snijvlak van service design, technologie en netwerken.">
+    <!-- <meta name="twitter:image" content="https://gijsvandenbeucken.nl/images/twitter-image.jpg"> -->
+    <meta name="twitter:creator" content="@gijsvandenbeucken">
+    
+    <!-- Favicons -->
+    <!-- <link rel="icon" type="image/x-icon" href="/favicon.ico"> -->
+    <!-- <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"> -->
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <link rel="stylesheet" href="css/stylesheet.css">
+    
     <style>
-            * {
-                user-select: none;
-            }
+        * {
+            user-select: none;
+        }
 
-            html, body {
-                overflow: hidden;
-                
-            }
+        html, body {
+            overflow: hidden;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+        }
 
-            body {
-                margin: 0;
-                position: fixed;
-                width: 100%;
-                height: 100%;
-            }
+        body {
+            margin: 0;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+        }
 
-            canvas {
-                width: 100%;
-                height: 100%;
-            }
-            
-            .dg {
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .dg {
             display: none !important;
-            }
-            a {
-    color: white;
-}
+        }
+        
+        a {
+            color: white;
+        }
+    </style>
 
-            
-        </style>
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Gijs van den Beucken",
+        "jobTitle": "Concept Developer & Innovation Consultant",
+        "description": "Ik help organisaties innovatie te adopteren op het snijvlak van service design, technologie en netwerken",
+        "url": "https://gijsvandenbeucken.nl",
+        "email": "gijs@gijsvandenbeucken.nl",
+        "telephone": "+31620020056",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "NL"
+        },
+        "knowsAbout": [
+            "Service Design",
+            "Innovation Management", 
+            "Technology Strategy",
+            "Network Theory",
+            "Concept Development"
+        ],
+        "sameAs": [
+            "https://linkedin.com/in/gijsvandenbeucken"
+        ]
+    }
+    </script>
 
-        <script>
-            window.ga=window.ga||function(){(ga.q=ga.q||[])};
-        </script> 
-
-
+    <!-- Analytics -->
+    <script>
+        window.ga=window.ga||function(){(ga.q=ga.q||[])};
+    </script> 
 </head>
 <body class="body">
     
-<div class="canvas w-embed w-script">
-    <canvas></canvas>
-    <script src="script.js"></script>
-</div>
+
    
     <div class="container-center"> 
         <div class="text-block-tagline">Hi, nice to meet you, my name is <br>
@@ -64,15 +118,12 @@
         
           
             <div class="div-block-128">
-                <a href="mailto:gijs@gijsvandenbeucken.nl" class="link-block-mail w-inline-block"> 
+                <a href="mailto:gijs@gijsvandenbeucken.nl" class="link-block-mail w-inline-block" aria-label="Stuur een email naar Gijs"> 
                 <div class="text-block-mail">mail</div></a>
-                <a href="tel:+31620020056" class="call w-inline-block"><div class="text-block-mail">call</div></a>
+                <a href="tel:+31620020056" class="call w-inline-block" aria-label="Bel Gijs"><div class="text-block-mail">call</div></a>
             
             </div>
-            
-
     </div>
-
  
  </div>
  <!-- <div class="div-block-131"><p class="paragraph-12">click and drag your mouse or finger across the screen ;)</p></div> -->
