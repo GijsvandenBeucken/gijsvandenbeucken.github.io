@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tijdlijn</title>
+    <style>
+        :root {
+            --bkr-dark-blue: #1e3a5f;
+            --bkr-blue: #2d5a8c;
+            --bkr-light-blue: #a8d5ff;
+            --bkr-yellow: #fdb71a;
+        }
+
+        html {
+            font-size: 62.5%;
+            box-sizing: border-box;
+        }
+
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-size: 1.6rem;
+            padding: 20px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('backgroundslide2.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: -2;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            z-index: -1;
+        }
+        
+        .title {
+            font-size: 3.6rem;
+            font-weight: 600;
+            color: var(--bkr-dark-blue);
+            margin-bottom: 80px;
+            text-align: left;
+        }
+        
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            flex: 1;
+            justify-content: end;
+            margin-top: 40px;
+            margin-bottom: 100px;
+        }
+        
+        .timeline {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            position: relative;
+            width: 70vw;
+            max-width: 1800px;
+            justify-content: space-between;
+        }
+        
+        .timeline-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .circle {
+            display: inline-flex;
+            height: 5rem;
+            width: 5rem;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 3px solid var(--bkr-blue);
+            color: var(--bkr-blue);
+            background: #ffffff;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.8rem;
+        }
+
+        .circle:hover {
+            transform: scale(1.1);
+            border-color: var(--bkr-yellow);
+        }
+
+        .circle.active {
+            height: 7rem;
+            width: 7rem;
+            background: var(--bkr-blue);
+            color: white;
+            border-color: var(--bkr-blue);
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.3);
+        }
+        
+        .line {
+            flex-grow: 1;
+            height: 6px;
+            background: #e0e0e0;
+            z-index: 1;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .line.completed {
+            background: var(--bkr-light-blue);
+        }
+        
+        .text {
+            position: absolute;
+            bottom: 8rem;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: normal;
+            font-size: 1.8rem;
+            font-weight: 400;
+            opacity: 0;
+            transition: all 0.3s ease;
+            color: var(--bkr-dark-blue);
+            background: #ffffff;
+            padding: 3rem;
+            border-radius: 1.5rem;
+            border: 2px solid var(--bkr-blue);
+            width: 42rem;
+            min-height: 50rem;
+            text-align: left;
+            pointer-events: none;
+            line-height: 1.6;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .text h3 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: var(--bkr-blue);
+            margin: 0 0 0.5rem 0;
+        }
+
+        .text .year {
+            font-size: 2rem;
+            font-weight: 400;
+            color: var(--bkr-dark-blue);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .text .subtitle {
+            font-size: 2.6rem;
+            font-weight: 600;
+            color: var(--bkr-blue);
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .text ul {
+            margin: 0;
+            padding-left: 2.5rem;
+            list-style: none;
+        }
+
+        .text ul li {
+            position: relative;
+            margin-bottom: 1rem;
+            padding-left: 0;
+            font-size: 2.4rem;
+        }
+
+        .text ul li:before {
+            content: '•';
+            color: var(--bkr-yellow);
+            font-weight: bold;
+            font-size: 2.6rem;
+            position: absolute;
+            left: -2.5rem;
+        }
+        
+        .text.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">Achtergrond</h1>
+    
+    <div class="timeline-container">
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="circle" data-index="0">1</div>
+                <div class="text">
+                    <h3>Solid Community</h3>
+                    <span class="year">2022</span>
+                    <ul>
+                        <li>Bestuurder</li>
+                        <li>PPS</li>
+                        <li>Strategische koers</li> 
+                        <li>Vertaling naar praktijk, waarde en businessmodel</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="timeline-item">
+                <div class="circle" data-index="1">2</div>
+                <div class="text">
+                    <h3>QTSP</h3>
+                    <span class="year">2023</span>
+                    <ul>
+                        <li>Projectmanager QEAA</li>
+                        <li>Voorbereidende analyse</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="timeline-item">
+                <div class="circle" data-index="2">3</div>
+                <div class="text">
+                    <h3>Logius</h3>
+                    <span class="year">2024</span>
+                    <ul>
+                        <li>Projectmanager QEAA</li>
+                        <li>PPS</li>
+                        <li>Onderzoek</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="timeline-item">
+                <div class="circle" data-index="3">4</div>
+                <div class="text">
+                    <h3>Zelfstandig adviseur</h3>
+                    <span class="year">2025</span>
+                    <ul>
+                        <li>Strategisch advies en begeleiding</li>
+                        <li>Voorlichting en onderzoek</li>
+                        <li>Multidisciplinaire aanpak</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = -1;
+        const circles = document.querySelectorAll('.circle');
+        const texts = document.querySelectorAll('.text');
+        const lines = document.querySelectorAll('.line');
+        
+        function updateTimeline() {
+            circles.forEach((circle, index) => {
+                circle.classList.remove('active');
+                texts[index].classList.remove('show');
+            });
+            
+            lines.forEach((line, index) => {
+                if (currentStep > index) {
+                    line.classList.add('completed');
+                } else {
+                    line.classList.remove('completed');
+                }
+            });
+            
+            if (currentStep >= 0 && currentStep < circles.length) {
+                circles[currentStep].classList.add('active');
+                texts[currentStep].classList.add('show');
+            }
+        }
+        
+        circles.forEach((circle, index) => {
+            circle.addEventListener('click', function() {
+                currentStep = index;
+                updateTimeline();
+            });
+        });
+
+        window.addEventListener('message', function(e) {
+            if (e.data.type === 'slideshow-key-forward') {
+                if (e.data.key === ' ') {
+                    currentStep = (currentStep + 1) % (circles.length + 1);
+                    if (currentStep === circles.length) {
+                        currentStep = -1;
+                    }
+                    updateTimeline();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

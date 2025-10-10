@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cynefin Framework</title>
+    <style>
+        :root {
+            --bkr-dark-blue: #1e3a5f;
+            --bkr-blue: #2d5a8c;
+            --bkr-light-blue: #a8d5ff;
+            --bkr-yellow: #fdb71a;
+            --card-grey: #f0f0f3;
+            --border-grey: #d1d5db;
+        }
+
+        html {
+            font-size: 62.5%;
+            box-sizing: border-box;
+        }
+
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            padding:20px 8rem;
+            font-size: 1.6rem;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 3.6rem;
+            font-weight: 600;
+            color: var(--bkr-dark-blue);
+            text-align: left;
+            margin: 0 0 16rem 0;
+        }
+
+        .container {
+            max-width: 180rem;
+            margin: 0 auto;
+        }
+
+        .cynefin-container {
+            
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+        }
+
+        .quadrant {
+            background: var(--card-grey);
+            border: 2px solid var(--bkr-blue);
+            border-radius: 2rem;
+            padding: 3rem 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 2rem;
+            min-height: 45rem;
+        }
+
+        .quadrant-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--bkr-dark-blue);
+        }
+
+        .quadrant-subtitle {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .process-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .process-step {
+            background: #ffffff;
+            border: 2px solid var(--border-grey);
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--bkr-dark-blue);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 20rem;
+        }
+
+        .arrow {
+            font-size: 2rem;
+            color: var(--bkr-blue);
+            font-weight: bold;
+        }
+
+        .quadrant-description {
+            font-size: 1.4rem;
+            color: #4a5568;
+            line-height: 1.6;
+            margin-top: auto;
+        }
+
+        .practice-type {
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--bkr-blue);
+            padding: 1rem 2rem;
+        }
+
+        @media (max-width: 1600px) {
+            .cynefin-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 2rem;
+            }
+
+            .cynefin-container {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2.8rem;
+            }
+        }
+
+        .clear {
+            background-color: #e8d67a5d;
+        }
+        .complicated {
+background-color:#90c69552
+        }
+
+
+        .complex {
+background-color:#7bb3d94f
+        }
+
+        .chaotic {
+            background-color:#d47f7f4b
+        }
+    </style>
+</head>
+<body>
+    <h1>Cynefin Framework</h1>
+
+    <div class="container">
+        <div class="cynefin-container">
+            <!-- DUIDELIJK -->
+            <div class="quadrant clear">
+                <div class="quadrant-title">DUIDELIJK (Clear)</div>
+                <div class="quadrant-subtitle">Oorzaak en gevolg zijn voor iedereen duidelijk</div>
+                
+                <div class="process-flow">
+                    <div class="process-step">Observeer</div>
+                    <div class="arrow">↓</div>
+                    <div class="process-step">Classificeer</div>
+                    <div class="arrow">↓</div>
+                    <div class="process-step">Handel</div>
+                </div>
+                
+                <div class="quadrant-description">
+                    Heldere regels en vaste procedures<br>Iedereen weet wat te doen
+                </div>
+                
+                <div class="practice-type">Bewezen werkwijze (best practice)</div>
+            </div>
+
+            <!-- INGEWIKKELD -->
+            <div class="quadrant complicated">
+                <div class="quadrant-title">INGEWIKKELD (Complicated)</div>
+                <div class="quadrant-subtitle">Oorzaak en gevolg zijn te begrijpen door analyse</div>
+                
+                <div class="process-flow">
+                    <div class="process-step">Observeer</div>
+                    <div class="arrow">↓</div>
+                    <div class="process-step">Analyseer</div>
+                    <div class="arrow">↓</div>
+                    <div class="process-step">Handel</div>
+                </div>
+                
+                <div class="quadrant-description">
+                    Deskundigheid nodig voor juiste keuze<br>Resultaat is voorspelbaar
+                </div>
+                
+                <div class="practice-type">Beproefde aanpak (good practice)</div>
+            </div>
+
+            <!-- COMPLEX -->
+            <div class="quadrant complex">
+                <div class="quadrant-title">COMPLEX (Complex)</div>
+                <div class="quadrant-subtitle">Oorzaak en gevolg zijn pas achteraf herkenbaar</div>
+                
+                <div class="process-flow">
+                    <div class="process-step">Verken</div>
+                    <div class="arrow">↓</div>
+                    <div class="process-step">Observeer</div>
+                    <div class="arrow">↓</div>
+                    <div class="process-step">Handel</div>
+                </div>
+                
+                <div class="quadrant-description">
+                    Leren door te proberen en patronen te ontdekken<br>Aanpak ontstaat gaandeweg
+                </div>
+                
+                <div class="practice-type">Lerend werken (emergent practice)</div>
+            </div>
+
+            <!-- CHAOTISCH -->
+            <div class="quadrant chaotic">
+                <div class="quadrant-title">CHAOTISCH (Chaotic)</div>
+                <div class="quadrant-subtitle">Oorzaak en gevolg zijn niet te herkennen</div>
+                
+                <div class="process-flow">
+                    <div class="process-step">Handel direct</div>
+                    <div class="arrow">↓</div>
+                    <div class="process-step">Observeer</div>
+                    <div class="arrow">↓</div>
+                    <div class="process-step">Pas aan</div>
+                </div>
+                
+                <div class="quadrant-description">
+                    Snel orde scheppen en stabiliseren<br>Daarna structuur aanbrengen
+                </div>
+                
+                <div class="practice-type">Nieuwe aanpak (novel practice)</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || 
+            e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            window.parent.postMessage({
+                type: 'slideshow-keypress',
+                event: { key: e.key }
+            }, '*');
+        }
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mogelijke vervolgacties</title>
+    <style>
+        :root {
+            --bkr-dark-blue: #1e3a5f;
+            --bkr-blue: #2d5a8c;
+            --bkr-light-blue: #a8d5ff;
+            --bkr-yellow: #fdb71a;
+            --card-grey: #f0f0f3;
+            --border-grey: #d1d5db;
+        }
+
+        html {
+            font-size: 62.5%;
+            box-sizing: border-box;
+        }
+
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            padding: 6rem 8rem;
+            font-size: 1.6rem;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 3.6rem;
+            font-weight: 600;
+            color: var(--bkr-dark-blue);
+            text-align: left;
+            margin: 0 0 4rem 0;
+        }
+
+        .container {
+            max-width: 180rem;
+            margin: 0 auto;
+        }
+
+        .content-section {
+            margin-bottom: 4rem;
+        }
+
+        .content-section h2 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            color: var(--bkr-dark-blue);
+            margin-bottom: 2rem;
+        }
+
+        .content-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .content-section li {
+            font-size: 2rem;
+            color: #4a5568;
+            line-height: 2;
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .content-section li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--bkr-blue);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 2.8rem;
+                margin-bottom: 3rem;
+            }
+
+            .content-section h2 {
+                font-size: 2rem;
+            }
+
+            .content-section li {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Mogelijke vervolgacties</h1>
+    
+    <div class="container">
+        <div class="content-section">
+            <h2>Basics</h2>
+            <ul>
+                <li>RP registry</li>
+                <li>Contact met EZ/BZK</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Verkennen/beïnvloeden</h2>
+            <ul>
+                <li>European Business Wallet (VIS)</li>
+                <li>Enrollment check</li>
+                <li>Identity matching (klanten BKR)</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>BKR-VC: Verkennen/beïnvloeden</h2>
+            <ul>
+                <li>Monitor payment/financial developments (CCD2, PSD2/3, PSR, IPR etc)</li>
+                <li>Verken de invloed op jullie gebruikers: maatschappelijke en ethische aspecten</li>
+                <li>Samenwerking Europese zusterorganisaties</li>
+            </ul>
+        </div>
+
+          <div class="content-section">
+            <h2>Organisatie</h2>
+            <ul>
+                <li>Welke bedrijfsonderdelen en processen raken deze ontwikkelingen</li>
+                <li>Welk kennisniveau, competenties en sturingsvisie vraagt dit</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Verken en evalueer evt. strategische rollen</h2>
+            <ul>
+                <li>Identity matching (functioneel)</li>
+                <li>BKR in financiële transacties (functioneel, maatschappelijk en ethisch)</li>
+                <li>Andere registers (pain/gain)</li>
+            </ul>
+        </div>
+    </div>
+        <script>
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || 
+            e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            window.parent.postMessage({
+                type: 'slideshow-keypress',
+                event: { key: e.key }
+            }, '*');
+        }
+    });
+</script>
+</body>
+</html>

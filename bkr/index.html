@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Slideshow</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .slideshow-container {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .slide-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .navigation {
+            background-color: transparent;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .navigation:hover {
+            opacity: 0.8;
+            pointer-events: auto;
+        }
+
+        .slideshow-container:hover .navigation {
+            opacity: 0.8;
+            pointer-events: auto;
+        }
+
+        .nav-button {
+            background: none;
+            color: #000;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: bold;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            opacity: 0.6;
+        }
+
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="slideshow-container">
+        <iframe id="slideFrame" class="slide-frame"></iframe>
+        
+        <div class="navigation">
+            <button id="prevButton" class="nav-button">‹</button>
+            <button id="nextButton" class="nav-button">›</button>
+        </div>
+    </div>
+
+    <script>
+        class HTMLSlideshow {
+            constructor() {
+                this.currentSlide = 1;
+                this.totalSlides = 16; // Standaard aantal slides, pas aan indien nodig
+                this.slideFrame = document.getElementById('slideFrame');
+                
+                this.initializeElements();
+                this.setupEventListeners();
+                this.loadSlide(this.currentSlide);
+            }
+
+            initializeElements() {
+                this.prevButton = document.getElementById('prevButton');
+                this.nextButton = document.getElementById('nextButton');
+            }
+
+            setupEventListeners() {
+                this.prevButton.addEventListener('click', () => this.previousSlide());
+                this.nextButton.addEventListener('click', () => this.nextSlide());
+                
+                // Keyboard shortcuts voor hoofddocument
+                document.addEventListener('keydown', (e) => {
+                    this.handleKeyPress(e);
+                });
+                
+                // Luister naar berichten van slides via postMessage
+                window.addEventListener('message', (e) => {
+                    if (e.data.type === 'slideshow-keypress') {
+                        this.handleKeyPress(e.data.event);
+                    }
+                });
+            }
+
+            handleKeyPress(e) {
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    if (e.preventDefault) e.preventDefault();
+                    this.previousSlide();
+                } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                    if (e.preventDefault) e.preventDefault();
+                    this.nextSlide();
+                } else if (e.key === ' ') {
+                    // Stuur spatiebalk door naar de actieve slide
+                    if (e.preventDefault) e.preventDefault();
+                    this.sendKeyToSlide(' ');
+                }
+            }
+
+            async loadSlide(slideNumber) {
+                const slideUrl = `slide${slideNumber}.html`;
+
+                try {
+                    const response = await fetch(slideUrl, { method: 'HEAD' });
+                    
+                    if (response.ok) {
+                        this.slideFrame.src = slideUrl;
+                        this.slideFrame.onload = () => {
+                            this.updateUI();
+                        };
+                    } else {
+                        throw new Error('Bestand niet gevonden');
+                    }
+                } catch (error) {
+                    console.log('Fout bij laden van slide:', error.message);
+                }
+            }
+
+            updateUI() {
+                // Update knoppen
+                this.prevButton.disabled = this.currentSlide <= 1;
+                this.nextButton.disabled = this.currentSlide >= this.totalSlides;
+            }
+
+            previousSlide() {
+                if (this.currentSlide > 1) {
+                    this.currentSlide--;
+                    this.loadSlide(this.currentSlide);
+                }
+            }
+
+            nextSlide() {
+                if (this.currentSlide < this.totalSlides) {
+                    this.currentSlide++;
+                    this.loadSlide(this.currentSlide);
+                }
+            }
+
+            // Nieuwe methode om toetsen door te sturen naar slides
+            sendKeyToSlide(key) {
+                if (this.slideFrame && this.slideFrame.contentWindow) {
+                    this.slideFrame.contentWindow.postMessage({
+                        type: 'slideshow-key-forward',
+                        key: key
+                    }, '*');
+                }
+            }
+
+            // Methode om het totaal aantal slides aan te passen
+            setTotalSlides(total) {
+                this.totalSlides = total;
+                this.updateUI();
+            }
+        }
+
+        // Start de slideshow wanneer de pagina geladen is
+        document.addEventListener('DOMContentLoaded', () => {
+            window.slideshow = new HTMLSlideshow();
+            
+            // Pas het totaal aantal slides aan (verander dit getal naar je werkelijke aantal)
+            // slideshow.setTotalSlides(6);
+        });
+
+        
+    </script>
+</body>
+</html>
