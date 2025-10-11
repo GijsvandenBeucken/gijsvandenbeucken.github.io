@@ -25,7 +25,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #ffffff;
+            background: #f8f9fa;
             min-height: 100vh;
             padding: 6rem 8rem;
             font-size: 1.6rem;
@@ -45,38 +45,67 @@
             margin: 0 auto;
         }
 
-        .content-section {
-            margin-bottom: 4rem;
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
         }
 
-        .content-section h2 {
+        .card {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 3rem;
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.08);
+            border: 1px solid var(--border-grey);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(30, 58, 95, 0.12);
+        }
+
+        .card h2 {
             font-size: 2.4rem;
             font-weight: 600;
             color: var(--bkr-dark-blue);
-            margin-bottom: 2rem;
+            margin: 0 0 2rem 0;
+            padding-bottom: 1.5rem;
+            border-bottom: 3px solid var(--bkr-yellow);
         }
 
-        .content-section ul {
+        .card ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .content-section li {
-            font-size: 2rem;
+        .card li {
+            font-size: 1.8rem;
             color: #4a5568;
-            line-height: 2;
+            line-height: 1.6;
             margin-bottom: 1.5rem;
-            padding-left: 2rem;
+            padding-left: 2.5rem;
             position: relative;
         }
 
-        .content-section li:before {
+        .card li:before {
             content: "•";
             position: absolute;
             left: 0;
             color: var(--bkr-blue);
             font-weight: bold;
+            font-size: 2rem;
+        }
+
+        .card li:last-child {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 1200px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
@@ -89,11 +118,15 @@
                 margin-bottom: 3rem;
             }
 
-            .content-section h2 {
+            .card {
+                padding: 2rem;
+            }
+
+            .card h2 {
                 font-size: 2rem;
             }
 
-            .content-section li {
+            .card li {
                 font-size: 1.6rem;
             }
         }
@@ -103,62 +136,65 @@
     <h1>Mogelijke vervolgacties</h1>
     
     <div class="container">
-        <div class="content-section">
-            <h2>Basics</h2>
-            <ul>
-                <li>RP registry</li>
-                <li>Contact met EZ/BZK</li>
-            </ul>
-        </div>
+        <div class="cards-grid">
+            <div class="card">
+                <h2>Basics</h2>
+                <ul>
+                    <li>RP registry</li>
+                    <li>Contact met EZ/BZK</li>
+                </ul>
+            </div>
 
-        <div class="content-section">
-            <h2>Verkennen/beïnvloeden</h2>
-            <ul>
-                <li>European Business Wallet (VIS)</li>
-                <li>Enrolment check</li>
-                <li>Identity matching (klanten BKR)</li>
-            </ul>
-        </div>
+            <div class="card">
+                <h2>Verkennen/beïnvloeden</h2>
+                <ul>
+                    <li>European Business Wallet (VIS)</li>
+                    <li>Enrolment check</li>
+                    <li>Identity matching (klanten BKR)</li>
+                </ul>
+            </div>
 
-        <div class="content-section">
-            <h2>BKR-VC: Verkennen/beïnvloeden</h2>
-            <ul>
-                <li>Monitor payment/financial ontwikkelingen (CCD2, PSD2/3, PSR, IPR etc.)</li>
-                <li>Verken de invloed op jullie gebruikers: maatschappelijke en ethische aspecten</li>
-                <li>Samenwerking Europese zusterorganisaties</li>
-                <li>Pilot Identity matching en credit VC's</li>
-            </ul>
-        </div>
+            <div class="card">
+                <h2>BKR-VC: Verkennen/beïnvloeden</h2>
+                <ul>
+                    <li>Monitor payment/financial ontwikkelingen (CCD2, PSD2/3, PSR, IPR etc.)</li>
+                    <li>Verken de invloed op jullie gebruikers: maatschappelijke en ethische aspecten</li>
+                    <li>Samenwerking Europese zusterorganisaties</li>
+                    <li>Pilot Identity matching en credit VC's</li>
+                </ul>
+            </div>
 
-          <div class="content-section">
-            <h2>Organisatie</h2>
-            <ul>
-                <li>Welke bedrijfsonderdelen en processen raken deze ontwikkelingen</li>
-                <li>Welk kennisniveau, competenties en sturingsvisie vraagt dit</li>
-            </ul>
-        </div>
+            <div class="card">
+                <h2>Organisatie</h2>
+                <ul>
+                    <li>Welke bedrijfsonderdelen en processen raken deze ontwikkelingen</li>
+                    <li>Welke kennis, competenties en sturingsvisie vraagt dit</li>
+                </ul>
+            </div>
 
-        <div class="content-section">
-            <h2>Verken en evalueer evt. strategische rollen</h2>
-            <ul>
-                <li>Rol Identity matching (functioneel)</li>
-                <li>BKR-VC in financiële transacties (functioneel, maatschappelijk en ethisch)</li>
-                <li>Initiator of deelnemer pilot</li>
-                <li>Andere registers (pain/gain)</li>
-            </ul>
+            <div class="card">
+                <h2>Verken en evalueer evt. strategische rollen</h2>
+                <ul>
+                    <li>Rol Identity matching (functioneel)</li>
+                    <li>BKR-VC in financiële transacties (functioneel, maatschappelijk en ethisch)</li>
+                    <li>Initiator of deelnemer pilot</li>
+                    <li>Andere registers (pain/gain)</li>
+                </ul>
+            </div>
         </div>
     </div>
-        <script>
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || 
-            e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-            e.preventDefault();
-            window.parent.postMessage({
-                type: 'slideshow-keypress',
-                event: { key: e.key }
-            }, '*');
-        }
-    });
-</script>
+
+    <script>
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || 
+                e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                window.parent.postMessage({
+                    type: 'slideshow-keypress',
+                    event: { key: e.key }
+                }, '*');
+            }
+        });
+    </script>
 </body>
 </html>
