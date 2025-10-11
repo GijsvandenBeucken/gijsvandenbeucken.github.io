@@ -610,6 +610,9 @@
                         
                         <p style="margin-top: 15px;">OpenID for Verifiable Credential Issuance (OID4VCI) is een open standaard die een veilige API definieert voor het uitgeven van Verifiable Credentials (VC's). Het protocol is gebaseerd op de breed toegepaste principes van OAuth 2.0 en OpenID Connect.</p>
                         
+                        <p><strong>Voorbeeld schema flow</strong></p>
+                        <img src="authorization-code-flow.png" alt="Authorization Code Flow" style="width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); margin: 15px 0;">
+                        
                         <p><strong>ETSI-standaarden</strong></p>
                         <p>• ETSI EN 319 401: General Policy Requirements for Trust Service Providers</p>
                         <p>• ETSI TS 119 471: Policy and Security requirements for Providers of Electronic Attestation of Attributes Services</p>
@@ -738,6 +741,9 @@
                         <p>Het creëert een gemeenschappelijke taal voor het opvragen en ontvangen van bewijs van identiteitskenmerken, waarbij jij via je digitale wallet de regie houdt en het principe van dataminimalisatie kan worden toegepast.</p>
                         <p>OpenID4VP vormt het technische raamwerk voor het digitaal "laten zien van je identiteitsbewijs" online, maar dan met de mogelijkheid om alleen die specifieke informatie te tonen die nodig is voor een bepaalde transactie.</p>
                         
+                        <p><strong>Voorbeeld schema flow</strong></p>
+                        <img src="cross-device-flow-openid4vp.png" alt="Cross Device Flow OpenID4VP" style="width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); margin: 15px 0;">
+                        
                         <p><strong>Voorbeelden</strong></p>
                         <p>• Overheidsportalen</p>
                         <p>• Banken</p>
@@ -820,18 +826,17 @@
                 collapseWallet();
             }
         });
-        // Keyboard navigatie voor slideshow
-document.addEventListener('keydown', function(e) {
-    // Pijltjestoetsen voor slide navigatie
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || 
-        e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        window.parent.postMessage({
-            type: 'slideshow-keypress',
-            event: { key: e.key }
-        }, '*');
-    }
-});
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || 
+                e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                window.parent.postMessage({
+                    type: 'slideshow-keypress',
+                    event: { key: e.key }
+                }, '*');
+            }
+        });
     </script>
 </body>
 </html>
