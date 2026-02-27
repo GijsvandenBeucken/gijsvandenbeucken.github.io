@@ -209,7 +209,7 @@ def _get_engine(data_dir):
 def _get_engine_data(data_dir):
     return _load_json(
         os.path.join(data_dir, "engine_data.json"),
-        {"contacts": [], "issuer_names": {}},
+        {"contacts": [], "issuer_names": {}, "incoming_requests": []},
     )
 
 
@@ -242,6 +242,8 @@ def _register_engine_routes(app, transport, data_dir, notify_local):
             coins = [type("C", (), r)() for r in e.list_coins()]
 
         inline_msg = session.pop("engine_msg", None)
+        all_requests = edata.get("incoming_requests", [])
+        pending_requests = [r for r in all_requests if r.get("status") == "pending"]
 
         return render_template("engine.html",
             show_nav=False,
@@ -255,6 +257,8 @@ def _register_engine_routes(app, transport, data_dir, notify_local):
             inline_msg=inline_msg,
             dest_hash=transport.dest_hash_hex,
             announces=transport.get_announces(),
+            incoming_requests=all_requests,
+            pending_count=len(pending_requests),
         )
 
     @app.route("/engine/generate-key", methods=["POST"])
@@ -335,43 +339,139 @@ def _register_engine_routes(app, transport, data_dir, notify_local):
             _save_engine_data(data_dir, edata)
         return redirect(url_for("engine_page"))
 
+    @app.route("/engine/approve-request/<int:idx>", methods=["POST"])
+    def engine_approve_request(idx):
+        edata = _get_engine_data(data_dir)
+        reqs = edata.get("incoming_requests", [])
+        if idx < 0 or idx >= len(reqs):
+            flash("Verzoek niet gevonden", "error")
+            return redirect(url_for("engine_page"))
+        req = reqs[idx]
+        if req.get("status") != "pending":
+            flash("Verzoek is al afgehandeld", "error")
+            return redirect(url_for("engine_page"))
+
+        pk_issuer = req["payload"].get("pk_issuer", "")
+        issuer_name = req["payload"].get("bank_name", "")
+        e = eng()
+        try:
+            e.register_issuer(pk_issuer)
+        except Exception:
+            pass
+
+        if issuer_name:
+            edata.setdefault("issuer_names", {})[pk_issuer] = issuer_name
+        existing = {c.get("pk") for c in edata.get("contacts", [])}
+        if pk_issuer not in existing:
+            edata.setdefault("contacts", []).append({
+                "name": issuer_name or req["from_hash"][:16],
+                "address": req["from_hash"],
+                "pk": pk_issuer,
+            })
+
+        req["status"] = "approved"
+        _save_engine_data(data_dir, edata)
+        notify_local({"type": "issuer_registered", "pk": pk_issuer[:16]})
+
+        try:
+            transport.send(req["from_hash"], req["from_role"], "issuer_confirmed", {
+                "pk_engine": e.pk_hex,
+                "engine_dest": transport.dest_hash_hex,
+            })
+        except Exception:
+            pass
+
+        session["engine_msg"] = f"Issuer '{issuer_name or pk_issuer[:16]}' goedgekeurd!"
+        return redirect(url_for("engine_page"))
+
+    @app.route("/engine/decline-request/<int:idx>", methods=["POST"])
+    def engine_decline_request(idx):
+        edata = _get_engine_data(data_dir)
+        reqs = edata.get("incoming_requests", [])
+        if idx < 0 or idx >= len(reqs):
+            flash("Verzoek niet gevonden", "error")
+            return redirect(url_for("engine_page"))
+        req = reqs[idx]
+        if req.get("status") != "pending":
+            flash("Verzoek is al afgehandeld", "error")
+            return redirect(url_for("engine_page"))
+
+        req["status"] = "declined"
+        _save_engine_data(data_dir, edata)
+
+        try:
+            transport.send(req["from_hash"], req["from_role"], "issuer_declined", {
+                "reason": "Afgewezen door engine operator",
+            })
+        except Exception:
+            pass
+
+        session["engine_msg"] = "Verzoek afgewezen"
+        return redirect(url_for("engine_page"))
+
+    @app.route("/engine/request-bank-registration", methods=["POST"])
+    def engine_request_bank_registration():
+        e = eng()
+        data = request.get_json(silent=True) or {}
+        bank_dest = data.get("bank_dest", "")
+        if not bank_dest:
+            return jsonify({"error": "bank_dest vereist"}), 400
+        try:
+            transport.send(bank_dest, "bank", "engine_register_request", {
+                "pk_engine": e.pk_hex,
+                "engine_name": "State Engine",
+                "engine_dest": transport.dest_hash_hex,
+            })
+            return jsonify({"ok": True})
+        except Exception as exc:
+            return jsonify({"error": str(exc)}), 500
+
 
 def _engine_handle_message(app, transport, data_dir, notify_local,
                             msg_type, payload, from_hash, from_role):
     """Process incoming RNS messages for engine."""
     if msg_type == "register_issuer":
         pk_issuer = payload.get("pk_issuer", "")
-        issuer_name = payload.get("bank_name", "")
         if not pk_issuer:
             return
 
+        edata = _get_engine_data(data_dir)
+        edata.setdefault("incoming_requests", []).append({
+            "request_type": "register_issuer",
+            "from_hash": from_hash,
+            "from_role": from_role,
+            "payload": payload,
+            "ts": datetime.now().isoformat(),
+            "status": "pending",
+        })
+        _save_engine_data(data_dir, edata)
+        notify_local({"type": "new_request", "request_type": "register_issuer"})
+
+    elif msg_type == "bank_register_response":
+        pk_issuer = payload.get("pk_issuer", "")
+        bank_name = payload.get("bank_name", "")
+        if not pk_issuer:
+            return
         e = _get_engine(data_dir)
         try:
             e.register_issuer(pk_issuer)
         except Exception:
             pass
-
         edata = _get_engine_data(data_dir)
-        if issuer_name:
-            edata.setdefault("issuer_names", {})[pk_issuer] = issuer_name
+        if bank_name:
+            edata.setdefault("issuer_names", {})[pk_issuer] = bank_name
         existing = {c.get("pk") for c in edata.get("contacts", [])}
         if pk_issuer not in existing:
             edata.setdefault("contacts", []).append({
-                "name": issuer_name or from_hash[:16],
+                "name": bank_name or from_hash[:16],
                 "address": from_hash,
                 "pk": pk_issuer,
             })
         _save_engine_data(data_dir, edata)
-
         notify_local({"type": "issuer_registered", "pk": pk_issuer[:16]})
 
-        try:
-            transport.send(from_hash, from_role, "issuer_confirmed", {
-                "pk_engine": e.pk_hex,
-                "engine_dest": transport.dest_hash_hex,
-            })
-        except Exception:
-            pass
+    elif msg_type == "bank_register_declined":
+        notify_local({"type": "request_declined", "reason": payload.get("reason", "")})
 
     elif msg_type == "register_coin":
         coin_data = payload.get("coin")
@@ -439,7 +539,7 @@ def _get_bank_data(data_dir):
     return _load_json(
         os.path.join(data_dir, "bank.json"),
         {"issued_coins": [], "contacts": [], "registered_at_engine": False,
-         "engine_address": None, "engine_pk": None},
+         "engine_address": None, "engine_pk": None, "incoming_requests": []},
     )
 
 
@@ -476,6 +576,8 @@ def _register_bank_routes(app, transport, data_dir, notify_local):
             bank_contact = f"{transport.dest_hash_hex}|{pk}"
 
         inline_msg = session.pop("bank_msg", None)
+        all_requests = bdata.get("incoming_requests", [])
+        pending_requests = [r for r in all_requests if r.get("status") == "pending"]
 
         return render_template("bank.html",
             show_nav=False,
@@ -492,6 +594,8 @@ def _register_bank_routes(app, transport, data_dir, notify_local):
             inline_msg=inline_msg,
             dest_hash=transport.dest_hash_hex,
             announces=transport.get_announces(),
+            incoming_requests=all_requests,
+            pending_count=len(pending_requests),
         )
 
     @app.route("/bank/generate-key", methods=["POST"])
@@ -606,6 +710,116 @@ def _register_bank_routes(app, transport, data_dir, notify_local):
         _save_bank_data(data_dir, bdata)
         return jsonify({"ok": True})
 
+    @app.route("/bank/approve-request/<int:idx>", methods=["POST"])
+    def bank_approve_request(idx):
+        bdata = _get_bank_data(data_dir)
+        reqs = bdata.get("incoming_requests", [])
+        if idx < 0 or idx >= len(reqs):
+            flash("Verzoek niet gevonden", "error")
+            return redirect(url_for("bank_page"))
+        req = reqs[idx]
+        if req.get("status") != "pending":
+            flash("Verzoek is al afgehandeld", "error")
+            return redirect(url_for("bank_page"))
+
+        if req["request_type"] == "engine_register":
+            pk_engine = req["payload"].get("pk_engine", "")
+            engine_dest = req["payload"].get("engine_dest", req["from_hash"])
+
+            bdata["registered_at_engine"] = True
+            bdata["engine_address"] = engine_dest
+            bdata["engine_pk"] = pk_engine
+            existing = {c["address"] for c in bdata["contacts"]}
+            if engine_dest not in existing:
+                bdata["contacts"].append({
+                    "name": req["payload"].get("engine_name", "State Engine"),
+                    "address": engine_dest,
+                    "pk": pk_engine,
+                })
+
+            req["status"] = "approved"
+            _save_bank_data(data_dir, bdata)
+
+            i = iss()
+            try:
+                transport.send(req["from_hash"], "engine", "bank_register_response", {
+                    "pk_issuer": i.pk_hex,
+                    "bank_name": "Bank",
+                })
+            except Exception:
+                pass
+
+            session["bank_msg"] = "Engine registratie goedgekeurd!"
+
+        elif req["request_type"] == "coin_request":
+            i = iss()
+            engine_dest = bdata.get("engine_address", "")
+            engine_pk = bdata.get("engine_pk", "")
+            if not engine_dest or not engine_pk:
+                flash("Niet geregistreerd bij een engine — kan geen coins uitgeven", "error")
+                return redirect(url_for("bank_page"))
+
+            wallet_dest = req["payload"].get("wallet_dest", req["from_hash"])
+            public_keys = req["payload"].get("public_keys", [])
+
+            if not public_keys:
+                flash("Geen publieke sleutels in verzoek", "error")
+                return redirect(url_for("bank_page"))
+
+            for pk_owner in public_keys:
+                coin = i.issue_coin(1, pk_owner, engine_dest, engine_pk)
+                bdata["issued_coins"].append({
+                    "timestamp": _now(),
+                    "coin_id": coin.coin_id,
+                    "waarde": 1,
+                    "recipient": wallet_dest[:16] + "…",
+                    "coin_json": coin.to_dict(),
+                })
+                try:
+                    transport.send(engine_dest, "engine", "register_coin", {
+                        "coin": coin.to_dict(),
+                        "recipient_dest": wallet_dest,
+                    })
+                except Exception as exc:
+                    flash(f"Fout bij registreren coin: {exc}", "error")
+
+            req["status"] = "approved"
+            _save_bank_data(data_dir, bdata)
+            session["bank_msg"] = f"{len(public_keys)} coin(s) uitgegeven aan wallet"
+
+        return redirect(url_for("bank_page"))
+
+    @app.route("/bank/decline-request/<int:idx>", methods=["POST"])
+    def bank_decline_request(idx):
+        bdata = _get_bank_data(data_dir)
+        reqs = bdata.get("incoming_requests", [])
+        if idx < 0 or idx >= len(reqs):
+            flash("Verzoek niet gevonden", "error")
+            return redirect(url_for("bank_page"))
+        req = reqs[idx]
+        if req.get("status") != "pending":
+            flash("Verzoek is al afgehandeld", "error")
+            return redirect(url_for("bank_page"))
+
+        req["status"] = "declined"
+        _save_bank_data(data_dir, bdata)
+
+        decline_type = {
+            "engine_register": "bank_register_declined",
+            "coin_request": "coin_request_declined",
+        }.get(req["request_type"], "")
+
+        if decline_type:
+            try:
+                transport.send(req["from_hash"], req["from_role"], decline_type, {
+                    "reason": "Afgewezen door bank operator",
+                })
+            except Exception:
+                pass
+
+        session["bank_msg"] = "Verzoek afgewezen"
+        return redirect(url_for("bank_page"))
+
 
 def _bank_handle_message(app, transport, data_dir, notify_local,
                           msg_type, payload, from_hash, from_role):
@@ -631,6 +845,35 @@ def _bank_handle_message(app, transport, data_dir, notify_local,
             "engine_pk": pk_engine,
         })
 
+    elif msg_type == "engine_register_request":
+        bdata = _get_bank_data(data_dir)
+        bdata.setdefault("incoming_requests", []).append({
+            "request_type": "engine_register",
+            "from_hash": from_hash,
+            "from_role": from_role,
+            "payload": payload,
+            "ts": datetime.now().isoformat(),
+            "status": "pending",
+        })
+        _save_bank_data(data_dir, bdata)
+        notify_local({"type": "new_request", "request_type": "engine_register"})
+
+    elif msg_type == "issuer_declined":
+        notify_local({"type": "request_declined", "reason": payload.get("reason", "")})
+
+    elif msg_type == "coin_request":
+        bdata = _get_bank_data(data_dir)
+        bdata.setdefault("incoming_requests", []).append({
+            "request_type": "coin_request",
+            "from_hash": from_hash,
+            "from_role": from_role,
+            "payload": payload,
+            "ts": datetime.now().isoformat(),
+            "status": "pending",
+        })
+        _save_bank_data(data_dir, bdata)
+        notify_local({"type": "new_request", "request_type": "coin_request"})
+
 
 # ════════════════════════════════════════════════════════════
 #  WALLET
@@ -653,6 +896,7 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
             r for r in w._data.get("incoming_requests", [])
             if r.get("status") == "pending"
         ]
+        outgoing_coin_requests = w._data.get("outgoing_coin_requests", [])
 
         return render_template("wallet.html",
             show_nav=False,
@@ -669,6 +913,7 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
             dest_hash=transport.dest_hash_hex,
             announces=transport.get_announces(),
             incoming_requests=incoming_requests,
+            outgoing_coin_requests=outgoing_coin_requests,
         )
 
     @app.route("/wallet/<wallet_id>/request-payment", methods=["POST"])
@@ -753,6 +998,38 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
 
     @app.route("/wallet/<wallet_id>/set-address", methods=["POST"])
     def wallet_set_address(wallet_id):
+        return redirect(url_for("wallet_page"))
+
+    @app.route("/wallet/<wallet_id>/request-coins", methods=["POST"])
+    def wallet_request_coins(wallet_id):
+        w = _get_wallet(data_dir)
+        try:
+            bank_dest = request.form["bank_address"].strip()
+            if "|" in bank_dest:
+                bank_dest = bank_dest.split("|")[0]
+            amount = int(request.form["amount"])
+            if amount < 1:
+                raise ValueError("Aantal moet minimaal 1 zijn")
+
+            public_keys = [w.generate_receive_keypair() for _ in range(amount)]
+
+            transport.send(bank_dest, "bank", "coin_request", {
+                "amount": amount,
+                "wallet_dest": transport.dest_hash_hex,
+                "public_keys": public_keys,
+            })
+
+            w._data.setdefault("outgoing_coin_requests", []).append({
+                "bank_dest": bank_dest,
+                "amount": amount,
+                "ts": _now(),
+                "status": "pending",
+            })
+            w._save()
+
+            session["wallet_msg"] = f"Coin-aanvraag ({amount}x) verstuurd naar bank"
+        except Exception as exc:
+            flash(f"Fout: {exc}", "error")
         return redirect(url_for("wallet_page"))
 
     @app.route("/wallet/<wallet_id>/accept-request/<int:idx>", methods=["POST"])
@@ -846,3 +1123,12 @@ def _wallet_handle_message(app, transport, data_dir, wallet_id, notify_local,
             "pk": payload.get("pk", ""),
             "address": payload.get("address", ""),
         })
+
+    elif msg_type == "coin_request_declined":
+        w = _get_wallet(data_dir)
+        for req in w._data.get("outgoing_coin_requests", []):
+            if req.get("status") == "pending" and req.get("bank_dest") == from_hash:
+                req["status"] = "declined"
+                break
+        w._save()
+        notify_local({"type": "coin_request_declined", "reason": payload.get("reason", "")})

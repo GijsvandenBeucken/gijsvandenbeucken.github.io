@@ -1,12 +1,30 @@
 {
   "contacts": [
     {
+      "name": "bank",
+      "address": "7082f864d83c52f4d23b4e9ac7e16c21",
+      "pk": ""
+    },
+    {
       "name": "Bank",
-      "address": "9083d48dca3404c75246ee21a4db310e",
-      "pk": "bc643682cae21fd06941e22624d091c24a2c8fd57d5c78244a2aaa18c051c139"
+      "address": "7082f864d83c52f4d23b4e9ac7e16c21",
+      "pk": "3c6f4cc10bf331ff064c6a71cdead57e8d373ae224dbb5d1856a5d2dea655d8d"
     }
   ],
   "issuer_names": {
-    "bc643682cae21fd06941e22624d091c24a2c8fd57d5c78244a2aaa18c051c139": "Bank"
-  }
+    "3c6f4cc10bf331ff064c6a71cdead57e8d373ae224dbb5d1856a5d2dea655d8d": "Bank"
+  },
+  "incoming_requests": [
+    {
+      "request_type": "register_issuer",
+      "from_hash": "7082f864d83c52f4d23b4e9ac7e16c21",
+      "from_role": "bank",
+      "payload": {
+        "pk_issuer": "3c6f4cc10bf331ff064c6a71cdead57e8d373ae224dbb5d1856a5d2dea655d8d",
+        "bank_name": "Bank"
+      },
+      "ts": "2026-02-27T23:23:32.601802",
+      "status": "approved"
+    }
+  ]
 }

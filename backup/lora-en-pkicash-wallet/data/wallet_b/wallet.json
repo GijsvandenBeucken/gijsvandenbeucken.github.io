@@ -1,36 +1,68 @@
 {
   "coins": {
-    "daa2a28c-1ac9-4a42-8945-c22619a9b330": {
+    "c5a8cb44-cf46-48b1-8545-c1cceb4aca43": {
       "coin": {
-        "coin_id": "daa2a28c-1ac9-4a42-8945-c22619a9b330",
-        "waarde": 10,
-        "pk_current": "10b7823c3f593fb70c9a809031886f54e605f0f23b75c9ac6bfaf07548ff64fb",
-        "pk_issuer": "bc643682cae21fd06941e22624d091c24a2c8fd57d5c78244a2aaa18c051c139",
-        "issuer_signature": "a7a93795d07d62b3ee9223e156e906ff2f19e35149296be11e07f8b7d021bcf1305df80bd380de0d705c2a60016c5e4ca151ae1a0fe3ba864a8a3e0ac41ae70c",
-        "state_engine_endpoint": "af05a935c8382d151035aef6fa07f27f",
-        "pk_engine": "8f7dfcc48cd656c1bd1c26eeb4366a5995188ed589128b0f9b1451e67ad3821a"
+        "coin_id": "c5a8cb44-cf46-48b1-8545-c1cceb4aca43",
+        "waarde": 1,
+        "pk_current": "dc0cd54274def704ab47db755363495889aa78056a2e7ee9c2487d09aa59a4f9",
+        "pk_issuer": "3c6f4cc10bf331ff064c6a71cdead57e8d373ae224dbb5d1856a5d2dea655d8d",
+        "issuer_signature": "473a30d7b4ce9dad9b211e0625e2ccf9727341f0a18a8c5afc25d5d2e4858d5b8764c1e7bcd2ffd7f0bbb635ff38eb795d1aa5acab05a03c06a72391b32d8e00",
+        "state_engine_endpoint": "7038f9b4f40303a153f5788f15e59119",
+        "pk_engine": "6e942d62484ff5c90f3f4947fcc839f9bc6fd153f6db3f420a1d782febd1721b"
       },
-      "sk_current": "7aab107d93e67c648b6d9a62d9e705aaad05c895dd2b468c6ec7e8846922672a"
+      "sk_current": "06d57275a74dca18cf25e2a379324356005baffa285ed5b2f0a1fd9fed471a93"
+    },
+    "9c26bfe5-e56e-411a-9a1c-26b9ebaa8ee1": {
+      "coin": {
+        "coin_id": "9c26bfe5-e56e-411a-9a1c-26b9ebaa8ee1",
+        "waarde": 1,
+        "pk_current": "a1b2fd156dadfe44182a2c63163a183cd45717febc98aeddb63a0a52c8e7c1f6",
+        "pk_issuer": "3c6f4cc10bf331ff064c6a71cdead57e8d373ae224dbb5d1856a5d2dea655d8d",
+        "issuer_signature": "fb9a39ec7cf1c79bfe3fbab55d1b126f73d43b462289302a4a53a1c18f95cdecd21a463b9503c1e785a2733032aa6cd3b2246246e79a8a9e7282a7ac6935c308",
+        "state_engine_endpoint": "7038f9b4f40303a153f5788f15e59119",
+        "pk_engine": "6e942d62484ff5c90f3f4947fcc839f9bc6fd153f6db3f420a1d782febd1721b"
+      },
+      "sk_current": "2b02c5644d001376a7683a9f21e64aef6ee4d701a2a97bf6f20ace053cd1066b"
     }
   },
   "pending_keypairs": {
-    "824bfc5f0770124d70dd86d983becf3fa9dc1ecbb2f5f355ec91405a77d422af": "c22fa65b76e82208e0a2698da054d039963aa650fd95c648618075165165f389"
+    "d73a2fed9b679da8277f3b9432eabf0a22c88cd8b085252306d6f8e81383cd29": "b40eba11d2e8735fff6dff034647fee5017f660cf55b33308d0c8e64e2e30a48"
   },
   "transaction_log": [
     {
-      "timestamp": "2026-02-27 22:36:36",
+      "timestamp": "2026-02-27 23:32:35",
       "action": "betaling ontvangen",
-      "coin_id": "daa2a28c-1ac9-4a42-8945-c22619a9b330",
-      "waarde": 10,
+      "coin_id": "c5a8cb44-cf46-48b1-8545-c1cceb4aca43",
+      "waarde": 1,
+      "counterparty": null
+    },
+    {
+      "timestamp": "2026-02-27 23:33:31",
+      "action": "ontvangen van bank",
+      "coin_id": "9c26bfe5-e56e-411a-9a1c-26b9ebaa8ee1",
+      "waarde": 1,
       "counterparty": null
     }
   ],
   "contacts": [
     {
       "name": "walleta",
-      "address": "1d09aeef3f25deece6ed01573e5ece8e",
+      "address": "a0981f794ea45e52d825595ef32e0cf8",
+      "pk": ""
+    },
+    {
+      "name": "bank",
+      "address": "7082f864d83c52f4d23b4e9ac7e16c21",
       "pk": ""
     }
   ],
-  "address": ""
+  "address": "",
+  "outgoing_coin_requests": [
+    {
+      "bank_dest": "7082f864d83c52f4d23b4e9ac7e16c21",
+      "amount": 1,
+      "ts": "2026-02-27 23:33:19",
+      "status": "pending"
+    }
+  ]
 }

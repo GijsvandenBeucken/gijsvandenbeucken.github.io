@@ -1,37 +1,106 @@
 {
-  "coins": {},
-  "pending_keypairs": {},
+  "coins": {
+    "3b2ef3be-b729-43e9-9a98-1b3b34c91ef5": {
+      "coin": {
+        "coin_id": "3b2ef3be-b729-43e9-9a98-1b3b34c91ef5",
+        "waarde": 1,
+        "pk_current": "42c4197800d0aaa01b3549f4733da489a9ed8e5b98b7f8825b718f119f94bb2b",
+        "pk_issuer": "3c6f4cc10bf331ff064c6a71cdead57e8d373ae224dbb5d1856a5d2dea655d8d",
+        "issuer_signature": "8811bdaaffcc5e2bc568da72f7d771bd86e0e29c282af0b4166898666a500f6b9dfcc9e69383d30784780da6b24a4e6a2c5b3f0a0b1d7e14e26fa1cab85b940f",
+        "state_engine_endpoint": "7038f9b4f40303a153f5788f15e59119",
+        "pk_engine": "6e942d62484ff5c90f3f4947fcc839f9bc6fd153f6db3f420a1d782febd1721b"
+      },
+      "sk_current": "0eb3adc1a92563b5c335d402201535dc4f3a4ac5dd9113846750c42826893ad7"
+    },
+    "5e42194d-542a-45d2-9582-20ef8eaee669": {
+      "coin": {
+        "coin_id": "5e42194d-542a-45d2-9582-20ef8eaee669",
+        "waarde": 1,
+        "pk_current": "fc1f3fb587b247f059944a96ddc0f5b88d4e38267e765ac49fe0bd24f0c57180",
+        "pk_issuer": "3c6f4cc10bf331ff064c6a71cdead57e8d373ae224dbb5d1856a5d2dea655d8d",
+        "issuer_signature": "0787616bdae05665e62269672d4f16b1dabf52dd046fba9705f21f3b42bf0f5333b24fa76eb1f668e37bbfb4e5566f0e7d3820425e8acedf0ab9e23b6cb51f0d",
+        "state_engine_endpoint": "7038f9b4f40303a153f5788f15e59119",
+        "pk_engine": "6e942d62484ff5c90f3f4947fcc839f9bc6fd153f6db3f420a1d782febd1721b"
+      },
+      "sk_current": "4061dd7cc982e940601f2fa5adf55275ded6f49c3112605f163458028ae643d5"
+    }
+  },
+  "pending_keypairs": {
+    "3dad70cf23084f00b25ebc4c86a26c2e8dea3bbf10c38cabdd4684b12677ea93": "41e67f4cdda5777fb24927bdbf2c9e01f35db0c43c624ca1f5b808f06ca142f1",
+    "8dc0f399b918cb2ad7d90b17259d746837783ec4e0e498f34f93c3a541c9c48f": "fb19faece75f2a32c64047b89c57b762e954e94b19da4e17088affad27a754bb",
+    "a8e6624947a1e09db9369125b119d75d914ab1596b4be6f3831c86cd216822dc": "041b1f930514f7ebe54d570aa4adc24ca34429bc173b1faae49016f51409388a"
+  },
   "transaction_log": [
     {
-      "timestamp": "2026-02-27 22:35:38",
+      "timestamp": "2026-02-27 23:25:04",
       "action": "ontvangen van bank",
-      "coin_id": "daa2a28c-1ac9-4a42-8945-c22619a9b330",
-      "waarde": 10,
+      "coin_id": "3b2ef3be-b729-43e9-9a98-1b3b34c91ef5",
+      "waarde": 1,
       "counterparty": null
     },
     {
-      "timestamp": "2026-02-27 22:36:36",
+      "timestamp": "2026-02-27 23:26:13",
+      "action": "ontvangen van bank",
+      "coin_id": "c5a8cb44-cf46-48b1-8545-c1cceb4aca43",
+      "waarde": 1,
+      "counterparty": null
+    },
+    {
+      "timestamp": "2026-02-27 23:31:30",
+      "action": "ontvangen van bank",
+      "coin_id": "5e42194d-542a-45d2-9582-20ef8eaee669",
+      "waarde": 1,
+      "counterparty": null
+    },
+    {
+      "timestamp": "2026-02-27 23:32:35",
       "action": "verstuurd",
-      "coin_id": "daa2a28c-1ac9-4a42-8945-c22619a9b330",
-      "waarde": 10,
-      "counterparty": "c35169e277ac2ea3f750c7438b0cccd0"
+      "coin_id": "c5a8cb44-cf46-48b1-8545-c1cceb4aca43",
+      "waarde": 1,
+      "counterparty": "8ad127386c8424e65f84f5830108a2cf"
     }
   ],
   "contacts": [
     {
+      "name": "bank",
+      "address": "7082f864d83c52f4d23b4e9ac7e16c21",
+      "pk": ""
+    },
+    {
       "name": "Wallet B",
-      "address": "c35169e277ac2ea3f750c7438b0cccd0",
+      "address": "8ad127386c8424e65f84f5830108a2cf",
       "pk": ""
     }
   ],
   "address": "",
+  "outgoing_coin_requests": [
+    {
+      "bank_dest": "7082f864d83c52f4d23b4e9ac7e16c21",
+      "amount": 1,
+      "ts": "2026-02-27 23:24:54",
+      "status": "pending"
+    },
+    {
+      "bank_dest": "7082f864d83c52f4d23b4e9ac7e16c21",
+      "amount": 1,
+      "ts": "2026-02-27 23:26:04",
+      "status": "pending"
+    },
+    {
+      "bank_dest": "7082f864d83c52f4d23b4e9ac7e16c21",
+      "amount": 1,
+      "ts": "2026-02-27 23:31:12",
+      "status": "pending"
+    }
+  ],
   "incoming_requests": [
     {
-      "from_hash": "c35169e277ac2ea3f750c7438b0cccd0",
+      "from_hash": "8ad127386c8424e65f84f5830108a2cf",
       "from_role": "wallet",
       "payload": {
-        "address": "c35169e277ac2ea3f750c7438b0cccd0",
-        "pk": "10b7823c3f593fb70c9a809031886f54e605f0f23b75c9ac6bfaf07548ff64fb"
+        "address": "8ad127386c8424e65f84f5830108a2cf",
+        "pk": "dc0cd54274def704ab47db755363495889aa78056a2e7ee9c2487d09aa59a4f9",
+        "amount": "1"
       },
       "ts": "",
       "status": "paid"

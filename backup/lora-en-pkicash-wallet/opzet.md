@@ -134,15 +134,23 @@ Announce:
 
 Berichttypen (via RNS Link + zlib-compressed JSON):
 
-| Type               | Van    | Naar              | Inhoud                                    |
-| ------------------ | ------ | ----------------- | ----------------------------------------- |
-| register_issuer    | Bank   | Engine            | {pk_issuer, bank_name}                    |
-| issuer_confirmed   | Engine | Bank              | {pk_engine, engine_dest}                  |
-| register_coin      | Bank   | Engine            | {coin_json, recipient_dest}               |
-| coin_delivery      | Engine | Wallet            | {coin_json, engine_confirmation}          |
-| transaction        | Wallet | Engine            | {coin_id, pk_next, sig, recipient_dest}   |
-| tx_confirmed       | Engine | Wallet(zender)    | {coin_id, status}                         |
-| coin_transfer      | Engine | Wallet(ontvanger) | {updated_coin, confirmation}              |
+| Type                    | Van    | Naar              | Inhoud                                    |
+| ----------------------- | ------ | ----------------- | ----------------------------------------- |
+| register_issuer         | Bank   | Engine            | {pk_issuer, bank_name}                    |
+| issuer_confirmed        | Engine | Bank              | {pk_engine, engine_dest}                  |
+| issuer_declined         | Engine | Bank              | {reason}                                  |
+| engine_register_request | Engine | Bank              | {pk_engine, engine_name, engine_dest}     |
+| bank_register_response  | Bank   | Engine            | {pk_issuer, bank_name}                    |
+| bank_register_declined  | Bank   | Engine            | {reason}                                  |
+| coin_request            | Wallet | Bank              | {amount, wallet_dest, public_keys}        |
+| coin_request_declined   | Bank   | Wallet            | {reason}                                  |
+| register_coin           | Bank   | Engine            | {coin_json, recipient_dest}               |
+| coin_delivery           | Engine | Wallet            | {coin_json, engine_confirmation}          |
+| transaction             | Wallet | Engine            | {coin_id, pk_next, sig, recipient_dest}   |
+| tx_confirmed            | Engine | Wallet(zender)    | {coin_id, status}                         |
+| coin_transfer           | Engine | Wallet(ontvanger) | {updated_coin, confirmation}              |
+| payment_request         | Wallet | Wallet            | {address, pk, amount}                     |
+| payment_response        | Wallet | Wallet            | {pk, address, original_request}           |
 
 Inbox:
 - Inkomende RNS packets worden via callback in een thread-safe lijst geplaatst
@@ -193,6 +201,86 @@ Toelichting:
 - Private keys (SK) verlaten NOOIT het apparaat waarop ze zijn aangemaakt
 
 
+Interactiepatronen (Goedkeuringsflows)
+---------------------------------------
+
+Alle cross-actor interacties volgen een universeel verzoek-goedkeuring patroon:
+
+```mermaid
+sequenceDiagram
+    participant Verzoeker
+    participant Ontvanger
+    Verzoeker->>Ontvanger: request (type + payload)
+    Note over Ontvanger: Toont in UI als "pending"
+    alt Goedgekeurd
+        Ontvanger->>Verzoeker: approved (+ resultaat)
+        Note over Verzoeker: Verwerkt resultaat
+    else Afgewezen
+        Ontvanger->>Verzoeker: declined (+ reden)
+        Note over Verzoeker: Toont melding
+    end
+```
+
+### Bank → Engine: Issuer registratie
+
+De bank stuurt een registratieverzoek. De engine-operator moet goedkeuren.
+
+```mermaid
+sequenceDiagram
+    participant Bank
+    participant Engine
+    Bank->>Engine: register_issuer (pk_issuer, bank_name)
+    Note over Engine: Opslaan als pending request
+    alt Operator keurt goed
+        Engine->>Engine: register_issuer() in DB
+        Engine->>Bank: issuer_confirmed (pk_engine, engine_dest)
+    else Operator wijst af
+        Engine->>Bank: issuer_declined (reden)
+    end
+```
+
+### Engine → Bank: Registratieverzoek
+
+De engine kan een bank vragen "wil je mij als engine gebruiken?"
+
+```mermaid
+sequenceDiagram
+    participant Engine
+    participant Bank
+    Engine->>Bank: engine_register_request (pk_engine, engine_name)
+    Note over Bank: Opslaan als pending request
+    alt Operator keurt goed
+        Bank->>Engine: bank_register_response (pk_issuer, bank_name)
+        Note over Engine: register_issuer() in DB
+    else Operator wijst af
+        Bank->>Engine: bank_register_declined (reden)
+    end
+```
+
+### Wallet → Bank: Coin-aanvraag
+
+Een wallet kan coins aanvragen bij een bank.
+
+```mermaid
+sequenceDiagram
+    participant Wallet
+    participant Bank
+    participant Engine
+    Wallet->>Wallet: Genereer N keypairs
+    Wallet->>Bank: coin_request (amount, wallet_dest, public_keys)
+    Note over Bank: Opslaan als pending request
+    alt Operator keurt goed
+        loop Voor elke public key
+            Bank->>Bank: issue_coin(waarde=1, pk_owner)
+            Bank->>Engine: register_coin (coin, recipient_dest)
+            Engine->>Wallet: coin_delivery (coin + confirmation)
+        end
+    else Operator wijst af
+        Bank->>Wallet: coin_request_declined (reden)
+    end
+```
+
+
 Architectuur & Bestanden
 ------------------------
 
@@ -201,7 +289,7 @@ Architectuur & Bestanden
   ├── run.py                    # Startscript: --role engine/bank/wallet of --demo
   ├── app_actor.py              # Flask app factory per actor-rol
   ├── app.py                    # Legacy: oude single-server versie (deprecated)
-  ├── opzet.txt                 # Dit bestand (project briefing)
+  ├── opzet.md                  # Dit bestand (project briefing)
   ├── requirements.txt          # Python dependencies (flask, pynacl, rns)
   ├── src/
   │   ├── transport.py          # RNS wrapper: identity, destination, announce, send/receive
@@ -330,6 +418,6 @@ Roadmap
 5. ✓ Reticulum transport: elke actor als eigen proces met RNS communicatie
 6. ✓ Announce systeem: actoren ontdekken elkaar via RNS announces
 7. ✓ RNS berichten: registratie, coin uitgifte, transacties via RNS
-8. □ Key exchange: wallet vraagt PK aan andere wallet via RNS
+8. ✓ Goedkeuringspatroon: alle interacties via request → approve/decline → action
 9. □ LoRa integratie: Reticulum config met LoRa radio interface
 10. □ Meerdere state engines / redundantie

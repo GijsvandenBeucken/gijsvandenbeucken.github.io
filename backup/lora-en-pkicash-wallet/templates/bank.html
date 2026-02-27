@@ -21,6 +21,9 @@
                 <button class="menu-btn" onclick="toggleMenu('bank-menu')"><i data-lucide="menu" style="width:16px;height:16px"></i> Menu</button>
                 <div class="menu-dropdown" id="bank-menu">
                     <a href="#" onclick="showSection('overzicht'); return false;">Uitgegeven coins</a>
+                    <a href="#" onclick="showSection('verzoeken'); return false;">
+                        Verzoeken{% if pending_count %} <span class="badge badge-value" style="font-size:0.65rem;padding:0.1rem 0.4rem">{{ pending_count }}</span>{% endif %}
+                    </a>
                     <a href="#" onclick="showSection('contacten'); return false;">Contacten</a>
                     <a href="#" onclick="showSection('mijn-gegevens'); return false;">Mijn contactgegevens</a>
                     <a href="#" onclick="showSection('registraties'); return false;">Registraties State Engine</a>
@@ -263,7 +266,7 @@
         <form method="POST" action="{{ url_for('bank_issue_coin') }}">
             <div class="form-group">
                 <label>Waarde</label>
-                <input type="number" name="waarde" min="1" value="10" required>
+                <input type="number" name="waarde" min="1" value="1" required>
             </div>
 
             <hr class="overlay-divider">
@@ -335,6 +338,86 @@
 
             <button class="btn btn-primary" type="submit" style="margin-top:1rem">Coin uitgeven</button>
         </form>
+    </div>
+</div>
+
+<!-- Sectie: Verzoeken -->
+<div data-section="verzoeken" style="display:none">
+    <div class="card">
+        <h2>Openstaande verzoeken</h2>
+        {% set pending = incoming_requests|selectattr('status', 'equalto', 'pending')|list %}
+        {% if pending %}
+        {% for req in pending %}
+        {% set real_idx = incoming_requests.index(req) %}
+        <div style="padding:0.75rem 0;{% if not loop.last %}border-bottom:1px solid var(--border);{% endif %}">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
+                <div>
+                    <strong>
+                        {% if req.request_type == 'engine_register' %}Engine registratie
+                        {% elif req.request_type == 'coin_request' %}Coin aanvraag
+                        {% else %}{{ req.request_type }}{% endif %}
+                    </strong>
+                    <span class="badge" style="font-size:0.65rem;margin-left:0.3rem">{{ req.from_role }}</span>
+                </div>
+                <span style="font-size:0.75rem;color:var(--text-muted)">{{ req.ts[:19] if req.ts else '' }}</span>
+            </div>
+            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.4rem">
+                Van: <span class="mono" style="font-size:0.75rem;word-break:break-all">{{ req.from_hash }}</span>
+            </div>
+            {% if req.payload %}
+            <div style="font-size:0.8rem;margin-bottom:0.4rem">
+                {% if req.request_type == 'engine_register' %}
+                    {% if req.payload.engine_name %}Engine: <strong>{{ req.payload.engine_name }}</strong><br>{% endif %}
+                    {% if req.payload.pk_engine %}PK: <span class="mono" style="font-size:0.7rem;word-break:break-all">{{ req.payload.pk_engine }}</span>{% endif %}
+                {% elif req.request_type == 'coin_request' %}
+                    Aantal: <strong>{{ req.payload.amount }}</strong> coin(s)<br>
+                    Wallet: <span class="mono" style="font-size:0.7rem;word-break:break-all">{{ req.payload.wallet_dest }}</span>
+                {% endif %}
+            </div>
+            {% endif %}
+            <div style="display:flex;gap:0.5rem">
+                <form method="POST" action="{{ url_for('bank_approve_request', idx=real_idx) }}" style="margin:0">
+                    <button class="btn btn-success" style="padding:0.3rem 0.75rem;font-size:0.8rem">Goedkeuren</button>
+                </form>
+                <form method="POST" action="{{ url_for('bank_decline_request', idx=real_idx) }}" style="margin:0">
+                    <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem;color:var(--danger)">Weigeren</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p style="color:var(--text-muted);font-size:0.85rem">Geen openstaande verzoeken.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2>Afgehandelde verzoeken</h2>
+        {% set handled = incoming_requests|rejectattr('status', 'equalto', 'pending')|list %}
+        {% if handled %}
+        <table>
+            <tr><th>Type</th><th>Van</th><th>Status</th><th>Tijd</th></tr>
+            {% for req in handled|reverse %}
+            <tr>
+                <td style="font-size:0.85rem">
+                    {% if req.request_type == 'engine_register' %}Engine registratie
+                    {% elif req.request_type == 'coin_request' %}Coin aanvraag ({{ req.payload.amount if req.payload else '?' }}x)
+                    {% else %}{{ req.request_type }}{% endif %}
+                </td>
+                <td class="mono" style="font-size:0.75rem">{{ req.from_hash[:16] }}…</td>
+                <td>
+                    {% if req.status == 'approved' %}
+                    <span class="badge badge-success" style="font-size:0.7rem">Goedgekeurd</span>
+                    {% else %}
+                    <span class="badge" style="font-size:0.7rem;background:var(--danger);color:#fff">Afgewezen</span>
+                    {% endif %}
+                </td>
+                <td style="font-size:0.75rem;color:var(--text-muted)">{{ req.ts[:19] if req.ts else '' }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p style="color:var(--text-muted);font-size:0.85rem">Nog geen afgehandelde verzoeken.</p>
+        {% endif %}
     </div>
 </div>
 
@@ -422,6 +505,9 @@ function handleSSE(data) {
                 engine_pk: data.engine_pk
             })
         }).then(() => location.reload());
+    }
+    if (data.type === 'new_request' || data.type === 'request_declined') {
+        setTimeout(() => location.reload(), 1000);
     }
 }
 
