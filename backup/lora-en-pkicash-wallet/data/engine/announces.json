@@ -1,16 +1,9 @@
 {
-  "d2635c8b4cc36ffc030aff0cc24fe55c": {
-    "name": "Bank",
-    "role": "bank",
-    "pk_transaction": "39cd05dbb024a5595588de67588367fcb84f9a50bfda72594c6b45695a37a1e7",
-    "dest_hash": "d2635c8b4cc36ffc030aff0cc24fe55c",
-    "seen": "2026-02-27T22:01:40.048212"
-  },
-  "d8b099b1811ef03a3455e388317e9861": {
+  "1d09aeef3f25deece6ed01573e5ece8e": {
     "name": "",
     "role": "wallet",
     "pk_transaction": "",
-    "dest_hash": "d8b099b1811ef03a3455e388317e9861",
-    "seen": "2026-02-27T22:05:47.807429"
+    "dest_hash": "1d09aeef3f25deece6ed01573e5ece8e",
+    "seen": "2026-02-27T22:35:06.626091"
   }
 }

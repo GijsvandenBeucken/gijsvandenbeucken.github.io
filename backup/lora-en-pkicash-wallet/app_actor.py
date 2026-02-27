@@ -649,6 +649,11 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
         wallet_contact = f"{transport.dest_hash_hex}|{generated_pk}" if generated_pk else transport.dest_hash_hex
         inline_msg = session.pop("wallet_msg", None)
 
+        incoming_requests = [
+            r for r in w._data.get("incoming_requests", [])
+            if r.get("status") == "pending"
+        ]
+
         return render_template("wallet.html",
             show_nav=False,
             active_page=f"wallet_{wallet_id}",
@@ -663,6 +668,7 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
             inline_msg=inline_msg,
             dest_hash=transport.dest_hash_hex,
             announces=transport.get_announces(),
+            incoming_requests=incoming_requests,
         )
 
     @app.route("/wallet/<wallet_id>/request-payment", methods=["POST"])
@@ -705,6 +711,11 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
 
             w.confirm_send(coin_id, recipient_dest)
 
+            for req in w._data.get("incoming_requests", []):
+                if req.get("status") == "pending" and req.get("from_hash") == recipient_dest:
+                    req["status"] = "paid"
+            w._save()
+
             if request.form.get("save_contact"):
                 contact_name = recipient_name or recipient_dest[:16]
                 existing = {c["address"] for c in w.get_contacts()}
@@ -744,6 +755,40 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
     def wallet_set_address(wallet_id):
         return redirect(url_for("wallet_page"))
 
+    @app.route("/wallet/<wallet_id>/accept-request/<int:idx>", methods=["POST"])
+    def wallet_accept_request(wallet_id, idx):
+        w = _get_wallet(data_dir)
+        requests = w._data.get("incoming_requests", [])
+        if idx < 0 or idx >= len(requests):
+            flash("Verzoek niet gevonden", "error")
+            return redirect(url_for("wallet_page"))
+
+        req = requests[idx]
+        pk_hex = w.generate_receive_keypair()
+
+        try:
+            transport.send(req["from_hash"], "wallet", "payment_response", {
+                "pk": pk_hex,
+                "address": transport.dest_hash_hex,
+                "original_request": req.get("payload", {}),
+            })
+            req["status"] = "accepted"
+            req["generated_pk"] = pk_hex
+            w._save()
+            session["wallet_msg"] = f"Betaalverzoek geaccepteerd, PK verzonden"
+        except Exception as exc:
+            flash(f"Fout bij verzenden: {exc}", "error")
+        return redirect(url_for("wallet_page"))
+
+    @app.route("/wallet/<wallet_id>/decline-request/<int:idx>", methods=["POST"])
+    def wallet_decline_request(wallet_id, idx):
+        w = _get_wallet(data_dir)
+        requests = w._data.get("incoming_requests", [])
+        if 0 <= idx < len(requests):
+            requests[idx]["status"] = "declined"
+            w._save()
+        return redirect(url_for("wallet_page"))
+
 
 def _wallet_handle_message(app, transport, data_dir, wallet_id, notify_local,
                             msg_type, payload, from_hash, from_role):
@@ -767,4 +812,37 @@ def _wallet_handle_message(app, transport, data_dir, wallet_id, notify_local,
             "type": "tx_confirmed",
             "coin_id": payload.get("coin_id", ""),
             "status": payload.get("status", ""),
+        })
+
+    elif msg_type == "payment_request":
+        w = _get_wallet(data_dir)
+        w._data.setdefault("incoming_requests", []).append({
+            "from_hash": from_hash,
+            "from_role": from_role,
+            "payload": payload,
+            "ts": payload.get("ts", ""),
+            "status": "pending",
+        })
+        w._save()
+        notify_local({
+            "type": "payment_request",
+            "from_hash": from_hash,
+            "address": payload.get("address", ""),
+            "pk": payload.get("pk", ""),
+        })
+
+    elif msg_type == "payment_response":
+        w = _get_wallet(data_dir)
+        w._data.setdefault("received_responses", []).append({
+            "from_hash": from_hash,
+            "pk": payload.get("pk", ""),
+            "address": payload.get("address", ""),
+            "ts": payload.get("ts", ""),
+        })
+        w._save()
+        notify_local({
+            "type": "payment_response",
+            "from_hash": from_hash,
+            "pk": payload.get("pk", ""),
+            "address": payload.get("address", ""),
         })

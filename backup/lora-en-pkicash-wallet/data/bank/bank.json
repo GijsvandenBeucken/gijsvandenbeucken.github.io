@@ -1,34 +1,59 @@
 {
   "issued_coins": [
     {
-      "timestamp": "2026-02-27 22:03:11",
-      "coin_id": "ea4d01ef-1a14-4942-8cbd-ec9fcdcccdf8",
+      "timestamp": "2026-02-27 22:32:52",
+      "coin_id": "1d59cc58-3f75-45b6-aa71-5eab0ca9fc54",
       "waarde": 10,
-      "recipient": "d8b099b1811ef03a\u2026",
+      "recipient": "6034a818f003cb02\u2026",
       "coin_json": {
-        "coin_id": "ea4d01ef-1a14-4942-8cbd-ec9fcdcccdf8",
+        "coin_id": "1d59cc58-3f75-45b6-aa71-5eab0ca9fc54",
         "waarde": 10,
-        "pk_current": "cd78558460c32bf1f4c66c7021dfaca779bd41984cd938d815df09cfbfb87ac3",
-        "pk_issuer": "39cd05dbb024a5595588de67588367fcb84f9a50bfda72594c6b45695a37a1e7",
-        "issuer_signature": "2b909e0a35f9a35b06c833952ef10b6c0c320e420dd5395930b9bf09f3ac716d713d73f39df207ba71f83347848bb7bb8e9dd0907eb9cee8278d13f507158c07",
-        "state_engine_endpoint": "ff7855d4f4ce86ea31fdefe3d7677fe4",
-        "pk_engine": "3cca462da053762302297fb79c951e15ba3debf53098d6b41011a9ce6f496981"
+        "pk_current": "0eeb147beea15ce75b23ad4d7786c4d418ea92d1fa1071d1114800c68843ba3a",
+        "pk_issuer": "bc643682cae21fd06941e22624d091c24a2c8fd57d5c78244a2aaa18c051c139",
+        "issuer_signature": "0bb94b2f86f5af52d116e9a851cb0a8255524a070db0bb1632d85ca44d0adc308ae200704267d70ecaf36e2a4b0c1ad2fd635d5aa95f72f22195e43a2ef13407",
+        "state_engine_endpoint": "f0f2fcab8a14db6bf83b4dee69384d5c",
+        "pk_engine": "76541960e72c24509218b249bfee232964304400084dc1bab5ad4d42f802a963"
+      }
+    },
+    {
+      "timestamp": "2026-02-27 22:35:38",
+      "coin_id": "daa2a28c-1ac9-4a42-8945-c22619a9b330",
+      "waarde": 10,
+      "recipient": "1d09aeef3f25deec\u2026",
+      "coin_json": {
+        "coin_id": "daa2a28c-1ac9-4a42-8945-c22619a9b330",
+        "waarde": 10,
+        "pk_current": "bd82fecc3ef0a803058efe848df291221451881962dd2fddcd4256871f650e33",
+        "pk_issuer": "bc643682cae21fd06941e22624d091c24a2c8fd57d5c78244a2aaa18c051c139",
+        "issuer_signature": "a7a93795d07d62b3ee9223e156e906ff2f19e35149296be11e07f8b7d021bcf1305df80bd380de0d705c2a60016c5e4ca151ae1a0fe3ba864a8a3e0ac41ae70c",
+        "state_engine_endpoint": "af05a935c8382d151035aef6fa07f27f",
+        "pk_engine": "8f7dfcc48cd656c1bd1c26eeb4366a5995188ed589128b0f9b1451e67ad3821a"
       }
     }
   ],
   "contacts": [
     {
       "name": "State Engine",
-      "address": "ff7855d4f4ce86ea31fdefe3d7677fe4",
-      "pk": "3cca462da053762302297fb79c951e15ba3debf53098d6b41011a9ce6f496981"
+      "address": "f0f2fcab8a14db6bf83b4dee69384d5c",
+      "pk": "76541960e72c24509218b249bfee232964304400084dc1bab5ad4d42f802a963"
     },
     {
-      "name": "d8b099b1811ef03a",
-      "address": "d8b099b1811ef03a3455e388317e9861",
-      "pk": "cd78558460c32bf1f4c66c7021dfaca779bd41984cd938d815df09cfbfb87ac3"
+      "name": "Wallet A",
+      "address": "6034a818f003cb02dce77f1303393395",
+      "pk": "0eeb147beea15ce75b23ad4d7786c4d418ea92d1fa1071d1114800c68843ba3a"
+    },
+    {
+      "name": "State Engine",
+      "address": "af05a935c8382d151035aef6fa07f27f",
+      "pk": "8f7dfcc48cd656c1bd1c26eeb4366a5995188ed589128b0f9b1451e67ad3821a"
+    },
+    {
+      "name": "walleta",
+      "address": "1d09aeef3f25deece6ed01573e5ece8e",
+      "pk": ""
     }
   ],
   "registered_at_engine": true,
-  "engine_address": "ff7855d4f4ce86ea31fdefe3d7677fe4",
-  "engine_pk": "3cca462da053762302297fb79c951e15ba3debf53098d6b41011a9ce6f496981"
+  "engine_address": "af05a935c8382d151035aef6fa07f27f",
+  "engine_pk": "8f7dfcc48cd656c1bd1c26eeb4366a5995188ed589128b0f9b1451e67ad3821a"
 }

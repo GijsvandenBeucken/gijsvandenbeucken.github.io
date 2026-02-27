@@ -50,6 +50,34 @@
         <div class="balance">{{ balance }}</div>
     </div>
 
+    {% if incoming_requests %}
+    <div class="card" style="border-left:3px solid var(--success);background:var(--bg)">
+        <h2 style="font-size:1rem">Inkomende betaalverzoeken</h2>
+        {% for req in incoming_requests %}
+        <div style="padding:0.5rem 0;{% if not loop.last %}border-bottom:1px solid var(--border);{% endif %}">
+            <div style="font-size:0.85rem;margin-bottom:0.4rem">
+                <strong>Betaalverzoek</strong> van
+                <span class="mono" style="font-size:0.75rem">{{ req.from_hash }}</span>
+            </div>
+            {% if req.payload %}
+            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.4rem">
+                PK ontvanger: <span class="mono" style="font-size:0.7rem;word-break:break-all">{{ req.payload.pk }}</span>
+            </div>
+            {% endif %}
+            <div style="display:flex;gap:0.5rem">
+                <button class="btn btn-success" style="padding:0.3rem 0.75rem;font-size:0.8rem"
+                    onclick="payFromRequest('{{ req.from_hash }}', '{{ req.payload.pk|default('') }}')">
+                    Betalen
+                </button>
+                <form method="POST" action="{{ url_for('wallet_decline_request', wallet_id=wallet_id, idx=loop.index0) }}" style="margin:0">
+                    <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem;color:var(--danger)">Weigeren</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="card">
         <h2>Transacties</h2>
         {% if inline_msg %}
@@ -291,9 +319,18 @@
 {% block scripts %}
 <script>
 function handleSSE(data) {
-    if (data.type === 'coin_received' || data.type === 'tx_confirmed') {
+    if (data.type === 'coin_received' || data.type === 'tx_confirmed' ||
+        data.type === 'payment_request' || data.type === 'payment_response') {
         setTimeout(() => location.reload(), 1000);
     }
+}
+
+function payFromRequest(addr, pk) {
+    const addrField = document.getElementById('pay_addr');
+    const pkField = document.getElementById('pay_pk');
+    if (addrField) addrField.value = addr;
+    if (pkField) pkField.value = pk;
+    openOverlay('pay-overlay');
 }
 
 function sendPaymentRequest() {

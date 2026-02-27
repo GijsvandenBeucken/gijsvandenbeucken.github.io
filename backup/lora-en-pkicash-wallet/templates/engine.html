@@ -65,7 +65,7 @@
             {% for iss in issuers %}
             <tr>
                 <td style="font-weight:500">{{ iss.name or '(onbekend)' }}</td>
-                <td class="mono">{{ iss.pk[:24] }}...</td>
+                <td class="mono" style="word-break:break-all;font-size:0.75rem">{{ iss.pk }}</td>
             </tr>
             {% endfor %}
         </table>
@@ -81,8 +81,8 @@
             <tr><th>Coin ID</th><th>PK eigenaar</th></tr>
             {% for c in coins %}
             <tr>
-                <td class="mono">{{ c.coin_id[:16] }}...</td>
-                <td class="mono">{{ c.pk_current[:16] }}...</td>
+                <td class="mono" style="word-break:break-all;font-size:0.75rem">{{ c.coin_id }}</td>
+                <td class="mono" style="word-break:break-all;font-size:0.75rem">{{ c.pk_current }}</td>
             </tr>
             {% endfor %}
         </table>

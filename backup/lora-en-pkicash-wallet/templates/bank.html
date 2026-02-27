@@ -146,7 +146,7 @@
             {% for c in issued_coins %}
             <tr>
                 <td style="font-size:0.8rem;color:var(--text-muted)">{{ c.timestamp }}</td>
-                <td class="mono">{{ c.coin_id[:12] }}...</td>
+                <td class="mono" style="word-break:break-all;font-size:0.75rem">{{ c.coin_id }}</td>
                 <td><span class="badge badge-value">{{ c.waarde }}</span></td>
                 <td>{{ c.recipient }}</td>
                 <td>
@@ -348,7 +348,7 @@
             <tr>
                 <td style="font-weight:500">State Engine</td>
                 <td class="mono" style="font-size:0.8rem">{{ engine_address }}</td>
-                <td class="mono" style="font-size:0.8rem">{{ engine_pk[:24] }}...</td>
+                <td class="mono" style="word-break:break-all;font-size:0.75rem">{{ engine_pk }}</td>
             </tr>
         </table>
         {% else %}

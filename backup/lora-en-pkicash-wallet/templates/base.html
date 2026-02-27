@@ -156,10 +156,15 @@
                             <span class="my-contact-label">Gezien</span>
                             <span class="my-contact-value">{{ info.seen|default('') }}</span>
                         </div>
-                        <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
-                            <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem" onclick="copyToClipboard('{{ hash }}|{{ info.pk_transaction|default('') }}', this)">
-                                <i data-lucide="copy" style="width:12px;height:12px"></i> Kopieer
+                        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.5rem">
+                            <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem" onclick="copyToClipboard('{{ hash }}', this)">
+                                <i data-lucide="copy" style="width:12px;height:12px"></i> Kopieer adres
                             </button>
+                            {% if info.pk_transaction %}
+                            <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem" onclick="copyToClipboard('{{ info.pk_transaction }}', this)">
+                                <i data-lucide="copy" style="width:12px;height:12px"></i> Kopieer PK
+                            </button>
+                            {% endif %}
                             <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem" onclick="saveAnnounceAsContact('{{ hash }}', '{{ info.name|default('') }}', '{{ info.pk_transaction|default('') }}')">
                                 <i data-lucide="user-plus" style="width:12px;height:12px"></i> Opslaan als contact
                             </button>
@@ -191,17 +196,27 @@
             container.innerHTML = reversed.map(m => {
                 const dir = m.direction === 'out' ? '↑ Verstuurd' : '↓ Ontvangen';
                 const dirClass = m.direction === 'out' ? 'badge-info' : 'badge-success';
-                const peer = m.direction === 'out'
-                    ? (m.to_hash ? m.to_hash.substring(0,12) + '…' : '?')
-                    : (m.from_hash ? m.from_hash.substring(0,12) + '…' : '?');
+                const peer = m.direction === 'out' ? (m.to_hash || '?') : (m.from_hash || '?');
+                const peerRole = m.direction === 'out' ? (m.to_role || '') : (m.from_role || '');
                 const ts = m.ts ? new Date(m.ts).toLocaleString('nl-NL') : '';
                 const msgType = m.type || '?';
+                let detail = '';
+                if (m.payload) {
+                    const p = m.payload;
+                    if (p.waarde) detail += 'Waarde: ' + p.waarde + ' ';
+                    if (p.address) detail += 'Adres: ' + p.address + ' ';
+                    if (p.coin_id) detail += 'Coin: ' + p.coin_id.substring(0,8) + '… ';
+                }
                 return '<div class="card" style="margin-bottom:0.5rem;padding:0.6rem 0.8rem">' +
                     '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem">' +
                         '<span class="badge ' + dirClass + '" style="font-size:0.7rem">' + dir + '</span>' +
                         '<span style="font-size:0.7rem;color:var(--text-muted)">' + ts + '</span>' +
                     '</div>' +
-                    '<div style="font-size:0.8rem"><strong>' + msgType + '</strong> — ' + peer + '</div>' +
+                    '<div style="font-size:0.85rem;margin-bottom:0.2rem"><strong>' + msgType + '</strong>' +
+                        (peerRole ? ' <span class="badge" style="font-size:0.65rem">' + peerRole + '</span>' : '') +
+                    '</div>' +
+                    '<div style="font-size:0.75rem;color:var(--text-muted);word-break:break-all">' + peer + '</div>' +
+                    (detail ? '<div style="font-size:0.75rem;margin-top:0.2rem">' + detail + '</div>' : '') +
                 '</div>';
             }).join('');
         });
