@@ -1,0 +1,34 @@
+{
+  "issued_coins": [
+    {
+      "timestamp": "2026-02-27 22:03:11",
+      "coin_id": "ea4d01ef-1a14-4942-8cbd-ec9fcdcccdf8",
+      "waarde": 10,
+      "recipient": "d8b099b1811ef03a\u2026",
+      "coin_json": {
+        "coin_id": "ea4d01ef-1a14-4942-8cbd-ec9fcdcccdf8",
+        "waarde": 10,
+        "pk_current": "cd78558460c32bf1f4c66c7021dfaca779bd41984cd938d815df09cfbfb87ac3",
+        "pk_issuer": "39cd05dbb024a5595588de67588367fcb84f9a50bfda72594c6b45695a37a1e7",
+        "issuer_signature": "2b909e0a35f9a35b06c833952ef10b6c0c320e420dd5395930b9bf09f3ac716d713d73f39df207ba71f83347848bb7bb8e9dd0907eb9cee8278d13f507158c07",
+        "state_engine_endpoint": "ff7855d4f4ce86ea31fdefe3d7677fe4",
+        "pk_engine": "3cca462da053762302297fb79c951e15ba3debf53098d6b41011a9ce6f496981"
+      }
+    }
+  ],
+  "contacts": [
+    {
+      "name": "State Engine",
+      "address": "ff7855d4f4ce86ea31fdefe3d7677fe4",
+      "pk": "3cca462da053762302297fb79c951e15ba3debf53098d6b41011a9ce6f496981"
+    },
+    {
+      "name": "d8b099b1811ef03a",
+      "address": "d8b099b1811ef03a3455e388317e9861",
+      "pk": "cd78558460c32bf1f4c66c7021dfaca779bd41984cd938d815df09cfbfb87ac3"
+    }
+  ],
+  "registered_at_engine": true,
+  "engine_address": "ff7855d4f4ce86ea31fdefe3d7677fe4",
+  "engine_pk": "3cca462da053762302297fb79c951e15ba3debf53098d6b41011a9ce6f496981"
+}

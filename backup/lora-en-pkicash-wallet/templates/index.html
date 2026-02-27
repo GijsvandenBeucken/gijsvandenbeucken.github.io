@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}PKI Cash - Rolkeuze{% endblock %}
+{% block content %}
+<div class="role-select">
+    <h1>PKI Cash - Crisis Betalingssysteem</h1>
+
+    <a href="{{ url_for('bank_page') }}" class="role-card">
+        <div class="role-icon">&#x1f3e6;</div>
+        <div class="role-name">Bank</div>
+        <div class="role-desc">Issuer medewerker</div>
+    </a>
+
+    <a href="{{ url_for('engine_page') }}" class="role-card">
+        <div class="role-icon">&#x2699;</div>
+        <div class="role-name">State Engine</div>
+        <div class="role-desc">Engine beheerder</div>
+    </a>
+
+    <a href="{{ url_for('wallet_page', wallet_id='a') }}" class="role-card">
+        <div class="role-icon">&#x1f4b3;</div>
+        <div class="role-name">Wallet A</div>
+        <div class="role-desc">Gebruiker A</div>
+    </a>
+
+    <a href="{{ url_for('wallet_page', wallet_id='b') }}" class="role-card">
+        <div class="role-icon">&#x1f4b3;</div>
+        <div class="role-name">Wallet B</div>
+        <div class="role-desc">Gebruiker B</div>
+    </a>
+
+    <a href="#" onclick="openDemo(); return false;" class="role-card" style="grid-column: 1 / -1;">
+        <div class="role-icon">&#x1f4bb;</div>
+        <div class="role-name">Demo Modus</div>
+        <div class="role-desc">Open alle 4 de schermen in aparte tabs</div>
+    </a>
+</div>
+
+<script>
+function openDemo() {
+    window.open('/bank?demo=1', '_blank');
+    window.open('/engine?demo=1', '_blank');
+    window.open('/wallet/a?demo=1', '_blank');
+    window.open('/wallet/b?demo=1', '_blank');
+}
+</script>
+{% endblock %}

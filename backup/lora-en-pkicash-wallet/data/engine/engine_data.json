@@ -1,0 +1,12 @@
+{
+  "contacts": [
+    {
+      "name": "Bank",
+      "address": "d2635c8b4cc36ffc030aff0cc24fe55c",
+      "pk": "39cd05dbb024a5595588de67588367fcb84f9a50bfda72594c6b45695a37a1e7"
+    }
+  ],
+  "issuer_names": {
+    "39cd05dbb024a5595588de67588367fcb84f9a50bfda72594c6b45695a37a1e7": "Bank"
+  }
+}

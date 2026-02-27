@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PKI Cash{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    {% if show_nav %}
+    <nav>
+        <span class="logo">PKI Cash</span>
+        <a href="{{ url_for('bank_page', demo=1) }}" class="{{ 'active' if active_page == 'bank' }}">Bank</a>
+        <a href="{{ url_for('engine_page', demo=1) }}" class="{{ 'active' if active_page == 'engine' }}">Engine</a>
+        <a href="{{ url_for('wallet_page', wallet_id='a', demo=1) }}" class="{{ 'active' if active_page == 'wallet_a' }}">Wallet A</a>
+        <a href="{{ url_for('wallet_page', wallet_id='b', demo=1) }}" class="{{ 'active' if active_page == 'wallet_b' }}">Wallet B</a>
+    </nav>
+    {% endif %}
+
+    {% block header %}{% endblock %}
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash flash-{{ category }} auto-dismiss">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+    function copyToClipboard(text, btn) {
+        navigator.clipboard.writeText(text);
+        if (btn) {
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="check" style="width:16px;height:16px"></i>';
+            lucide.createIcons({nodes: [btn]});
+            setTimeout(() => { btn.innerHTML = orig; lucide.createIcons({nodes: [btn]}); }, 1500);
+        }
+    }
+
+    function openOverlay(id) {
+        document.getElementById(id).classList.add('open');
+    }
+
+    function closeOverlay(id) {
+        document.getElementById(id).classList.remove('open');
+    }
+
+    function toggleAccordion(el) {
+        el.classList.toggle('open');
+        el.nextElementSibling.classList.toggle('open');
+    }
+
+    function toggleMenu(id) {
+        const menu = document.getElementById(id);
+        menu.classList.toggle('open');
+    }
+
+    function pickContact(btn, nameId, addrId, pkId) {
+        const item = btn.closest('.contact-picker-item');
+        if (nameId) document.getElementById(nameId).value = item.dataset.name;
+        if (addrId) document.getElementById(addrId).value = item.dataset.addr;
+        if (pkId) document.getElementById(pkId).value = item.dataset.pk;
+        btn.closest('.contact-picker').classList.remove('open');
+    }
+
+    function toggleContactPicker(el) {
+        const picker = el.closest('.field-with-icon').querySelector('.contact-picker');
+        if (picker) picker.classList.toggle('open');
+    }
+
+    function showSection(name) {
+        document.querySelectorAll('[data-section]').forEach(s => s.style.display = s.dataset.section === name ? '' : 'none');
+        document.querySelectorAll('.menu-dropdown.open').forEach(m => m.classList.remove('open'));
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.menu-wrapper')) {
+            document.querySelectorAll('.menu-dropdown.open').forEach(m => m.classList.remove('open'));
+        }
+        if (!e.target.closest('.field-with-icon')) {
+            document.querySelectorAll('.contact-picker.open').forEach(p => p.classList.remove('open'));
+        }
+    });
+
+    document.addEventListener('paste', function(e) {
+        const el = e.target;
+        if (!el.classList.contains('contact-addr')) return;
+        const text = (e.clipboardData || window.clipboardData).getData('text').trim();
+        if (text.includes('|')) {
+            e.preventDefault();
+            const parts = text.split('|');
+            el.value = parts[0].trim();
+            const pkField = el.closest('.contact-pair').querySelector('.contact-pk');
+            if (pkField) pkField.value = parts.slice(1).join('|').trim();
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        document.querySelectorAll('.auto-dismiss').forEach(el => {
+            setTimeout(() => { el.style.transition = 'opacity 0.5s'; el.style.opacity = '0'; }, 2500);
+            setTimeout(() => el.remove(), 3200);
+        });
+
+        document.querySelectorAll('.inline-msg').forEach(el => {
+            setTimeout(() => { el.style.transition = 'opacity 0.5s'; el.style.opacity = '0'; }, 2500);
+            setTimeout(() => el.remove(), 3200);
+        });
+    });
+    </script>
+
+    <!-- Overlay: Netwerk (Announces) -->
+    <div class="overlay-backdrop" id="network-overlay">
+        <div class="overlay" style="max-width:700px">
+            <div class="overlay-header">
+                <h2>Netwerk</h2>
+                <button class="overlay-close" onclick="closeOverlay('network-overlay')">&times;</button>
+            </div>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.5rem">
+                Eigen adres: <code id="own-dest-hash" style="font-size:0.75rem">{{ dest_hash|default('') }}</code>
+                <button class="copy-inline" onclick="copyToClipboard(document.getElementById('own-dest-hash').textContent, this)" title="Kopieer"><i data-lucide="copy" style="width:14px;height:14px"></i></button>
+            </p>
+            <button class="btn btn-primary" style="margin-bottom:1rem;padding:0.4rem 1rem;font-size:0.85rem" onclick="doAnnounce()">
+                <i data-lucide="radio" style="width:14px;height:14px;vertical-align:middle"></i> Announce op netwerk
+            </button>
+            <h3 style="font-size:0.9rem;margin-bottom:0.5rem">Ontdekte actoren</h3>
+            <div id="announce-list">
+                {% if announces %}
+                {% for hash, info in announces.items() %}
+                <div class="contact-card">
+                    <div class="contact-card-header" onclick="this.parentElement.classList.toggle('expanded')">
+                        <span class="c-name">{{ info.name or info.role or 'Onbekend' }}</span>
+                        <span class="badge" style="font-size:0.7rem;margin-left:0.5rem">{{ info.role|default('?') }}</span>
+                        <span class="c-mono" style="flex:1;text-align:right;font-size:0.7rem">{{ hash[:16] }}…</span>
+                        <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--text-muted)"></i>
+                    </div>
+                    <div class="contact-card-body">
+                        <div class="my-contact-field">
+                            <span class="my-contact-label">Dest hash</span>
+                            <span class="my-contact-value mono" style="font-size:0.7rem;word-break:break-all">{{ hash }}</span>
+                        </div>
+                        {% if info.pk_transaction %}
+                        <div class="my-contact-field">
+                            <span class="my-contact-label">PK transactie</span>
+                            <span class="my-contact-value mono" style="font-size:0.7rem;word-break:break-all">{{ info.pk_transaction }}</span>
+                        </div>
+                        {% endif %}
+                        <div class="my-contact-field">
+                            <span class="my-contact-label">Gezien</span>
+                            <span class="my-contact-value">{{ info.seen|default('') }}</span>
+                        </div>
+                        <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
+                            <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem" onclick="copyToClipboard('{{ hash }}|{{ info.pk_transaction|default('') }}', this)">
+                                <i data-lucide="copy" style="width:12px;height:12px"></i> Kopieer
+                            </button>
+                            <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem" onclick="saveAnnounceAsContact('{{ hash }}', '{{ info.name|default('') }}', '{{ info.pk_transaction|default('') }}')">
+                                <i data-lucide="user-plus" style="width:12px;height:12px"></i> Opslaan als contact
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p style="color:var(--text-muted);font-size:0.85rem">Nog geen actoren ontdekt. Klik "Announce" en wacht op anderen.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function showInbox() {
+        showSection('inbox');
+        const container = document.getElementById('inbox-list');
+        if (!container) return;
+        container.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem">Laden...</p>';
+        fetch('/api/message-log')
+        .then(r => r.json())
+        .then(messages => {
+            if (!messages || messages.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem">Nog geen berichten.</p>';
+                return;
+            }
+            const reversed = [...messages].reverse();
+            container.innerHTML = reversed.map(m => {
+                const dir = m.direction === 'out' ? '↑ Verstuurd' : '↓ Ontvangen';
+                const dirClass = m.direction === 'out' ? 'badge-info' : 'badge-success';
+                const peer = m.direction === 'out'
+                    ? (m.to_hash ? m.to_hash.substring(0,12) + '…' : '?')
+                    : (m.from_hash ? m.from_hash.substring(0,12) + '…' : '?');
+                const ts = m.ts ? new Date(m.ts).toLocaleString('nl-NL') : '';
+                const msgType = m.type || '?';
+                return '<div class="card" style="margin-bottom:0.5rem;padding:0.6rem 0.8rem">' +
+                    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem">' +
+                        '<span class="badge ' + dirClass + '" style="font-size:0.7rem">' + dir + '</span>' +
+                        '<span style="font-size:0.7rem;color:var(--text-muted)">' + ts + '</span>' +
+                    '</div>' +
+                    '<div style="font-size:0.8rem"><strong>' + msgType + '</strong> — ' + peer + '</div>' +
+                '</div>';
+            }).join('');
+        });
+    }
+
+    function doAnnounce() {
+        fetch('/api/announce', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'})
+        .then(r => r.json())
+        .then(d => { if(d.ok) { alert('Announce verzonden!'); location.reload(); } });
+    }
+
+    function saveAnnounceAsContact(hash, name, pk) {
+        const contactName = prompt('Naam voor dit contact:', name || hash.substring(0,16));
+        if (!contactName) return;
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/api/add-contact';
+        [['contact_name', contactName], ['contact_address', hash], ['contact_pk', pk]].forEach(([n,v]) => {
+            const inp = document.createElement('input');
+            inp.type = 'hidden'; inp.name = n; inp.value = v;
+            form.appendChild(inp);
+        });
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    const _evtSource = new EventSource('/api/events');
+    _evtSource.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        if (data.type === 'announce') {
+            location.reload();
+        }
+        if (typeof handleSSE === 'function') handleSSE(data);
+    };
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

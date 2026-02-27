@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% block title %}PKI Cash - State Engine{% endblock %}
+
+{% set activated = pk_engine is not none %}
+
+{% block header %}
+<div class="page-header-bar">
+    <div class="header-inner">
+        <div class="header-top">
+            <h1>
+                State Engine
+                {% if activated %}
+                <button class="copy-inline" onclick="copyToClipboard('{{ engine_contact }}', this)" title="Kopieer adres + public key">
+                    <i data-lucide="copy" style="width:16px;height:16px"></i>
+                </button>
+                {% endif %}
+            </h1>
+            {% if activated %}
+            <div class="menu-wrapper">
+                <button class="menu-btn" onclick="toggleMenu('engine-menu')"><i data-lucide="menu" style="width:16px;height:16px"></i> Menu</button>
+                <div class="menu-dropdown" id="engine-menu">
+                    <a href="#" onclick="showSection('overzicht'); return false;">Overzicht</a>
+                    <a href="#" onclick="showSection('contacten'); return false;">Contacten</a>
+                    <a href="#" onclick="showSection('mijn-gegevens'); return false;">Mijn contactgegevens</a>
+                    <a href="#" onclick="showInbox(); return false;">Inbox</a>
+                    <a href="#" onclick="openOverlay('network-overlay'); return false;">Netwerk</a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+{% if not activated %}
+<div class="activation">
+    <h2>Engine activeren</h2>
+    <div class="activation-step current">
+        <div class="activation-step-header">
+            <span class="step-indicator">1</span>
+            Keypair genereren
+        </div>
+        <p>Genereer een keypair om de State Engine te activeren.</p>
+        <form method="POST" action="{{ url_for('engine_generate_key') }}">
+            <button class="btn btn-primary" type="submit">Keypair genereren</button>
+        </form>
+    </div>
+</div>
+
+{% else %}
+
+<div data-section="overzicht">
+    <div class="card">
+        <h2 style="display:flex;justify-content:space-between;align-items:center">
+            Trusted issuers ({{ issuers|length }})
+            <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem" onclick="openOverlay('issuer-overlay')">+ Toevoegen</button>
+        </h2>
+        {% if inline_msg %}
+        <div class="inline-msg">{{ inline_msg }}</div>
+        {% endif %}
+        {% if issuers %}
+        <table>
+            <tr><th>Naam</th><th>Publieke sleutel</th></tr>
+            {% for iss in issuers %}
+            <tr>
+                <td style="font-weight:500">{{ iss.name or '(onbekend)' }}</td>
+                <td class="mono">{{ iss.pk[:24] }}...</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p style="color:var(--text-muted);font-size:0.85rem">Nog geen issuers. Klik "+ Toevoegen" om een bank te registreren.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2>Geregistreerde coins ({{ coins|length }})</h2>
+        {% if coins %}
+        <table>
+            <tr><th>Coin ID</th><th>PK eigenaar</th></tr>
+            {% for c in coins %}
+            <tr>
+                <td class="mono">{{ c.coin_id[:16] }}...</td>
+                <td class="mono">{{ c.pk_current[:16] }}...</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p style="color:var(--text-muted);font-size:0.85rem">Nog geen coins.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div data-section="contacten" style="display:none">
+    <div class="card">
+        <h2 style="display:flex;justify-content:space-between;align-items:center">
+            Contacten ({{ contacts|length }})
+            <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem" onclick="openOverlay('engine-contact-overlay')">+ Toevoegen</button>
+        </h2>
+        {% if contacts %}
+        {% for c in contacts %}
+        <div class="contact-card">
+            <div class="contact-card-header" onclick="this.parentElement.classList.toggle('expanded')">
+                <span class="c-name">{{ c.name }}</span>
+                <span class="c-mono" style="flex:1;text-align:right">{{ c.address }}</span>
+                <i data-lucide="chevron-down" style="width:16px;height:16px;color:var(--text-muted);flex-shrink:0"></i>
+            </div>
+            <div class="contact-card-body">
+                <form method="POST" action="{{ url_for('engine_edit_contact', idx=loop.index0) }}">
+                    <div class="form-group">
+                        <label>Naam</label>
+                        <input type="text" name="contact_name" value="{{ c.name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Adres</label>
+                        <input type="text" name="contact_address" value="{{ c.address }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Publieke sleutel</label>
+                        <input type="text" name="contact_pk" value="{{ c.pk }}" placeholder="pk (hex)">
+                    </div>
+                    <div class="contact-actions">
+                        <button class="btn btn-primary" type="submit" style="width:auto;padding:0.4rem 1rem;font-size:0.8rem">Opslaan</button>
+                        <form method="POST" action="{{ url_for('engine_delete_contact', idx=loop.index0) }}" style="display:inline;margin:0" onsubmit="return confirm('Contact verwijderen?')">
+                            <button class="btn-danger-text" type="submit">Verwijderen</button>
+                        </form>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p style="color:var(--text-muted);font-size:0.85rem">Nog geen contacten. Klik "+ Toevoegen" om een contact toe te voegen.</p>
+        {% endif %}
+    </div>
+
+    <!-- Overlay: Contact toevoegen (Engine) -->
+    <div class="overlay-backdrop" id="engine-contact-overlay">
+        <div class="overlay">
+            <div class="overlay-header">
+                <h2>Contact toevoegen</h2>
+                <button class="overlay-close" onclick="closeOverlay('engine-contact-overlay')">&times;</button>
+            </div>
+            <form method="POST" action="{{ url_for('engine_add_contact') }}">
+                <div class="form-group">
+                    <label>Naam</label>
+                    <input type="text" name="contact_name" placeholder="bijv. Bank" required>
+                </div>
+                <div class="contact-pair">
+                    <div class="form-group">
+                        <label>Adres</label>
+                        <input type="text" name="contact_address" class="contact-addr" placeholder="adres" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Publieke sleutel</label>
+                        <input type="text" name="contact_pk" class="contact-pk" placeholder="pk (hex)">
+                    </div>
+                </div>
+                <button class="btn btn-primary" type="submit" style="margin-top:0.75rem">Opslaan</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div data-section="mijn-gegevens" style="display:none">
+    <div class="card">
+        <h2>Mijn contactgegevens</h2>
+        <div class="my-contact-field">
+            <span class="my-contact-label">Adres (dest hash)</span>
+            <span class="my-contact-value mono" style="word-break:break-all;font-size:0.75rem">{{ engine_address }}</span>
+        </div>
+        <div class="my-contact-field">
+            <span class="my-contact-label">Public Key (transactie)</span>
+            <span class="my-contact-value mono" style="word-break:break-all;font-size:0.75rem">{{ pk_engine }}</span>
+        </div>
+        <button class="btn btn-outline" style="margin-top:0.75rem" onclick="copyToClipboard('{{ engine_contact }}', this)">
+            <i data-lucide="copy" style="width:14px;height:14px;vertical-align:middle"></i> Kopieer alles
+        </button>
+    </div>
+</div>
+
+<!-- Overlay: Issuer registreren -->
+<div class="overlay-backdrop" id="issuer-overlay">
+    <div class="overlay">
+        <div class="overlay-header">
+            <h2>Issuer registreren</h2>
+            <button class="overlay-close" onclick="closeOverlay('issuer-overlay')">&times;</button>
+        </div>
+        <form method="POST" action="{{ url_for('engine_register_issuer') }}">
+            <div class="form-group">
+                <label>Naam bank</label>
+                <div class="field-with-icon">
+                    <input type="text" name="issuer_name" id="issuer_name" placeholder="bijv. DNB, Rabobank">
+                    {% if contacts %}
+                    <button type="button" class="addressbook-btn" onclick="toggleContactPicker(this)" title="Kies uit contacten"><i data-lucide="book-user" style="width:16px;height:16px"></i></button>
+                    <div class="contact-picker">
+                        {% for c in contacts %}
+                        <div class="contact-picker-item" data-name="{{ c.name }}" data-addr="{{ c.address }}" data-pk="{{ c.pk }}" onclick="pickContact(this, 'issuer_name', 'issuer_address', 'issuer_pk')">
+                            <div class="cp-name">{{ c.name }}</div>
+                            <div class="cp-detail">{{ c.address }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="contact-pair">
+                <div class="form-group">
+                    <label>Adres</label>
+                    <input type="text" name="issuer_address" id="issuer_address" class="contact-addr" placeholder="bijv. bank">
+                </div>
+                <div class="form-group">
+                    <label>Publieke sleutel</label>
+                    <input type="text" name="issuer_pk" id="issuer_pk" class="contact-pk" placeholder="pk (hex)" required>
+                </div>
+            </div>
+            <div class="checkbox-row">
+                <input type="checkbox" name="save_contact" id="save_issuer" value="1" checked>
+                <label for="save_issuer" style="margin:0;font-weight:normal">Opslaan in adresboek</label>
+            </div>
+            <button class="btn btn-primary" type="submit" style="margin-top:0.75rem">Registreer</button>
+        </form>
+    </div>
+</div>
+
+<div data-section="inbox" style="display:none">
+    <h2 style="font-size:1.1rem;margin-bottom:0.75rem">Inbox</h2>
+    <div id="inbox-list"></div>
+</div>
+
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if activated %}
+<script>
+function handleSSE(data) {
+    if (data.type === 'coin_registered' || data.type === 'transaction' || data.type === 'issuer_registered') {
+        setTimeout(() => location.reload(), 1000);
+    }
+}
+</script>
+{% endif %}
+{% endblock %}

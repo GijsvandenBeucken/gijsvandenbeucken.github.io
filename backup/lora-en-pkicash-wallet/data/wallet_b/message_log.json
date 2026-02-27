@@ -1,0 +1,13 @@
+[
+  {
+    "direction": "out",
+    "type": "payment_request",
+    "to_hash": "d8b099b1811ef03a3455e388317e9861",
+    "to_role": "wallet",
+    "payload": {
+      "address": "5a5804e9802265392cdecd11895fc6f7",
+      "pk": "01b55a49e583dd8b63b8b24b182ccac1c8b33bbc0577493643d4418d7ca660ee"
+    },
+    "ts": "2026-02-27T22:06:34.665836"
+  }
+]

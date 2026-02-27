@@ -1,0 +1,16 @@
+{
+  "coins": {},
+  "pending_keypairs": {
+    "c55bce59bf63ef5c8674133b7dd0b99532cfed5facb974131d662968467682fb": "8747d87fc80ef10ae25a63e01301a0eb96a6294c4dfc21688086f3b09fed67af",
+    "01b55a49e583dd8b63b8b24b182ccac1c8b33bbc0577493643d4418d7ca660ee": "14321de3414fa101d37d57d222b91b6b9e44dd57012e04562106a78dfa952c81"
+  },
+  "transaction_log": [],
+  "contacts": [
+    {
+      "name": "wallet a",
+      "address": "d8b099b1811ef03a3455e388317e9861",
+      "pk": ""
+    }
+  ],
+  "address": ""
+}
