@@ -18,6 +18,7 @@
             </h1>
             {% if has_key %}
             <div class="menu-wrapper">
+                {% if pending_count %}<span class="menu-badge"></span>{% endif %}
                 <button class="menu-btn" onclick="toggleMenu('bank-menu')"><i data-lucide="menu" style="width:16px;height:16px"></i> Menu</button>
                 <div class="menu-dropdown" id="bank-menu">
                     <a href="#" onclick="showSection('overzicht'); return false;">Uitgegeven coins</a>
@@ -148,14 +149,14 @@
             <tr><th>Tijd</th><th>Coin ID</th><th>Waarde</th><th>Ontvanger</th><th></th></tr>
             {% for c in issued_coins %}
             <tr>
-                <td style="font-size:0.8rem;color:var(--text-muted)">{{ c.timestamp }}</td>
+                <td style="font-size:0.8rem;color:var(--text-muted);white-space:nowrap">{{ c.timestamp }}</td>
                 <td class="mono" style="word-break:break-all;font-size:0.75rem">{{ c.coin_id }}</td>
                 <td><span class="badge badge-value">{{ c.waarde }}</span></td>
-                <td>{{ c.recipient }}</td>
+                <td class="mono" style="word-break:break-all;font-size:0.75rem">{{ c.recipient }}</td>
                 <td>
                     <span class="accordion-toggle" onclick="toggleAccordion(this)">JSON</span>
                     <div class="accordion-body">
-                        <textarea readonly rows="5" style="font-size:0.7rem">{{ c.coin_json | tojson(indent=2) }}</textarea>
+                        <pre style="font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg);padding:0.5rem;border-radius:var(--radius-sm);margin:0;max-height:300px;overflow-y:auto">{{ c.coin_json | tojson(indent=2) }}</pre>
                     </div>
                 </td>
             </tr>

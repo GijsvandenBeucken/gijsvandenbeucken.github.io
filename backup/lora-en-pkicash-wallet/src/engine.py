@@ -119,8 +119,16 @@ class StateEngine:
         return {"coin_id": row["coin_id"], "pk_current": row["pk_current"]}
 
     def list_coins(self) -> list[dict]:
-        rows = self._conn.execute("SELECT coin_id, pk_current FROM coins").fetchall()
-        return [{"coin_id": r["coin_id"], "pk_current": r["pk_current"]} for r in rows]
+        rows = self._conn.execute("SELECT coin_id, pk_current, coin_data FROM coins").fetchall()
+        result = []
+        for r in rows:
+            entry = {"coin_id": r["coin_id"], "pk_current": r["pk_current"]}
+            try:
+                entry["coin_data"] = json.loads(r["coin_data"])
+            except (json.JSONDecodeError, TypeError):
+                pass
+            result.append(entry)
+        return result
 
     def process_transaction(self, tx: dict) -> dict:
         """

@@ -17,6 +17,7 @@
             </h1>
             {% if activated %}
             <div class="menu-wrapper">
+                {% if pending_count %}<span class="menu-badge"></span>{% endif %}
                 <button class="menu-btn" onclick="toggleMenu('engine-menu')"><i data-lucide="menu" style="width:16px;height:16px"></i> Menu</button>
                 <div class="menu-dropdown" id="engine-menu">
                     <a href="#" onclick="showSection('overzicht'); return false;">Overzicht</a>
@@ -81,11 +82,17 @@
         <h2>Geregistreerde coins ({{ coins|length }})</h2>
         {% if coins %}
         <table>
-            <tr><th>Coin ID</th><th>PK eigenaar</th></tr>
+            <tr><th>Coin ID</th><th>PK eigenaar</th><th></th></tr>
             {% for c in coins %}
             <tr>
                 <td class="mono" style="word-break:break-all;font-size:0.75rem">{{ c.coin_id }}</td>
                 <td class="mono" style="word-break:break-all;font-size:0.75rem">{{ c.pk_current }}</td>
+                <td>
+                    <span class="accordion-toggle" onclick="toggleAccordion(this)">Details</span>
+                    <div class="accordion-body">
+                        <pre style="font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg);padding:0.5rem;border-radius:var(--radius-sm);margin:0">{{ c | tojson(indent=2) }}</pre>
+                    </div>
+                </td>
             </tr>
             {% endfor %}
         </table>

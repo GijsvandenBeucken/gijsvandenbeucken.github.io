@@ -239,7 +239,7 @@ def _register_engine_routes(app, transport, data_dir, notify_local):
             raw_issuers = e.list_issuers()
             names = edata.get("issuer_names", {})
             issuers = [{"pk": p, "name": names.get(p, "")} for p in raw_issuers]
-            coins = [type("C", (), r)() for r in e.list_coins()]
+            coins = e.list_coins()
 
         inline_msg = session.pop("engine_msg", None)
         all_requests = edata.get("incoming_requests", [])
@@ -621,7 +621,7 @@ def _register_bank_routes(app, transport, data_dir, notify_local):
                 "timestamp": _now(),
                 "coin_id": coin.coin_id,
                 "waarde": waarde,
-                "recipient": recipient_dest[:16] + "…",
+                "recipient": recipient_dest,
                 "coin_json": coin.to_dict(),
             })
 
@@ -772,7 +772,7 @@ def _register_bank_routes(app, transport, data_dir, notify_local):
                     "timestamp": _now(),
                     "coin_id": coin.coin_id,
                     "waarde": 1,
-                    "recipient": wallet_dest[:16] + "…",
+                    "recipient": wallet_dest,
                     "coin_json": coin.to_dict(),
                 })
                 try:
@@ -1022,6 +1022,7 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
             w._data.setdefault("outgoing_coin_requests", []).append({
                 "bank_dest": bank_dest,
                 "amount": amount,
+                "public_keys": list(public_keys),
                 "ts": _now(),
                 "status": "pending",
             })
@@ -1031,6 +1032,37 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
         except Exception as exc:
             flash(f"Fout: {exc}", "error")
         return redirect(url_for("wallet_page"))
+
+    @app.route("/wallet/<wallet_id>/send-coin-request", methods=["POST"])
+    def wallet_send_coin_request(wallet_id):
+        w = _get_wallet(data_dir)
+        data = request.get_json(silent=True) or {}
+        bank_dest = data.get("bank_dest", "")
+        amount = int(data.get("amount", 1))
+        if "|" in bank_dest:
+            bank_dest = bank_dest.split("|")[0]
+        if not bank_dest:
+            return jsonify({"error": "bank_dest vereist"}), 400
+        if amount < 1:
+            return jsonify({"error": "Aantal moet minimaal 1 zijn"}), 400
+        try:
+            public_keys = [w.generate_receive_keypair() for _ in range(amount)]
+            transport.send(bank_dest, "bank", "coin_request", {
+                "amount": amount,
+                "wallet_dest": transport.dest_hash_hex,
+                "public_keys": public_keys,
+            })
+            w._data.setdefault("outgoing_coin_requests", []).append({
+                "bank_dest": bank_dest,
+                "amount": amount,
+                "public_keys": list(public_keys),
+                "ts": _now(),
+                "status": "pending",
+            })
+            w._save()
+            return jsonify({"ok": True})
+        except Exception as exc:
+            return jsonify({"error": str(exc)}), 500
 
     @app.route("/wallet/<wallet_id>/accept-request/<int:idx>", methods=["POST"])
     def wallet_accept_request(wallet_id, idx):
@@ -1075,6 +1107,20 @@ def _wallet_handle_message(app, transport, data_dir, wallet_id, notify_local,
         try:
             w.receive_from_engine(payload)
             coin_data = payload.get("coin", {})
+            pk_current = coin_data.get("pk_current", "")
+
+            if pk_current:
+                for req in w._data.get("outgoing_coin_requests", []):
+                    if req.get("status") != "pending":
+                        continue
+                    pks = req.get("public_keys", [])
+                    if pk_current in pks:
+                        pks.remove(pk_current)
+                        if not pks:
+                            req["status"] = "approved"
+                        w._save()
+                        break
+
             notify_local({
                 "type": "coin_received",
                 "coin_id": coin_data.get("coin_id", ""),

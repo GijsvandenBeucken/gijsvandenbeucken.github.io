@@ -19,7 +19,6 @@
                 <button class="menu-btn" onclick="toggleMenu('wallet-menu')"><i data-lucide="menu" style="width:16px;height:16px"></i> Menu</button>
                 <div class="menu-dropdown" id="wallet-menu">
                     <a href="#" onclick="showSection('overzicht'); return false;">Overzicht</a>
-                    <a href="#" onclick="showSection('coins-aanvragen'); return false;">Coins aanvragen</a>
                     <a href="#" onclick="showSection('contacten'); return false;">Contacten</a>
                     <a href="#" onclick="showSection('mijn-adres'); return false;">Mijn contactgegevens</a>
                     <a href="#" onclick="showInbox(); return false;">Inbox</a>
@@ -77,6 +76,32 @@
     </div>
     {% endif %}
 
+    {% if outgoing_coin_requests %}
+    <div class="card">
+        <h2 style="font-size:1rem">Betaalverzoeken</h2>
+        {% for req in outgoing_coin_requests|reverse %}
+        <div style="padding:0.5rem 0;{% if not loop.last %}border-bottom:1px solid var(--border);{% endif %}">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                    <span style="font-size:0.85rem;font-weight:500">{{ req.amount }} coin(s)</span>
+                    <span style="font-size:0.75rem;color:var(--text-muted);margin-left:0.5rem">aan <span class="mono" style="font-size:0.7rem">{{ req.bank_dest[:20] }}…</span></span>
+                </div>
+                <div style="display:flex;align-items:center;gap:0.5rem">
+                    {% if req.status == 'pending' %}
+                    <span class="badge badge-info" style="font-size:0.7rem">Wacht op goedkeuring</span>
+                    {% elif req.status == 'approved' %}
+                    <span class="badge badge-success" style="font-size:0.7rem">Ontvangen</span>
+                    {% elif req.status == 'declined' %}
+                    <span class="badge" style="font-size:0.7rem;background:var(--danger);color:#fff">Afgewezen</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div style="font-size:0.7rem;color:var(--text-muted)">{{ req.ts }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="card">
         <h2>Transacties</h2>
         {% if inline_msg %}
@@ -85,78 +110,26 @@
         {% if transactions %}
         {% for tx in transactions %}
         {% set is_in = tx.action != 'verstuurd' %}
-        <div class="tx-item">
-            <div class="tx-left">
+        <div class="tx-item" style="flex-wrap:wrap">
+            <div class="tx-left" style="flex:1">
                 <span class="tx-action">{{ tx.action|capitalize }}</span>
                 <span class="tx-detail">{{ tx.counterparty or '' }} {{ tx.timestamp }}</span>
             </div>
             <span class="tx-amount {{ 'received' if is_in else 'sent' }}">
                 {{ '+' if is_in else '-' }}{{ tx.waarde or '?' }}
             </span>
+            <div style="width:100%">
+                <span class="accordion-toggle" onclick="toggleAccordion(this)">Details</span>
+                <div class="accordion-body">
+                    <pre style="font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg);padding:0.5rem;border-radius:var(--radius-sm);margin:0">{{ tx | tojson(indent=2) }}</pre>
+                </div>
+            </div>
         </div>
         {% endfor %}
         {% else %}
         <p style="color:var(--text-muted);font-size:0.85rem">Nog geen transacties.</p>
         {% endif %}
     </div>
-</div>
-
-<div data-section="coins-aanvragen" style="display:none">
-    <div class="card">
-        <h2>Coins aanvragen bij bank</h2>
-        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem">
-            Vraag coins aan bij een bank. De bank-operator moet je verzoek goedkeuren.
-        </p>
-        <form method="POST" action="{{ url_for('wallet_request_coins', wallet_id=wallet_id) }}">
-            <div class="form-group">
-                <label>Bank</label>
-                <div class="field-with-icon">
-                    <input type="text" name="bank_address" id="coinreq_bank" placeholder="dest hash van bank" required>
-                    {% if contacts %}
-                    <button type="button" class="addressbook-btn" onclick="toggleContactPicker(this)" title="Kies uit contacten"><i data-lucide="book-user" style="width:16px;height:16px"></i></button>
-                    <div class="contact-picker">
-                        {% for c in contacts %}
-                        <div class="contact-picker-item" data-name="{{ c.name }}" data-addr="{{ c.address }}" data-pk="{{ c.pk }}" onclick="pickContact(this, null, 'coinreq_bank', null)">
-                            <div class="cp-name">{{ c.name }}</div>
-                            <div class="cp-detail">{{ c.address }}</div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Aantal coins (waarde 1 per stuk)</label>
-                <input type="number" name="amount" min="1" value="1" required style="max-width:120px">
-            </div>
-            <button class="btn btn-primary" type="submit" style="margin-top:0.5rem">Aanvraag versturen</button>
-        </form>
-    </div>
-
-    {% if outgoing_coin_requests %}
-    <div class="card">
-        <h2>Mijn aanvragen</h2>
-        <table>
-            <tr><th>Bank</th><th>Aantal</th><th>Status</th><th>Tijd</th></tr>
-            {% for req in outgoing_coin_requests|reverse %}
-            <tr>
-                <td class="mono" style="font-size:0.75rem">{{ req.bank_dest[:16] }}…</td>
-                <td>{{ req.amount }}</td>
-                <td>
-                    {% if req.status == 'pending' %}
-                    <span class="badge badge-info" style="font-size:0.7rem">Wacht op goedkeuring</span>
-                    {% elif req.status == 'approved' %}
-                    <span class="badge badge-success" style="font-size:0.7rem">Goedgekeurd</span>
-                    {% elif req.status == 'declined' %}
-                    <span class="badge" style="font-size:0.7rem;background:var(--danger);color:#fff">Afgewezen</span>
-                    {% endif %}
-                </td>
-                <td style="font-size:0.75rem;color:var(--text-muted)">{{ req.ts }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-    {% endif %}
 </div>
 
 <div data-section="contacten" style="display:none">
@@ -396,33 +369,59 @@ function payFromRequest(addr, pk) {
     openOverlay('pay-overlay');
 }
 
-function sendPaymentRequest() {
+async function sendPaymentRequest() {
     const destField = document.getElementById('recv_send_to');
     let dest = destField ? destField.value.trim() : '';
     if (dest.includes('|')) dest = dest.split('|')[0];
     if (!dest) { alert('Vul eerst een dest hash in.'); return; }
     const amountField = document.getElementById('recv_amount');
-    const amount = amountField ? amountField.value.trim() : '';
-    fetch('/api/send', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            dest_hash: dest,
-            target_role: 'wallet',
-            msg_type: 'payment_request',
-            payload: {
-                address: '{{ wallet_address }}',
-                pk: '{{ wallet_pk|default("") }}',
-                amount: amount || null
+    const amount = amountField ? parseInt(amountField.value) : 0;
+
+    try {
+        const annResp = await fetch('/api/announces');
+        const announces = await annResp.json();
+        const info = announces[dest];
+        const targetRole = info ? info.role : '';
+
+        if (targetRole === 'bank') {
+            if (!amount || amount < 1) {
+                alert('Vul een bedrag in (minimaal 1) voor een coin-aanvraag aan een bank.');
+                return;
             }
-        })
-    })
-    .then(r => r.json())
-    .then(d => {
-        if (d.ok) alert('Betaalverzoek verzonden via Reticulum!');
-        else alert('Fout: ' + (d.error || 'onbekend'));
-    })
-    .catch(e => alert('Fout: ' + e.message));
+            const resp = await fetch('/wallet/{{ wallet_id }}/send-coin-request', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ bank_dest: dest, amount: amount })
+            });
+            const d = await resp.json();
+            if (d.ok) {
+                alert('Coin-aanvraag (' + amount + 'x) verzonden naar bank!');
+                location.reload();
+            } else {
+                alert('Fout: ' + (d.error || 'onbekend'));
+            }
+        } else {
+            const resp = await fetch('/api/send', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    dest_hash: dest,
+                    target_role: 'wallet',
+                    msg_type: 'payment_request',
+                    payload: {
+                        address: '{{ wallet_address }}',
+                        pk: '{{ wallet_pk|default("") }}',
+                        amount: amount || null
+                    }
+                })
+            });
+            const d = await resp.json();
+            if (d.ok) alert('Betaalverzoek verzonden via Reticulum!');
+            else alert('Fout: ' + (d.error || 'onbekend'));
+        }
+    } catch (e) {
+        alert('Fout: ' + e.message);
+    }
 }
 {% if wallet_pk %}
 document.addEventListener('DOMContentLoaded', function() { openOverlay('receive-overlay'); });
