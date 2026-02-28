@@ -121,7 +121,12 @@
             <div style="width:100%">
                 <span class="accordion-toggle" onclick="toggleAccordion(this)">Details</span>
                 <div class="accordion-body">
-                    <pre style="font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg);padding:0.5rem;border-radius:var(--radius-sm);margin:0">{{ tx | tojson(indent=2) }}</pre>
+                    {% if tx.coin_data %}
+                    <div style="font-size:0.75rem;font-weight:600;margin-bottom:0.25rem">Coin</div>
+                    <pre style="font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg);padding:0.5rem;border-radius:var(--radius-sm);margin:0 0 0.5rem 0">{{ tx.coin_data | tojson(indent=2) }}</pre>
+                    {% endif %}
+                    <div style="font-size:0.75rem;font-weight:600;margin-bottom:0.25rem">Transactie</div>
+                    <pre style="font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg);padding:0.5rem;border-radius:var(--radius-sm);margin:0">{{ {"action": tx.action, "coin_id": tx.coin_id, "waarde": tx.waarde, "counterparty": tx.counterparty, "timestamp": tx.timestamp} | tojson(indent=2) }}</pre>
                 </div>
             </div>
         </div>

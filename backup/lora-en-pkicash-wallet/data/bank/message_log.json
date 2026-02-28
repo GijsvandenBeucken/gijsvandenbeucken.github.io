@@ -2,109 +2,142 @@
   {
     "direction": "out",
     "type": "register_issuer",
-    "to_hash": "d0121151c73970578caca96cd0356049",
+    "to_hash": "038fdd5e84d49eb538556e2739bfe9cc",
     "to_role": "engine",
     "payload": {
-      "pk_issuer": "8b1d8271bc837ef141189a030cd4127913273a21735e03eadd19ff26a6348263",
+      "pk_issuer": "26fad024796d954dbb17ae0712280703029b614ce4ae9db4ff95556291270d39",
       "bank_name": "Bank"
     },
-    "ts": "2026-02-28T00:20:28.730466"
+    "ts": "2026-02-28T00:37:35.736983"
   },
   {
     "type": "issuer_confirmed",
-    "from_hash": "d0121151c73970578caca96cd0356049",
+    "from_hash": "038fdd5e84d49eb538556e2739bfe9cc",
     "from_role": "engine",
     "payload": {
-      "pk_engine": "30461683eed08b2654df202918ae8983aad9ad2baa38dc6e5a2ac83d24beadad",
-      "engine_dest": "d0121151c73970578caca96cd0356049"
+      "pk_engine": "a63fc41ecacb6c98141973fa3e514e863ae7cb7b2d09fffe891e2ca053d0dcf1",
+      "engine_dest": "038fdd5e84d49eb538556e2739bfe9cc"
     },
-    "ts": "2026-02-28T00:20:43.621462",
+    "ts": "2026-02-28T00:38:03.503967",
     "direction": "in"
   },
   {
     "type": "coin_request",
-    "from_hash": "0c6a9fc5299dcf955301479fb04c6f21",
+    "from_hash": "e4b5a26da4a94c1a26cfe8f73b4f3db0",
     "from_role": "wallet",
     "payload": {
       "amount": 1,
-      "wallet_dest": "0c6a9fc5299dcf955301479fb04c6f21",
+      "wallet_dest": "e4b5a26da4a94c1a26cfe8f73b4f3db0",
       "public_keys": [
-        "d004ef355a22497130359ac5a4346c6322134ea39135558f769c43ec1da9b935"
+        "7358225a4289b48360b38b03ed61c3705174c544c39a5e2e2bd1488c36c444ba"
       ]
     },
-    "ts": "2026-02-28T00:22:05.927272",
+    "ts": "2026-02-28T00:38:56.336406",
     "direction": "in"
   },
   {
     "direction": "out",
     "type": "register_coin",
-    "to_hash": "d0121151c73970578caca96cd0356049",
+    "to_hash": "038fdd5e84d49eb538556e2739bfe9cc",
     "to_role": "engine",
     "payload": {
       "coin": {
-        "coin_id": "01d88b17-1e0f-4f4d-9af9-9bc5fd2e0de3",
+        "coin_id": "9834ae8e-4572-415e-8bd3-3344d1e65563",
         "waarde": 1,
-        "pk_current": "d004ef355a22497130359ac5a4346c6322134ea39135558f769c43ec1da9b935",
-        "pk_issuer": "8b1d8271bc837ef141189a030cd4127913273a21735e03eadd19ff26a6348263",
-        "issuer_signature": "3a7b52005f9bd1347caed863e7720787901880af496dd45b0f0463c904095fb06526b94386fc1229b42b171fd49009de2a51a787aa5e5c546fe6507183cc6f02",
-        "state_engine_endpoint": "d0121151c73970578caca96cd0356049",
-        "pk_engine": "30461683eed08b2654df202918ae8983aad9ad2baa38dc6e5a2ac83d24beadad"
+        "pk_current": "7358225a4289b48360b38b03ed61c3705174c544c39a5e2e2bd1488c36c444ba",
+        "pk_issuer": "26fad024796d954dbb17ae0712280703029b614ce4ae9db4ff95556291270d39",
+        "issuer_signature": "c783f11bb98e1a2da3075b4ba2bde49398e99ea0858f2980503a2f8491d9a3240af032f5ab615c73dae8e3ce11ae537cdd17f7fad871e0bdf734b4c93eb5f60b",
+        "state_engine_endpoint": "038fdd5e84d49eb538556e2739bfe9cc",
+        "pk_engine": "a63fc41ecacb6c98141973fa3e514e863ae7cb7b2d09fffe891e2ca053d0dcf1"
       },
-      "recipient_dest": "0c6a9fc5299dcf955301479fb04c6f21"
+      "recipient_dest": "e4b5a26da4a94c1a26cfe8f73b4f3db0"
     },
-    "ts": "2026-02-28T00:22:15.134820"
+    "ts": "2026-02-28T00:39:04.353588"
   },
   {
     "type": "coin_request",
-    "from_hash": "0c6a9fc5299dcf955301479fb04c6f21",
+    "from_hash": "e4b5a26da4a94c1a26cfe8f73b4f3db0",
     "from_role": "wallet",
     "payload": {
-      "amount": 2,
-      "wallet_dest": "0c6a9fc5299dcf955301479fb04c6f21",
+      "amount": 1,
+      "wallet_dest": "e4b5a26da4a94c1a26cfe8f73b4f3db0",
       "public_keys": [
-        "0258c1ff62b004e8c367522d7ddbe05cdfc0de3110a0da196008c34f08211d74",
-        "e57d50e40f353ca0a787e7df9a11024f8e69cb13168fda0c4ffb4eb742fcea44"
+        "4bcab14a736228b664e4a935386fd07e1104f7cc1865e5a85751416da6f52716"
       ]
     },
-    "ts": "2026-02-28T00:29:45.343215",
+    "ts": "2026-02-28T00:40:06.596994",
     "direction": "in"
   },
   {
     "direction": "out",
     "type": "register_coin",
-    "to_hash": "d0121151c73970578caca96cd0356049",
+    "to_hash": "038fdd5e84d49eb538556e2739bfe9cc",
     "to_role": "engine",
     "payload": {
       "coin": {
-        "coin_id": "cca21d70-bf9b-41c0-b450-05f899dc7fb9",
+        "coin_id": "c9a7bdc7-4fdc-421f-82e4-654fab7390c5",
         "waarde": 1,
-        "pk_current": "0258c1ff62b004e8c367522d7ddbe05cdfc0de3110a0da196008c34f08211d74",
-        "pk_issuer": "8b1d8271bc837ef141189a030cd4127913273a21735e03eadd19ff26a6348263",
-        "issuer_signature": "fbafbf080386bcc80c5606320c2755ad6179ae44c0eafaeacbeb3c7c08840c2f521a76f1d7a10aa6588241457281a2f064a2f8cb62e5096ae978f2715756a205",
-        "state_engine_endpoint": "d0121151c73970578caca96cd0356049",
-        "pk_engine": "30461683eed08b2654df202918ae8983aad9ad2baa38dc6e5a2ac83d24beadad"
+        "pk_current": "4bcab14a736228b664e4a935386fd07e1104f7cc1865e5a85751416da6f52716",
+        "pk_issuer": "26fad024796d954dbb17ae0712280703029b614ce4ae9db4ff95556291270d39",
+        "issuer_signature": "05c3c45bb5aeba60a03b7599146819fe95a76a3b9bea5aa3e20162c91771c9f17a19b7c1b7df13e5dfd5286ced07395126c94056ab73b2c7c22d3ac6e6fcd50b",
+        "state_engine_endpoint": "038fdd5e84d49eb538556e2739bfe9cc",
+        "pk_engine": "a63fc41ecacb6c98141973fa3e514e863ae7cb7b2d09fffe891e2ca053d0dcf1"
       },
-      "recipient_dest": "0c6a9fc5299dcf955301479fb04c6f21"
+      "recipient_dest": "e4b5a26da4a94c1a26cfe8f73b4f3db0"
     },
-    "ts": "2026-02-28T00:29:52.111434"
+    "ts": "2026-02-28T00:40:13.943178"
+  },
+  {
+    "type": "coin_request",
+    "from_hash": "e4b5a26da4a94c1a26cfe8f73b4f3db0",
+    "from_role": "wallet",
+    "payload": {
+      "amount": 2,
+      "wallet_dest": "e4b5a26da4a94c1a26cfe8f73b4f3db0",
+      "public_keys": [
+        "029b1c41829b129e98254fdcef130aa2c39829779a0f4c1d8fe995a824a3a973",
+        "1e57ae35402599e74cb6673b683b5413138217ec66230470732416f343994286"
+      ]
+    },
+    "ts": "2026-02-28T00:43:47.014466",
+    "direction": "in"
   },
   {
     "direction": "out",
     "type": "register_coin",
-    "to_hash": "d0121151c73970578caca96cd0356049",
+    "to_hash": "038fdd5e84d49eb538556e2739bfe9cc",
     "to_role": "engine",
     "payload": {
       "coin": {
-        "coin_id": "78309520-0803-465b-b987-b44aeb4e47cf",
+        "coin_id": "662606ab-ab2d-48da-8653-f0e25c82a3c2",
         "waarde": 1,
-        "pk_current": "e57d50e40f353ca0a787e7df9a11024f8e69cb13168fda0c4ffb4eb742fcea44",
-        "pk_issuer": "8b1d8271bc837ef141189a030cd4127913273a21735e03eadd19ff26a6348263",
-        "issuer_signature": "d8967f733f5143efbd26ecf588ae77e00321386b8c112647ff1f7c71a27a5c4428ecfef17bc4e4cfd4e7a180f04010777783a3741aa25622df761353a47b7a0b",
-        "state_engine_endpoint": "d0121151c73970578caca96cd0356049",
-        "pk_engine": "30461683eed08b2654df202918ae8983aad9ad2baa38dc6e5a2ac83d24beadad"
+        "pk_current": "029b1c41829b129e98254fdcef130aa2c39829779a0f4c1d8fe995a824a3a973",
+        "pk_issuer": "26fad024796d954dbb17ae0712280703029b614ce4ae9db4ff95556291270d39",
+        "issuer_signature": "634b432ff0e7e0297b2bd31341934c30860d11ef494671d03f7500cdcd44962c2cb556043de338fb94e629445af4d90190c00be129c82e194fa321b2b53ebc01",
+        "state_engine_endpoint": "038fdd5e84d49eb538556e2739bfe9cc",
+        "pk_engine": "a63fc41ecacb6c98141973fa3e514e863ae7cb7b2d09fffe891e2ca053d0dcf1"
       },
-      "recipient_dest": "0c6a9fc5299dcf955301479fb04c6f21"
+      "recipient_dest": "e4b5a26da4a94c1a26cfe8f73b4f3db0"
     },
-    "ts": "2026-02-28T00:29:52.127429"
+    "ts": "2026-02-28T00:43:54.314867"
+  },
+  {
+    "direction": "out",
+    "type": "register_coin",
+    "to_hash": "038fdd5e84d49eb538556e2739bfe9cc",
+    "to_role": "engine",
+    "payload": {
+      "coin": {
+        "coin_id": "62a4cca7-483e-4b8f-8d4e-af948fe9750b",
+        "waarde": 1,
+        "pk_current": "1e57ae35402599e74cb6673b683b5413138217ec66230470732416f343994286",
+        "pk_issuer": "26fad024796d954dbb17ae0712280703029b614ce4ae9db4ff95556291270d39",
+        "issuer_signature": "4340577bde81a2f0f0dc2ca5585f1c25004629a80a423a47b120f735d5dc8ab898a8fe78dfed64b8238af0920d8efb2030371efb18a9dd26d757b08577286d03",
+        "state_engine_endpoint": "038fdd5e84d49eb538556e2739bfe9cc",
+        "pk_engine": "a63fc41ecacb6c98141973fa3e514e863ae7cb7b2d09fffe891e2ca053d0dcf1"
+      },
+      "recipient_dest": "e4b5a26da4a94c1a26cfe8f73b4f3db0"
+    },
+    "ts": "2026-02-28T00:43:54.331866"
   }
 ]

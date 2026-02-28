@@ -34,14 +34,17 @@ class Wallet:
     def _save(self):
         self._path.write_text(json.dumps(self._data, indent=2))
 
-    def _log(self, action: str, coin_id: str, waarde=None, counterparty: str = None):
-        self._data["transaction_log"].append({
+    def _log(self, action: str, coin_id: str, waarde=None, counterparty: str = None, coin_data: dict = None):
+        entry = {
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "action": action,
             "coin_id": coin_id,
             "waarde": waarde,
             "counterparty": counterparty,
-        })
+        }
+        if coin_data:
+            entry["coin_data"] = coin_data
+        self._data["transaction_log"].append(entry)
 
     def generate_receive_keypair(self) -> str:
         sk, pk = generate_keypair()
@@ -105,9 +108,11 @@ class Wallet:
     def confirm_send(self, coin_id: str, recipient_address: str = None):
         entry = self._data["coins"].get(coin_id)
         waarde = entry["coin"]["waarde"] if entry else None
+        coin_data = entry["coin"] if entry else None
         if coin_id in self._data["coins"]:
             del self._data["coins"][coin_id]
-        self._log("verstuurd", coin_id, waarde=waarde, counterparty=recipient_address)
+        self._log("verstuurd", coin_id, waarde=waarde,
+                  counterparty=recipient_address, coin_data=coin_data)
         self._save()
 
     def receive_from_engine(self, delivery: dict):
@@ -134,7 +139,9 @@ class Wallet:
         }
 
         action = "ontvangen van bank" if status == "issued" else "betaling ontvangen"
-        self._log(action, coin_id, waarde=coin_data.get("waarde"))
+        counterparty = coin_data.get("pk_issuer", "")
+        self._log(action, coin_id, waarde=coin_data.get("waarde"),
+                  counterparty=counterparty, coin_data=coin_data)
         self._save()
 
     def validate_coin(self, coin: Coin, trusted_issuers: list[str]) -> bool:
