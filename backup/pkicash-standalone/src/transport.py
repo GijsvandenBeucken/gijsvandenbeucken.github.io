@@ -280,7 +280,7 @@ class PKICashTransport:
         """Called when another actor opens a Link to us."""
         link.set_packet_callback(self._on_packet)
         link.set_resource_strategy(RNS.Link.ACCEPT_ALL)
-        link.set_resource_concluded_callback(self._on_resource)
+        link.set_resource_started_callback(self._on_resource_started)
 
     def _process_incoming(self, raw_data):
         """Shared logic for processing incoming data from Packet or Resource."""
@@ -313,7 +313,12 @@ class PKICashTransport:
         """Called when a small packet arrives over an inbound Link."""
         self._process_incoming(raw_data)
 
-    def _on_resource(self, resource):
+    def _on_resource_started(self, resource):
+        """Called when a Resource transfer starts. Sets completion callback."""
+        print(f"[RESOURCE START] incoming resource, {resource.get_data_size()} bytes verwacht", flush=True)
+        resource.callback = self._on_resource_complete
+
+    def _on_resource_complete(self, resource):
         """Called when a Resource transfer completes over an inbound Link."""
         if resource.status == RNS.Resource.COMPLETE:
             print(f"[RESOURCE IN] {len(resource.data)} bytes ontvangen", flush=True)
