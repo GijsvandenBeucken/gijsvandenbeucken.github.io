@@ -320,11 +320,17 @@ class PKICashTransport:
 
     def _on_resource_complete(self, resource):
         """Called when a Resource transfer completes over an inbound Link."""
-        if resource.status == RNS.Resource.COMPLETE:
-            print(f"[RESOURCE IN] {len(resource.data)} bytes ontvangen", flush=True)
-            self._process_incoming(resource.data)
-        else:
-            print(f"[RESOURCE FAIL] status={resource.status}", flush=True)
+        try:
+            if resource.status == RNS.Resource.COMPLETE:
+                data = resource.data.read()
+                print(f"[RESOURCE IN] {len(data)} bytes ontvangen", flush=True)
+                self._process_incoming(data)
+            else:
+                print(f"[RESOURCE FAIL] status={resource.status}", flush=True)
+        except Exception as exc:
+            print(f"[RESOURCE ERROR] {exc}", flush=True)
+            import traceback
+            print(traceback.format_exc(), flush=True)
 
     def _on_announce_received(self, dest_hash_bytes, identity, app_data):
         """Called by _AnnounceHandler when an announce arrives."""
