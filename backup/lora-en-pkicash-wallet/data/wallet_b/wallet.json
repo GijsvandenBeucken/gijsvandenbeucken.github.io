@@ -1,32 +1,175 @@
 {
-  "coins": {},
-  "pending_keypairs": {
-    "ecc8991fe52c54158c54c61e5f82682690731da2a1f4f755cee48ccc5994fd29": "4f4f3f0563c7077091249ea14deddccfacd7cb927b001e6c47805900fa232164",
-    "a87c65f35ec2644686460f88828da149f9e1e9ba5b2ed2dd5b425dfc7c414dd1": "3c524e249d2b2cd3d91f8d4b0ca45ddddf0508d340fdf5cbc5da92d7a3e656ef",
-    "2e899b51215d324f63b9b12d988486c82f4439d8312479c3a4a7685b7acf1d3b": "ad1b72800b69ee6a2cb5992fb67f684a022fe4d336a66ba8e5084a21a808b373",
-    "85df9b0eed651b361decef23d6bcb9016aeff5edcd2c6392a367e6c2372d40ca": "66b06c1146d142c622cd612c448f9ab7560bf2018c9d48c6eb2f2e11c328dd77"
+  "coins": {
+    "dbc83842-cd66-4a89-83fa-816bfd4ec2c5": {
+      "coin": {
+        "coin_id": "dbc83842-cd66-4a89-83fa-816bfd4ec2c5",
+        "waarde": 1,
+        "pk_current": "4f82b7892cc5914e71bc898161dd45f27d72426a93207e0870eca70da3ae8957",
+        "pk_issuer": "15bf816429a2417e0583bdcca9ba9bd0167af72c23a421ffd54458c45d7b9c58",
+        "issuer_signature": "f942f141b49a8ca92885f37c190379704e61b9e28579869efa24eb8b59d7e07ee6db88ef0f0275a432010d7d8268c83df31fb435d224a82c97607607d96b780e",
+        "state_engine_endpoint": "7577bd7f70e65187eda390731cab6107",
+        "pk_engine": "5a4faf3eb29c23b3900e676cce4b148b184f28f649b19b1fcf2fc967e75d1f10"
+      },
+      "sk_current": "3bbfd470bd1a6a4e4f8dd995e948b55dc47c89beea50c828e6081af5c491e97f"
+    },
+    "70fa9e50-bf1f-4ff2-a37d-3b8b7e690004": {
+      "coin": {
+        "coin_id": "70fa9e50-bf1f-4ff2-a37d-3b8b7e690004",
+        "waarde": 1,
+        "pk_current": "4eeabba9f0f157d5276ff6938d7ed3eb71d09b6503b338225cbc4733a0ed2b06",
+        "pk_issuer": "15bf816429a2417e0583bdcca9ba9bd0167af72c23a421ffd54458c45d7b9c58",
+        "issuer_signature": "6e42620d287d3fcbb9113dd4fdacde7dceb68965cabda9914391335290c488e70e5839cd100daaedd2713425f484a18adc5aab32b1c8ad7d95bc242c3f6a2d06",
+        "state_engine_endpoint": "7577bd7f70e65187eda390731cab6107",
+        "pk_engine": "5a4faf3eb29c23b3900e676cce4b148b184f28f649b19b1fcf2fc967e75d1f10"
+      },
+      "sk_current": "52485706dd1b0f0d792cbfc50864f407ea908df06b5133577c8cc0c4921935e7"
+    },
+    "0be529f7-6660-4f24-9616-37feae42ba3a": {
+      "coin": {
+        "coin_id": "0be529f7-6660-4f24-9616-37feae42ba3a",
+        "waarde": 1,
+        "pk_current": "129d7d28faf5a9c7af20497a086df78056d7496bdc7f0eef11fac249ccd1a8e6",
+        "pk_issuer": "15bf816429a2417e0583bdcca9ba9bd0167af72c23a421ffd54458c45d7b9c58",
+        "issuer_signature": "9f2e8422ae6c9c03372c261985a7aed270d4a19af9d0979776745e1678cb32841df24290e1b4ce9d424fc8e6fd2d17aa54d81d15da6c5aa099c1d5552160db0b",
+        "state_engine_endpoint": "7577bd7f70e65187eda390731cab6107",
+        "pk_engine": "5a4faf3eb29c23b3900e676cce4b148b184f28f649b19b1fcf2fc967e75d1f10"
+      },
+      "sk_current": "676f7ee0aab1d37b22cfa6af1efbb9c3955b808a29ac2bf53e5e3810872f31fc"
+    },
+    "78b59f61-dfe0-4bf3-bba1-34d1919ab500": {
+      "coin": {
+        "coin_id": "78b59f61-dfe0-4bf3-bba1-34d1919ab500",
+        "waarde": 1,
+        "pk_current": "eddb95525f5c7967571282e398738b49a3dbdb0d9136cc45d8ddc978e21ca15e",
+        "pk_issuer": "15bf816429a2417e0583bdcca9ba9bd0167af72c23a421ffd54458c45d7b9c58",
+        "issuer_signature": "25ad6632b660b922648792d0370d63eb3a472d6dfeebac8b27f2a383d7e4856dae05a17b4e4a96c6deff452245b2319d6c39259f3eeee82d12e4703565193504",
+        "state_engine_endpoint": "7577bd7f70e65187eda390731cab6107",
+        "pk_engine": "5a4faf3eb29c23b3900e676cce4b148b184f28f649b19b1fcf2fc967e75d1f10"
+      },
+      "sk_current": "6883d456f5ad95b608670fe76e7947d5ad1bf35ce6f958fcd5bcc803dc39df83"
+    },
+    "a82cb7c5-3c58-4e79-b53e-0f67a80ce131": {
+      "coin": {
+        "coin_id": "a82cb7c5-3c58-4e79-b53e-0f67a80ce131",
+        "waarde": 1,
+        "pk_current": "8d916aa54f69b6e6a630c884f1abb4b9b21dce7bd69a918c3cb28efe251218b9",
+        "pk_issuer": "15bf816429a2417e0583bdcca9ba9bd0167af72c23a421ffd54458c45d7b9c58",
+        "issuer_signature": "57b8bc6985afa692a3b66bb2b39e1fb60d5706cf16e1a73699df66fbcd516d603412f08866e6c90a6da5e00e49a8bb34a175b530509631113a4d9ee69d500303",
+        "state_engine_endpoint": "7577bd7f70e65187eda390731cab6107",
+        "pk_engine": "5a4faf3eb29c23b3900e676cce4b148b184f28f649b19b1fcf2fc967e75d1f10"
+      },
+      "sk_current": "7aea259289b9b1bc08e418f270d2899919254ad8e9d9be969e89af24ca2a5993"
+    }
   },
-  "transaction_log": [],
+  "pending_keypairs": {
+    "6e92e11afefcedcd1fac3f8a832eae237d35738e1610ecbac84f8bd7b8a7f91b": "9a6c38fafe057c0eacb0f72bb40a262549c25072fbdaa887778727a005b3fe15",
+    "8b36ffba7145d601df58ada190b316f1cebc2e341a4ff3084b77941076c1ce6f": "83f229318eabf2db878150cd558b50d038ca2c545d4f245304ea585f30b2c88a"
+  },
+  "transaction_log": [
+    {
+      "timestamp": "2026-02-28 15:28:02",
+      "action": "betaling ontvangen",
+      "coin_id": "dbc83842-cd66-4a89-83fa-816bfd4ec2c5",
+      "waarde": 1,
+      "counterparty": "93fd41c6f50303702e52f2c5a24fa698",
+      "coin_data": {
+        "coin_id": "dbc83842-cd66-4a89-83fa-816bfd4ec2c5",
+        "waarde": 1,
+        "pk_current": "4f82b7892cc5914e71bc898161dd45f27d72426a93207e0870eca70da3ae8957",
+        "pk_issuer": "15bf816429a2417e0583bdcca9ba9bd0167af72c23a421ffd54458c45d7b9c58",
+        "issuer_signature": "f942f141b49a8ca92885f37c190379704e61b9e28579869efa24eb8b59d7e07ee6db88ef0f0275a432010d7d8268c83df31fb435d224a82c97607607d96b780e",
+        "state_engine_endpoint": "7577bd7f70e65187eda390731cab6107",
+        "pk_engine": "5a4faf3eb29c23b3900e676cce4b148b184f28f649b19b1fcf2fc967e75d1f10"
+      },
+      "description": "koffie"
+    },
+    {
+      "timestamp": "2026-02-28 15:28:02",
+      "action": "betaling ontvangen",
+      "coin_id": "70fa9e50-bf1f-4ff2-a37d-3b8b7e690004",
+      "waarde": 1,
+      "counterparty": "93fd41c6f50303702e52f2c5a24fa698",
+      "coin_data": {
+        "coin_id": "70fa9e50-bf1f-4ff2-a37d-3b8b7e690004",
+        "waarde": 1,
+        "pk_current": "4eeabba9f0f157d5276ff6938d7ed3eb71d09b6503b338225cbc4733a0ed2b06",
+        "pk_issuer": "15bf816429a2417e0583bdcca9ba9bd0167af72c23a421ffd54458c45d7b9c58",
+        "issuer_signature": "6e42620d287d3fcbb9113dd4fdacde7dceb68965cabda9914391335290c488e70e5839cd100daaedd2713425f484a18adc5aab32b1c8ad7d95bc242c3f6a2d06",
+        "state_engine_endpoint": "7577bd7f70e65187eda390731cab6107",
+        "pk_engine": "5a4faf3eb29c23b3900e676cce4b148b184f28f649b19b1fcf2fc967e75d1f10"
+      },
+      "description": "koffie"
+    },
+    {
+      "timestamp": "2026-02-28 15:28:02",
+      "action": "betaling ontvangen",
+      "coin_id": "0be529f7-6660-4f24-9616-37feae42ba3a",
+      "waarde": 1,
+      "counterparty": "93fd41c6f50303702e52f2c5a24fa698",
+      "coin_data": {
+        "coin_id": "0be529f7-6660-4f24-9616-37feae42ba3a",
+        "waarde": 1,
+        "pk_current": "129d7d28faf5a9c7af20497a086df78056d7496bdc7f0eef11fac249ccd1a8e6",
+        "pk_issuer": "15bf816429a2417e0583bdcca9ba9bd0167af72c23a421ffd54458c45d7b9c58",
+        "issuer_signature": "9f2e8422ae6c9c03372c261985a7aed270d4a19af9d0979776745e1678cb32841df24290e1b4ce9d424fc8e6fd2d17aa54d81d15da6c5aa099c1d5552160db0b",
+        "state_engine_endpoint": "7577bd7f70e65187eda390731cab6107",
+        "pk_engine": "5a4faf3eb29c23b3900e676cce4b148b184f28f649b19b1fcf2fc967e75d1f10"
+      },
+      "description": "koffie"
+    },
+    {
+      "timestamp": "2026-02-28 15:28:02",
+      "action": "betaling ontvangen",
+      "coin_id": "78b59f61-dfe0-4bf3-bba1-34d1919ab500",
+      "waarde": 1,
+      "counterparty": "93fd41c6f50303702e52f2c5a24fa698",
+      "coin_data": {
+        "coin_id": "78b59f61-dfe0-4bf3-bba1-34d1919ab500",
+        "waarde": 1,
+        "pk_current": "eddb95525f5c7967571282e398738b49a3dbdb0d9136cc45d8ddc978e21ca15e",
+        "pk_issuer": "15bf816429a2417e0583bdcca9ba9bd0167af72c23a421ffd54458c45d7b9c58",
+        "issuer_signature": "25ad6632b660b922648792d0370d63eb3a472d6dfeebac8b27f2a383d7e4856dae05a17b4e4a96c6deff452245b2319d6c39259f3eeee82d12e4703565193504",
+        "state_engine_endpoint": "7577bd7f70e65187eda390731cab6107",
+        "pk_engine": "5a4faf3eb29c23b3900e676cce4b148b184f28f649b19b1fcf2fc967e75d1f10"
+      },
+      "description": "koffie"
+    },
+    {
+      "timestamp": "2026-02-28 15:28:03",
+      "action": "betaling ontvangen",
+      "coin_id": "a82cb7c5-3c58-4e79-b53e-0f67a80ce131",
+      "waarde": 1,
+      "counterparty": "93fd41c6f50303702e52f2c5a24fa698",
+      "coin_data": {
+        "coin_id": "a82cb7c5-3c58-4e79-b53e-0f67a80ce131",
+        "waarde": 1,
+        "pk_current": "8d916aa54f69b6e6a630c884f1abb4b9b21dce7bd69a918c3cb28efe251218b9",
+        "pk_issuer": "15bf816429a2417e0583bdcca9ba9bd0167af72c23a421ffd54458c45d7b9c58",
+        "issuer_signature": "57b8bc6985afa692a3b66bb2b39e1fb60d5706cf16e1a73699df66fbcd516d603412f08866e6c90a6da5e00e49a8bb34a175b530509631113a4d9ee69d500303",
+        "state_engine_endpoint": "7577bd7f70e65187eda390731cab6107",
+        "pk_engine": "5a4faf3eb29c23b3900e676cce4b148b184f28f649b19b1fcf2fc967e75d1f10"
+      },
+      "description": "koffie"
+    }
+  ],
   "contacts": [
     {
       "name": "Wallet A",
-      "address": "97cd461cdaa7f1331030226d449a80e7",
+      "address": "93fd41c6f50303702e52f2c5a24fa698",
       "pk": ""
     }
   ],
   "address": "",
   "outgoing_payment_requests": [
     {
-      "dest": "97cd461cdaa7f1331030226d449a80e7",
-      "pk": "2e899b51215d324f63b9b12d988486c82f4439d8312479c3a4a7685b7acf1d3b",
-      "public_keys": [
-        "2e899b51215d324f63b9b12d988486c82f4439d8312479c3a4a7685b7acf1d3b",
-        "85df9b0eed651b361decef23d6bcb9016aeff5edcd2c6392a367e6c2372d40ca"
-      ],
-      "amount": 2,
-      "ts": "2026-02-28 14:56:06",
-      "status": "pending",
-      "description": null
+      "dest": "93fd41c6f50303702e52f2c5a24fa698",
+      "pk": "4f82b7892cc5914e71bc898161dd45f27d72426a93207e0870eca70da3ae8957",
+      "public_keys": [],
+      "amount": 5,
+      "ts": "2026-02-28 15:27:44",
+      "status": "paid",
+      "description": null,
+      "received": 5
     }
   ]
 }

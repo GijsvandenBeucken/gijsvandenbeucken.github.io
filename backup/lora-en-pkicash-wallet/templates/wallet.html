@@ -8,7 +8,7 @@
     <div class="header-inner">
         <div class="header-top">
             <h1>
-                Wallet {{ wallet_id|upper }}
+                {{ actor_name }}
                 {% if wallet_address %}
                 <button class="copy-inline" onclick="copyToClipboard('{{ wallet_address }}', this)" title="Kopieer adres">
                     <i data-lucide="copy" style="width:16px;height:16px"></i>
@@ -57,41 +57,64 @@
     </div>
 
     {% if incoming_requests %}
-    <div class="card" style="border-left:3px solid var(--success);background:var(--bg)">
-        <h2 style="font-size:1rem">Inkomende betaalverzoeken</h2>
+    <div class="card">
+        <h2>Inkomende betaalverzoeken</h2>
         {% for req in incoming_requests %}
         {% set req_amount = req.payload.public_keys|default([])|length or 1 %}
         {% set req_name = '' %}
         {% for c in contacts %}
             {% if c.address == req.from_hash %}{% set req_name = c.name %}{% endif %}
         {% endfor %}
-        <div style="padding:0.75rem 0;{% if not loop.last %}border-bottom:1px solid var(--border);{% endif %}">
-            <div style="font-size:0.85rem;margin-bottom:0.4rem">
-                <strong>Betaalverzoek</strong> van
-                {% if req_name %}<strong>{{ req_name }}</strong>{% else %}<span class="mono" style="font-size:0.75rem">{{ req.from_hash }}</span>{% endif %}
-                <span class="badge badge-value" style="margin-left:0.5rem">{{ req_amount }} coin(s)</span>
-            </div>
-            {% if req.payload and req.payload.description %}
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.4rem">
-                Omschrijving: <em>{{ req.payload.description }}</em>
+        <div style="margin-bottom:0.75rem;padding:1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius)">
+            <div style="font-size:1rem;font-weight:700;margin-bottom:0.15rem">Betaalverzoek</div>
+            {% if req.ts %}
+            {% set ts = req.ts[:19] if req.ts else '' %}
+            <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.6rem">
+                {% if ts %}
+                {% set rd = ts[:10] %}{% set rm = rd[5:7]|int %}
+                {{ rd[8:10]|int }}
+                {%- if rm == 1 %} januari{% elif rm == 2 %} februari{% elif rm == 3 %} maart{% elif rm == 4 %} april{% elif rm == 5 %} mei{% elif rm == 6 %} juni{% elif rm == 7 %} juli{% elif rm == 8 %} augustus{% elif rm == 9 %} september{% elif rm == 10 %} oktober{% elif rm == 11 %} november{% elif rm == 12 %} december{% endif %}
+                {{ rd[:4] }}, {{ ts[11:] }}
+                {% endif %}
             </div>
             {% endif %}
-            <div style="display:flex;gap:0.5rem;align-items:flex-end;flex-wrap:wrap">
-                <form method="POST" action="{{ url_for('wallet_approve_payment', wallet_id=wallet_id, idx=req.real_idx) }}" style="margin:0;display:flex;gap:0.5rem;align-items:flex-end;flex-wrap:wrap">
-                    <div style="display:flex;align-items:center;gap:0.3rem">
-                        <label style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap;margin:0">Aantal coins:</label>
-                        <input type="number" name="approve_amount" min="1" max="{{ req_amount }}" value="{{ req_amount }}" style="width:60px;padding:0.25rem 0.4rem;font-size:0.8rem">
-                    </div>
-                    <div style="display:flex;align-items:center;gap:0.3rem">
-                        <label style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap;margin:0">Omschrijving:</label>
-                        <input type="text" name="description" maxlength="32" value="{{ req.payload.description|default('') }}" placeholder="optioneel" style="width:160px;padding:0.25rem 0.4rem;font-size:0.8rem">
-                    </div>
-                    <button class="btn btn-success" style="padding:0.3rem 0.75rem;font-size:0.8rem">Betalen</button>
-                </form>
-                <form method="POST" action="{{ url_for('wallet_decline_request', wallet_id=wallet_id, idx=req.real_idx) }}" style="margin:0">
-                    <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem;color:var(--danger)">Weigeren</button>
-                </form>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:0 0 0.6rem 0">
+
+            <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.3rem">Gevraagd</div>
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:0.15rem 0.75rem;font-size:0.85rem;margin-bottom:0.15rem">
+                <span style="color:var(--text-muted)">Aantal</span>
+                <span>{{ req_amount }} coins</span>
+                <span style="color:var(--text-muted)">Door</span>
+                <span>{% if req_name %}{{ req_name }}{% else %}<span class="mono" style="font-size:0.8rem;word-break:break-all">{{ req.from_hash }}</span>{% endif %}</span>
+                {% if req.payload and req.payload.description %}
+                <span style="color:var(--text-muted)">Omschrijving</span>
+                <span><em>{{ req.payload.description }}</em></span>
+                {% endif %}
             </div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:0.6rem 0">
+
+            <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.3rem">Beslissing</div>
+            <form method="POST" action="{{ url_for('wallet_approve_payment', wallet_id=wallet_id, idx=req.real_idx) }}" style="margin:0">
+                <div class="form-group" style="margin-bottom:0.4rem">
+                    <label style="font-size:0.85rem;color:var(--text-muted);margin:0">Aantal coins</label>
+                    <input type="number" name="approve_amount" min="1" max="{{ req_amount }}" value="{{ req_amount }}" style="width:80px;padding:0.3rem 0.5rem;font-size:0.85rem">
+                </div>
+                <div class="form-group" style="margin-bottom:0.6rem">
+                    <label style="font-size:0.85rem;color:var(--text-muted);margin:0">Omschrijving</label>
+                    <input type="text" name="description" maxlength="32" value="{{ req.payload.description|default('') }}" placeholder="optioneel" style="padding:0.3rem 0.5rem;font-size:0.85rem;max-width:300px">
+                </div>
+
+                <hr style="border:none;border-top:1px solid var(--border);margin:0 0 0.6rem 0">
+
+                <div style="display:flex;gap:0.75rem">
+                    <button class="btn btn-success" style="padding:0.4rem 2rem;font-size:0.85rem">Goedkeuren</button>
+            </form>
+                    <form method="POST" action="{{ url_for('wallet_decline_request', wallet_id=wallet_id, idx=req.real_idx) }}" style="margin:0">
+                        <button class="btn btn-outline" style="padding:0.4rem 2rem;font-size:0.85rem;color:var(--danger);border-color:var(--danger)">Weigeren</button>
+                    </form>
+                </div>
         </div>
         {% endfor %}
     </div>
@@ -287,13 +310,24 @@
 <div data-section="mijn-adres" style="display:none">
     <div class="card">
         <h2>Mijn contactgegevens</h2>
-        <div class="my-contact-field">
-            <span class="my-contact-label">Adres (destination hash)</span>
-            <button class="copy-inline" onclick="copyToClipboard('{{ wallet_address }}', this)" title="Kopieer adres"><i data-lucide="copy" style="width:14px;height:14px"></i></button>
-            <span class="my-contact-value mono" style="word-break:break-all;font-size:0.75rem">{{ wallet_address }}</span>
+        <form method="POST" action="/api/set-name" style="margin-bottom:0.75rem">
+            <div style="display:grid;grid-template-columns:auto 1fr auto;gap:0.25rem 0.75rem;align-items:center;font-size:0.85rem">
+                <span style="color:var(--text-muted)">Naam</span>
+                <input type="text" name="actor_name" value="{{ actor_name }}" style="padding:0.3rem 0.5rem;font-size:0.85rem;border:1px solid var(--border);border-radius:var(--radius)">
+                <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.8rem">Opslaan</button>
+            </div>
+        </form>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:0.15rem 0.75rem;font-size:0.85rem">
+            <span style="color:var(--text-muted)">Adres (destination hash)</span>
+            <span>
+                <button class="copy-inline" onclick="copyToClipboard('{{ wallet_address }}', this)" title="Kopieer adres"><i data-lucide="copy" style="width:12px;height:12px"></i></button>
+                <span class="mono" style="font-size:0.75rem;word-break:break-all">{{ wallet_address }}</span>
+            </span>
+            <span style="color:var(--text-muted)">Rol</span>
+            <span>{{ role }}</span>
         </div>
-        <p style="color:var(--text-muted);font-size:0.8rem;margin:0.5rem 0">
-            PK transactie verandert per betaalverzoek.
+        <p style="color:var(--text-muted);font-size:0.8rem;margin:0.5rem 0 0 0">
+            PK transactie verandert per betaalverzoek en wordt niet gepubliceerd.
         </p>
     </div>
 </div>

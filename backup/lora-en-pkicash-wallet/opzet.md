@@ -146,9 +146,10 @@ Announce:
 - pk_transaction in announce:
   - Engine: publieke sleutel voor engine-signing (verificatie van coin deliveries)
   - Bank: PK_issuer (publieke sleutel voor issuer signatures op coins)
-  - Wallet: PK_transactie (ephemere publieke sleutel voor huidige coin-ontvangst)
+  - Wallet: wordt NIET meegegeven (ephemere keys zijn niet nuttig om te publiceren)
 - Alle actors ontvangen announces en tonen ze in de UI
 - Bij "Opslaan als contact" vanuit announce worden dest_hash + pk_transaction opgeslagen
+- Announce datum wordt getoond als "Announce ontvangen op" met nette Nederlandse datumnotatie
 
 Berichttypen (via RNS Link + zlib-compressed JSON):
 
@@ -382,16 +383,16 @@ Architectuur & Bestanden
       │   ├── identity          # RNS identity (PK_identity)
       │   ├── engine.key        # PyNaCl SK (PK_transactie)
       │   ├── engine.db         # SQLite (coin_id → PK_current)
-      │   ├── engine_data.json  # Contacten + issuer namen
+      │   ├── engine_data.json  # Contacten, issuer namen, actor_name
       │   └── announces.json    # Ontdekte actoren
       ├── bank/                 # Bank data directory
       │   ├── identity          # RNS identity
       │   ├── issuer.key        # PyNaCl SK (issuer signing)
-      │   ├── bank.json         # Uitgegeven coins, contacten, registraties
+      │   ├── bank.json         # Uitgegeven coins, contacten, registraties, actor_name
       │   └── announces.json    # Ontdekte actoren
       └── wallet_<id>/          # Per wallet data directory
           ├── identity          # RNS identity
-          ├── wallet.json       # Coins, keypairs, transactielog, contacten
+          ├── wallet.json       # Coins, keypairs, transactielog, contacten, actor_name
           └── announces.json    # Ontdekte actoren
 
 ### Opstarten
@@ -441,10 +442,18 @@ Of demo-modus (alle vier tegelijk):
 
 UI Design Patterns
 ------------------
-- Header: actor naam + kopieer-icoon (kopieert dest_hash|PK naar klembord)
-- Menu (rechtsboven): secties wisselen (overzicht, contacten, mijn gegevens, netwerk)
-- Netwerk overlay: toon ontdekte actoren (via RNS announces), announce knop,
-  opslaan als contact
+- Header: actor naam (bewerkbaar) + kopieer-adres-icoon + announce-icoon
+- Actor naam: bewerkbaar via "Mijn contactgegevens", opgeslagen in data (actor_name),
+  gebruikt als titel in header en als naam bij RNS announces.
+  Default: "State Engine", "Bank", "Wallet A" (afgeleid van wallet_id)
+- Menu (rechtsboven): secties wisselen (overzicht, contacten, mijn gegevens, netwerk, inbox)
+- Mijn contactgegevens: naam (bewerkbaar), adres/destination hash (copy-icoon),
+  rol, PK transactie (copy-icoon; niet bij wallets). Zelfde layout als netwerk-preview.
+- Netwerk overlay: preview van eigen gepubliceerde gegevens, announce knop,
+  ontdekte actoren met inline copy-iconen, rol-badge, datum ("Announce ontvangen op")
+- Inkomende verzoeken (bank + wallet): uniforme kaart-layout per verzoek met:
+  titel + datum/tijd, gevraagd (aantal, door, omschrijving), beslissing (aantal, omschrijving),
+  goedkeuren/weigeren knoppen
 - Inline meldingen: succes-berichten verdwijnen na 3 seconden
 - Contacten: uitklapbare kaarten met naam/adres als header, bewerkbare velden
 - Overlays: voor acties (coin uitgeven, issuer registreren, betaalverzoek, betalen)
@@ -489,6 +498,8 @@ Roadmap
 10. ✓ Omschrijving: optioneel description veld (max 32 chars) door hele berichtketen
 11. ✓ Professionele transactie-weergave: datumgroepering (Vandaag/Gisteren/datum)
 12. ✓ Issuance = transfer: coin uitgifte conceptueel identiek aan overdracht (PK_current=PK_issuer + transfer_signature)
-13. □ LoRa integratie: Reticulum config met LoRa radio interface
-14. □ Binaire encoding: JSON→MessagePack/CBOR + raw bytes voor LoRa optimalisatie
-15. □ Meerdere state engines / redundantie
+13. ✓ Bewerkbare actor naam: opgeslagen in data, gebruikt bij announce en als titel in header
+14. ✓ Netwerk overlay: preview eigen gegevens, inline copy-iconen, nette datumnotatie, announce-icoon in header
+16. □ LoRa integratie: Reticulum config met LoRa radio interface
+17. □ Binaire encoding: JSON→MessagePack/CBOR + raw bytes voor LoRa optimalisatie
+18. □ Meerdere state engines / redundantie

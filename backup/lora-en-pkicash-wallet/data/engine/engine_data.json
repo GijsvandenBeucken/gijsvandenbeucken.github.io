@@ -2,12 +2,13 @@
   "contacts": [
     {
       "name": "Bank",
-      "address": "8857d18c5c5161ab34dd78c83313fb7a",
-      "pk": "99bbb3fd38055f5c36ad54367ed91ba0486a545c9710e59ca40ba99a3b016fba"
+      "address": "c2cac5d237a61c472f9901356fc9d3bd",
+      "pk": "15bf816429a2417e0583bdcca9ba9bd0167af72c23a421ffd54458c45d7b9c58"
     }
   ],
   "issuer_names": {
-    "99bbb3fd38055f5c36ad54367ed91ba0486a545c9710e59ca40ba99a3b016fba": "Bank"
+    "15bf816429a2417e0583bdcca9ba9bd0167af72c23a421ffd54458c45d7b9c58": "Bank"
   },
-  "incoming_requests": []
+  "incoming_requests": [],
+  "actor_name": "State of the year"
 }

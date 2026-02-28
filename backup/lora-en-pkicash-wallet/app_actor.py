@@ -118,7 +118,8 @@ def create_app(role, transport, data_dir, wallet_id=None):
                     if not pk_tx:
                         pk_tx = e.pk_hex
                     if not name:
-                        name = "State Engine"
+                        edata = _get_engine_data(data_dir)
+                        name = edata.get("actor_name", "State Engine")
                 except Exception:
                     pass
             elif role == "bank":
@@ -127,12 +128,15 @@ def create_app(role, transport, data_dir, wallet_id=None):
                     if not pk_tx:
                         pk_tx = i.pk_hex
                     if not name:
-                        name = "Bank"
+                        bdata = _get_bank_data(data_dir)
+                        name = bdata.get("actor_name", "Bank")
                 except Exception:
                     pass
             elif role == "wallet":
                 if not name:
-                    name = f"Wallet {wallet_id.upper()}" if wallet_id else "Wallet"
+                    w = _get_wallet(data_dir)
+                    default_name = f"Wallet {wallet_id.upper()}" if wallet_id else "Wallet"
+                    name = w._data.get("actor_name", default_name)
                 pk_tx = ""
 
         transport.announce(name=name, pk_transaction=pk_tx)
@@ -182,6 +186,27 @@ def create_app(role, transport, data_dir, wallet_id=None):
             flash(f"Contact '{name}' toegevoegd!", "success")
         except Exception as exc:
             flash(f"Fout: {exc}", "error")
+        return redirect(request.referrer or "/")
+
+    @app.route("/api/set-name", methods=["POST"])
+    def api_set_name():
+        new_name = (request.form.get("actor_name") or "").strip()
+        if not new_name:
+            flash("Naam mag niet leeg zijn.", "error")
+            return redirect(request.referrer or "/")
+        if role == "engine":
+            edata = _get_engine_data(data_dir)
+            edata["actor_name"] = new_name
+            _save_engine_data(data_dir, edata)
+        elif role == "bank":
+            bdata = _get_bank_data(data_dir)
+            bdata["actor_name"] = new_name
+            _save_bank_data(data_dir, bdata)
+        elif role == "wallet":
+            w = _get_wallet(data_dir)
+            w._data["actor_name"] = new_name
+            w._save()
+        flash(f"Naam opgeslagen: {new_name}", "success")
         return redirect(request.referrer or "/")
 
     # ── role-specific routes ────────────────────────────────
@@ -269,6 +294,7 @@ def _register_engine_routes(app, transport, data_dir, notify_local):
         inline_msg = session.pop("engine_msg", None)
         all_requests = edata.get("incoming_requests", [])
         pending_requests = [r for r in all_requests if r.get("status") == "pending"]
+        actor_name = edata.get("actor_name", "State Engine")
 
         return render_template("engine.html",
             show_nav=False,
@@ -284,7 +310,8 @@ def _register_engine_routes(app, transport, data_dir, notify_local):
             announces=transport.get_announces(),
             incoming_requests=all_requests,
             pending_count=len(pending_requests),
-            announce_name="State Engine",
+            actor_name=actor_name,
+            announce_name=actor_name,
             announce_pk=pk or "",
             role=app.config["ACTOR_ROLE"],
         )
@@ -617,6 +644,7 @@ def _register_bank_routes(app, transport, data_dir, notify_local):
         inline_msg = session.pop("bank_msg", None)
         all_requests = bdata.get("incoming_requests", [])
         pending_requests = [r for r in all_requests if r.get("status") == "pending"]
+        actor_name = bdata.get("actor_name", "Bank")
 
         return render_template("bank.html",
             show_nav=False,
@@ -635,7 +663,8 @@ def _register_bank_routes(app, transport, data_dir, notify_local):
             announces=transport.get_announces(),
             incoming_requests=all_requests,
             pending_count=len(pending_requests),
-            announce_name="Bank",
+            actor_name=actor_name,
+            announce_name=actor_name,
             announce_pk=pk or "",
             role=app.config["ACTOR_ROLE"],
         )
@@ -962,7 +991,8 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
         from datetime import timedelta
         yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
 
-        wallet_name = f"Wallet {wallet_id.upper()}" if wallet_id else "Wallet"
+        default_name = f"Wallet {wallet_id.upper()}" if wallet_id else "Wallet"
+        actor_name = w._data.get("actor_name", default_name)
         return render_template("wallet.html",
             show_nav=False,
             active_page=f"wallet_{wallet_id}",
@@ -982,7 +1012,8 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
             outgoing_payment_requests=outgoing_payment_requests,
             today=today,
             yesterday=yesterday,
-            announce_name=wallet_name,
+            actor_name=actor_name,
+            announce_name=actor_name,
             announce_pk="",
             role=app.config["ACTOR_ROLE"],
         )
@@ -1380,7 +1411,7 @@ def _wallet_handle_message(app, transport, data_dir, wallet_id, notify_local,
             "from_hash": from_hash,
             "from_role": from_role,
             "payload": payload,
-            "ts": payload.get("ts", ""),
+            "ts": _now(),
             "status": "pending",
         })
         w._save()

@@ -9,7 +9,7 @@
     <div class="header-inner">
         <div class="header-top">
             <h1>
-                Bank
+                {{ actor_name }}
                 {% if has_key %}
                 <button class="copy-inline" onclick="copyToClipboard('{{ bank_address }}', this)" title="Kopieer adres">
                     <i data-lucide="copy" style="width:16px;height:16px"></i>
@@ -252,15 +252,28 @@
 <div data-section="mijn-gegevens" style="display:none">
     <div class="card">
         <h2>Mijn contactgegevens</h2>
-        <div class="my-contact-field">
-            <span class="my-contact-label">Adres (destination hash)</span>
-            <button class="copy-inline" onclick="copyToClipboard('{{ bank_address }}', this)" title="Kopieer adres"><i data-lucide="copy" style="width:14px;height:14px"></i></button>
-            <span class="my-contact-value mono" style="word-break:break-all;font-size:0.75rem">{{ bank_address }}</span>
-        </div>
-        <div class="my-contact-field">
-            <span class="my-contact-label">Public Key (issuer)</span>
-            <button class="copy-inline" onclick="copyToClipboard('{{ bank_pk }}', this)" title="Kopieer public key"><i data-lucide="copy" style="width:14px;height:14px"></i></button>
-            <span class="my-contact-value mono" style="word-break:break-all;font-size:0.75rem">{{ bank_pk }}</span>
+        <form method="POST" action="/api/set-name" style="margin-bottom:0.75rem">
+            <div style="display:grid;grid-template-columns:auto 1fr auto;gap:0.25rem 0.75rem;align-items:center;font-size:0.85rem">
+                <span style="color:var(--text-muted)">Naam</span>
+                <input type="text" name="actor_name" value="{{ actor_name }}" style="padding:0.3rem 0.5rem;font-size:0.85rem;border:1px solid var(--border);border-radius:var(--radius)">
+                <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.8rem">Opslaan</button>
+            </div>
+        </form>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:0.15rem 0.75rem;font-size:0.85rem">
+            <span style="color:var(--text-muted)">Adres (destination hash)</span>
+            <span>
+                <button class="copy-inline" onclick="copyToClipboard('{{ bank_address }}', this)" title="Kopieer adres"><i data-lucide="copy" style="width:12px;height:12px"></i></button>
+                <span class="mono" style="font-size:0.75rem;word-break:break-all">{{ bank_address }}</span>
+            </span>
+            <span style="color:var(--text-muted)">Rol</span>
+            <span>{{ role }}</span>
+            {% if bank_pk %}
+            <span style="color:var(--text-muted)">PK transactie (issuer)</span>
+            <span>
+                <button class="copy-inline" onclick="copyToClipboard('{{ bank_pk }}', this)" title="Kopieer PK"><i data-lucide="copy" style="width:12px;height:12px"></i></button>
+                <span class="mono" style="font-size:0.75rem;word-break:break-all">{{ bank_pk }}</span>
+            </span>
+            {% endif %}
         </div>
     </div>
 </div>
