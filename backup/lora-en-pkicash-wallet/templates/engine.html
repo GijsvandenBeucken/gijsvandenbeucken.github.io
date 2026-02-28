@@ -65,7 +65,7 @@
         {% endif %}
         {% if issuers %}
         <table>
-            <tr><th>Naam</th><th>Publieke sleutel</th></tr>
+            <tr><th>Naam</th><th>Publieke sleutel (transactie issuer)</th></tr>
             {% for iss in issuers %}
             <tr>
                 <td style="font-weight:500">{{ iss.name or '(onbekend)' }}</td>
@@ -82,17 +82,17 @@
         <h2>Geregistreerde coins ({{ coins|length }})</h2>
         {% if coins %}
         <table>
-            <tr><th>Coin ID</th><th>PK eigenaar</th><th></th></tr>
+            <tr><th>Coin ID</th><th>Publieke sleutel huidige eigenaar</th></tr>
             {% for c in coins %}
             <tr>
-                <td class="mono" style="word-break:break-all;font-size:0.75rem">{{ c.coin_id }}</td>
-                <td class="mono" style="word-break:break-all;font-size:0.75rem">{{ c.pk_current }}</td>
                 <td>
-                    <span class="accordion-toggle" onclick="toggleAccordion(this)">Details</span>
+                    <div class="mono" style="word-break:break-all;font-size:0.75rem">{{ c.coin_id }}</div>
+                    <span class="accordion-toggle" onclick="toggleAccordion(this)" style="font-size:0.75rem;margin-top:0.25rem;display:inline-block">Details</span>
                     <div class="accordion-body">
-                        <pre style="font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg);padding:0.5rem;border-radius:var(--radius-sm);margin:0">{{ c.coin_data | tojson(indent=2) if c.coin_data else '(geen data)' }}</pre>
+                        <pre style="font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg);padding:0.5rem;border-radius:var(--radius-sm);margin:0.25rem 0 0 0">{{ c.coin_data | tojson(indent=2) if c.coin_data else '(geen data)' }}</pre>
                     </div>
                 </td>
+                <td class="mono" style="word-break:break-all;font-size:0.75rem;vertical-align:top">{{ c.pk_current }}</td>
             </tr>
             {% endfor %}
         </table>

@@ -196,7 +196,8 @@ nav .logo { font-weight: 700; color: var(--text); margin-right: 1rem; }
     background: var(--card);
     border-radius: var(--radius);
     width: 100%;
-    max-width: 480px;
+    max-width: 700px;
+    min-height: 60vh;
     max-height: 85vh;
     overflow-y: auto;
     padding: 1.5rem;
@@ -354,7 +355,7 @@ input:focus, select:focus, textarea:focus {
 
 .btn-primary { background: var(--primary); color: #fff; width: 100%; }
 .btn-primary:hover { background: var(--primary-hover); }
-.btn-success { background: var(--success); color: #fff; width: 100%; }
+.btn-success { background: var(--success); color: #fff; }
 .btn-outline {
     background: transparent;
     border: 1px solid var(--border);
@@ -439,21 +440,33 @@ th { font-weight: 600; background: var(--bg); font-size: 0.8rem; color: var(--te
 
 /* ── Transaction log ── */
 
-.tx-item {
-    display: flex;
-    justify-content: space-between;
+.tx-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 0.5rem;
     align-items: center;
-    padding: 0.65rem 0;
-    border-bottom: 1px solid var(--border);
+    padding: 0.65rem 0 0 0;
 }
-
-.tx-item:last-child { border-bottom: none; }
-.tx-left { display: flex; flex-direction: column; gap: 0.1rem; }
+.tx-cell { min-width: 0; overflow: hidden; }
 .tx-action { font-weight: 500; font-size: 0.85rem; }
-.tx-detail { color: var(--text-muted); font-size: 0.75rem; }
-.tx-amount { font-weight: 600; font-size: 0.9rem; }
+.tx-actor { font-size: 0.8rem; color: var(--text-muted); }
+.tx-actor .mono { font-size: 0.7rem; word-break: break-all; }
+.tx-description { color: var(--text-muted); font-size: 0.8rem; font-style: italic; }
+.tx-amount { font-weight: 600; font-size: 0.9rem; text-align: right; white-space: nowrap; }
 .tx-amount.received { color: var(--success); }
 .tx-amount.sent { color: var(--danger); }
+.tx-details-wrap { padding: 0 0 0.65rem 0; border-bottom: 1px solid var(--border); }
+.tx-details-wrap:last-child { border-bottom: none; }
+
+.tx-date-header {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 0.75rem 0 0.25rem 0;
+    text-transform: capitalize;
+}
+
+.tx-date-header:first-child { padding-top: 0; }
 
 /* ── Badges ── */
 

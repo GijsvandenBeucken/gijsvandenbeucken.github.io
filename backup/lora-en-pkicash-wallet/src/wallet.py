@@ -34,7 +34,7 @@ class Wallet:
     def _save(self):
         self._path.write_text(json.dumps(self._data, indent=2))
 
-    def _log(self, action: str, coin_id: str, waarde=None, counterparty: str = None, coin_data: dict = None):
+    def _log(self, action: str, coin_id: str, waarde=None, counterparty: str = None, coin_data: dict = None, description: str = None):
         entry = {
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "action": action,
@@ -44,6 +44,8 @@ class Wallet:
         }
         if coin_data:
             entry["coin_data"] = coin_data
+        if description:
+            entry["description"] = description
         self._data["transaction_log"].append(entry)
 
     def generate_receive_keypair(self) -> str:
@@ -105,14 +107,15 @@ class Wallet:
             "signature": signature.hex(),
         }
 
-    def confirm_send(self, coin_id: str, recipient_address: str = None):
+    def confirm_send(self, coin_id: str, recipient_address: str = None, description: str = None):
         entry = self._data["coins"].get(coin_id)
         waarde = entry["coin"]["waarde"] if entry else None
         coin_data = entry["coin"] if entry else None
         if coin_id in self._data["coins"]:
             del self._data["coins"][coin_id]
         self._log("verstuurd", coin_id, waarde=waarde,
-                  counterparty=recipient_address, coin_data=coin_data)
+                  counterparty=recipient_address, coin_data=coin_data,
+                  description=description)
         self._save()
 
     def receive_from_engine(self, delivery: dict):
@@ -139,9 +142,11 @@ class Wallet:
         }
 
         action = "ontvangen van bank" if status == "issued" else "betaling ontvangen"
-        counterparty = coin_data.get("pk_issuer", "")
+        counterparty = delivery.get("sender_dest", "")
+        description = delivery.get("description")
         self._log(action, coin_id, waarde=coin_data.get("waarde"),
-                  counterparty=counterparty, coin_data=coin_data)
+                  counterparty=counterparty, coin_data=coin_data,
+                  description=description)
         self._save()
 
     def validate_coin(self, coin: Coin, trusted_issuers: list[str]) -> bool:

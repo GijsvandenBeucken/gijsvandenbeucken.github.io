@@ -107,10 +107,33 @@ def create_app(role, transport, data_dir, wallet_id=None):
     @app.route("/api/announce", methods=["POST"])
     def api_do_announce():
         data = request.get_json(silent=True) or {}
-        transport.announce(
-            name=data.get("name", ""),
-            pk_transaction=data.get("pk_transaction", ""),
-        )
+        name = data.get("name", "")
+        pk_tx = data.get("pk_transaction", "")
+
+        if not pk_tx or not name:
+            if role == "engine":
+                try:
+                    e = _get_engine(data_dir)
+                    if not pk_tx:
+                        pk_tx = e.pk_hex
+                    if not name:
+                        name = "State Engine"
+                except Exception:
+                    pass
+            elif role == "bank":
+                try:
+                    i = _get_issuer(data_dir)
+                    if not pk_tx:
+                        pk_tx = i.pk_hex
+                    if not name:
+                        name = "Bank"
+                except Exception:
+                    pass
+            elif role == "wallet":
+                if not name:
+                    name = f"Wallet {wallet_id.upper()}" if wallet_id else "Wallet"
+
+        transport.announce(name=name, pk_transaction=pk_tx)
         return jsonify({"ok": True, "dest_hash": transport.dest_hash_hex})
 
     @app.route("/api/send", methods=["POST"])
@@ -291,14 +314,15 @@ def _register_engine_routes(app, transport, data_dir, notify_local):
 
             if address:
                 try:
-                    transport.send(address, "bank", "issuer_confirmed", {
+                    transport.send(address, "bank", "engine_register_request", {
                         "pk_engine": e.pk_hex,
+                        "engine_name": "State Engine",
                         "engine_dest": transport.dest_hash_hex,
                     })
                 except Exception:
                     pass
 
-            session["engine_msg"] = f"Issuer '{issuer_name or pk_issuer[:16]}' geregistreerd!"
+            session["engine_msg"] = f"Issuer '{issuer_name or pk_issuer[:16]}' geregistreerd! Wacht op goedkeuring van bank."
         except Exception as exc:
             flash(f"Fout: {exc}", "error")
         return redirect(url_for("engine_page"))
@@ -476,6 +500,7 @@ def _engine_handle_message(app, transport, data_dir, notify_local,
     elif msg_type == "register_coin":
         coin_data = payload.get("coin")
         recipient_dest = payload.get("recipient_dest", "")
+        description = payload.get("description")
         if not coin_data:
             return
 
@@ -490,6 +515,9 @@ def _engine_handle_message(app, transport, data_dir, notify_local,
 
         deliveries = e.get_pending_deliveries(recipient_dest)
         for d in deliveries:
+            if description:
+                d["description"] = description
+            d["sender_dest"] = from_hash
             try:
                 transport.send(recipient_dest, "wallet", "coin_delivery", d)
             except Exception:
@@ -500,6 +528,7 @@ def _engine_handle_message(app, transport, data_dir, notify_local,
         pk_next = payload.get("pk_next", "")
         recipient_dest = payload.get("recipient_dest", "")
         signature = payload.get("signature", "")
+        description = payload.get("description")
         if not coin_id:
             return
 
@@ -525,6 +554,9 @@ def _engine_handle_message(app, transport, data_dir, notify_local,
 
         deliveries = e.get_pending_deliveries(recipient_dest)
         for d in deliveries:
+            if description:
+                d["description"] = description
+            d["sender_dest"] = from_hash
             try:
                 transport.send(recipient_dest, "wallet", "coin_transfer", d)
             except Exception:
@@ -761,12 +793,21 @@ def _register_bank_routes(app, transport, data_dir, notify_local):
 
             wallet_dest = req["payload"].get("wallet_dest", req["from_hash"])
             public_keys = req["payload"].get("public_keys", [])
+            form_desc = request.form.get("description", "").strip()[:32]
+            coin_description = form_desc or req["payload"].get("description") or None
 
             if not public_keys:
                 flash("Geen publieke sleutels in verzoek", "error")
                 return redirect(url_for("bank_page"))
 
-            for pk_owner in public_keys:
+            approve_amount = int(request.form.get("approve_amount", len(public_keys)))
+            approve_amount = max(1, approve_amount)
+            actual_amount = min(approve_amount, len(public_keys))
+            selected_pks = public_keys[:actual_amount]
+            if approve_amount > len(public_keys):
+                flash(f"Wallet stuurde {len(public_keys)} PK(s), {actual_amount} coin(s) uitgegeven", "info")
+
+            for pk_owner in selected_pks:
                 coin = i.issue_coin(1, pk_owner, engine_dest, engine_pk)
                 bdata["issued_coins"].append({
                     "timestamp": _now(),
@@ -775,17 +816,20 @@ def _register_bank_routes(app, transport, data_dir, notify_local):
                     "recipient": wallet_dest,
                     "coin_json": coin.to_dict(),
                 })
+                reg_payload = {
+                    "coin": coin.to_dict(),
+                    "recipient_dest": wallet_dest,
+                }
+                if coin_description:
+                    reg_payload["description"] = coin_description
                 try:
-                    transport.send(engine_dest, "engine", "register_coin", {
-                        "coin": coin.to_dict(),
-                        "recipient_dest": wallet_dest,
-                    })
+                    transport.send(engine_dest, "engine", "register_coin", reg_payload)
                 except Exception as exc:
                     flash(f"Fout bij registreren coin: {exc}", "error")
 
             req["status"] = "approved"
             _save_bank_data(data_dir, bdata)
-            session["bank_msg"] = f"{len(public_keys)} coin(s) uitgegeven aan wallet"
+            session["bank_msg"] = f"{actual_amount} coin(s) uitgegeven aan wallet"
 
         return redirect(url_for("bank_page"))
 
@@ -893,10 +937,16 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
         inline_msg = session.pop("wallet_msg", None)
 
         incoming_requests = [
-            r for r in w._data.get("incoming_requests", [])
+            {**r, "real_idx": i}
+            for i, r in enumerate(w._data.get("incoming_requests", []))
             if r.get("status") == "pending"
         ]
         outgoing_coin_requests = w._data.get("outgoing_coin_requests", [])
+        outgoing_payment_requests = w._data.get("outgoing_payment_requests", [])
+
+        today = datetime.now().strftime("%Y-%m-%d")
+        from datetime import timedelta
+        yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
 
         return render_template("wallet.html",
             show_nav=False,
@@ -914,6 +964,9 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
             announces=transport.get_announces(),
             incoming_requests=incoming_requests,
             outgoing_coin_requests=outgoing_coin_requests,
+            outgoing_payment_requests=outgoing_payment_requests,
+            today=today,
+            yesterday=yesterday,
         )
 
     @app.route("/wallet/<wallet_id>/request-payment", methods=["POST"])
@@ -931,6 +984,7 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
             recipient_dest = request.form["recipient_address"].strip()
             recipient_name = request.form.get("recipient_name", "").strip()
             pk_next = request.form["recipient_pk"].strip()
+            description = request.form.get("description", "").strip()[:32] or None
 
             engine_dest = None
             coin_entry = w._data["coins"].get(coin_id)
@@ -946,15 +1000,19 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
 
             tx = w.create_transaction(coin_id, pk_next, recipient_dest)
 
-            if engine_dest:
-                transport.send(engine_dest, "engine", "transaction", {
-                    "coin_id": coin_id,
-                    "pk_next": pk_next,
-                    "recipient_dest": recipient_dest,
-                    "signature": tx["signature"],
-                })
+            tx_payload = {
+                "coin_id": coin_id,
+                "pk_next": pk_next,
+                "recipient_dest": recipient_dest,
+                "signature": tx["signature"],
+            }
+            if description:
+                tx_payload["description"] = description
 
-            w.confirm_send(coin_id, recipient_dest)
+            if engine_dest:
+                transport.send(engine_dest, "engine", "transaction", tx_payload)
+
+            w.confirm_send(coin_id, recipient_dest, description=description)
 
             for req in w._data.get("incoming_requests", []):
                 if req.get("status") == "pending" and req.get("from_hash") == recipient_dest:
@@ -970,6 +1028,74 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
             session["wallet_msg"] = f"Coin verstuurd naar {recipient_name or recipient_dest[:16]}"
         except Exception as exc:
             flash(f"Fout: {exc}", "error")
+        return redirect(url_for("wallet_page"))
+
+    @app.route("/wallet/<wallet_id>/approve-payment/<int:idx>", methods=["POST"])
+    def wallet_approve_payment(wallet_id, idx):
+        w = _get_wallet(data_dir)
+        reqs = w._data.get("incoming_requests", [])
+        if idx < 0 or idx >= len(reqs):
+            flash("Verzoek niet gevonden", "error")
+            return redirect(url_for("wallet_page"))
+
+        req = reqs[idx]
+        if req.get("status") != "pending":
+            flash("Verzoek is al afgehandeld", "error")
+            return redirect(url_for("wallet_page"))
+
+        recipient_dest = req["from_hash"]
+        public_keys = req.get("payload", {}).get("public_keys", [])
+        single_pk = req.get("payload", {}).get("pk", "")
+        if not public_keys and single_pk:
+            public_keys = [single_pk]
+
+        requested_amount = len(public_keys)
+        approve_amount = int(request.form.get("approve_amount", requested_amount))
+        approve_amount = max(1, min(approve_amount, requested_amount))
+        description = request.form.get("description", "").strip()[:32] or req.get("payload", {}).get("description") or None
+
+        available_coins = list(w._data.get("coins", {}).items())
+        if not available_coins:
+            flash("Geen coins beschikbaar om te betalen", "error")
+            return redirect(url_for("wallet_page"))
+
+        actual_amount = min(approve_amount, len(available_coins))
+        selected_coins = available_coins[:actual_amount]
+        selected_pks = public_keys[:actual_amount]
+
+        sent = 0
+        for (coin_id, coin_entry), pk_next in zip(selected_coins, selected_pks):
+            coin_data = coin_entry["coin"]
+            engine_dest = coin_data.get("state_engine_endpoint", "")
+            if engine_dest.startswith("http"):
+                for dh, info in transport.get_announces().items():
+                    if info.get("role", "").startswith("engine"):
+                        engine_dest = dh
+                        break
+
+            try:
+                tx = w.create_transaction(coin_id, pk_next, recipient_dest)
+                tx_payload = {
+                    "coin_id": coin_id,
+                    "pk_next": pk_next,
+                    "recipient_dest": recipient_dest,
+                    "signature": tx["signature"],
+                }
+                if description:
+                    tx_payload["description"] = description
+                if engine_dest:
+                    transport.send(engine_dest, "engine", "transaction", tx_payload)
+                w.confirm_send(coin_id, recipient_dest, description=description)
+                sent += 1
+            except Exception as exc:
+                flash(f"Fout bij coin {coin_id[:8]}: {exc}", "error")
+
+        req["status"] = "paid"
+        w._save()
+
+        if approve_amount > len(available_coins):
+            flash(f"Slechts {actual_amount} coin(s) beschikbaar, {actual_amount} verstuurd", "info")
+        session["wallet_msg"] = f"{sent} coin(s) verstuurd"
         return redirect(url_for("wallet_page"))
 
     @app.route("/wallet/<wallet_id>/add-contact", methods=["POST"])
@@ -1064,6 +1190,72 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
         except Exception as exc:
             return jsonify({"error": str(exc)}), 500
 
+    @app.route("/wallet/<wallet_id>/send-payment-request", methods=["POST"])
+    def wallet_send_payment_request(wallet_id):
+        w = _get_wallet(data_dir)
+        data = request.get_json(silent=True) or {}
+        dest_hash = data.get("dest_hash", "")
+        amount = data.get("amount")
+        description = (data.get("description") or "")[:32] or None
+        if "|" in dest_hash:
+            dest_hash = dest_hash.split("|")[0]
+        if not dest_hash:
+            return jsonify({"error": "dest_hash vereist"}), 400
+
+        announces = transport.get_announces()
+        target_info = announces.get(dest_hash, {})
+        target_role = target_info.get("role", "")
+
+        try:
+            n = int(amount) if amount else 1
+            if n < 1:
+                n = 1
+
+            if target_role == "bank":
+                public_keys = [w.generate_receive_keypair() for _ in range(n)]
+                cr_payload = {
+                    "amount": n,
+                    "wallet_dest": transport.dest_hash_hex,
+                    "public_keys": public_keys,
+                }
+                if description:
+                    cr_payload["description"] = description
+                transport.send(dest_hash, "bank", "coin_request", cr_payload)
+                w._data.setdefault("outgoing_coin_requests", []).append({
+                    "bank_dest": dest_hash,
+                    "amount": n,
+                    "public_keys": list(public_keys),
+                    "ts": _now(),
+                    "status": "pending",
+                    "description": description,
+                })
+                w._save()
+            else:
+                public_keys = [w.generate_receive_keypair() for _ in range(n)]
+                pr_payload = {
+                    "address": transport.dest_hash_hex,
+                    "pk": public_keys[0],
+                    "public_keys": public_keys,
+                    "amount": n,
+                }
+                if description:
+                    pr_payload["description"] = description
+                transport.send(dest_hash, "wallet", "payment_request", pr_payload)
+                w._data.setdefault("outgoing_payment_requests", []).append({
+                    "dest": dest_hash,
+                    "pk": public_keys[0],
+                    "public_keys": list(public_keys),
+                    "amount": n,
+                    "ts": _now(),
+                    "status": "pending",
+                    "description": description,
+                })
+                w._save()
+
+            return jsonify({"ok": True})
+        except Exception as exc:
+            return jsonify({"error": str(exc)}), 500
+
     @app.route("/wallet/<wallet_id>/accept-request/<int:idx>", methods=["POST"])
     def wallet_accept_request(wallet_id, idx):
         w = _get_wallet(data_dir)
@@ -1092,10 +1284,18 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
     @app.route("/wallet/<wallet_id>/decline-request/<int:idx>", methods=["POST"])
     def wallet_decline_request(wallet_id, idx):
         w = _get_wallet(data_dir)
-        requests = w._data.get("incoming_requests", [])
-        if 0 <= idx < len(requests):
-            requests[idx]["status"] = "declined"
+        reqs = w._data.get("incoming_requests", [])
+        if 0 <= idx < len(reqs):
+            req = reqs[idx]
+            req["status"] = "declined"
             w._save()
+            try:
+                transport.send(req["from_hash"], "wallet", "payment_declined", {
+                    "address": transport.dest_hash_hex,
+                    "reason": "Geweigerd door ontvanger",
+                })
+            except Exception:
+                pass
         return redirect(url_for("wallet_page"))
 
 
@@ -1110,16 +1310,35 @@ def _wallet_handle_message(app, transport, data_dir, wallet_id, notify_local,
             pk_current = coin_data.get("pk_current", "")
 
             if pk_current:
+                matched = False
                 for req in w._data.get("outgoing_coin_requests", []):
-                    if req.get("status") != "pending":
+                    if req.get("status") not in ("pending", "partial"):
                         continue
                     pks = req.get("public_keys", [])
                     if pk_current in pks:
                         pks.remove(pk_current)
-                        if not pks:
-                            req["status"] = "approved"
+                        req["received"] = req.get("received", 0) + 1
+                        req["status"] = "approved" if not pks else "partial"
                         w._save()
+                        matched = True
                         break
+
+                if not matched:
+                    for req in w._data.get("outgoing_payment_requests", []):
+                        if req.get("status") not in ("pending", "partial"):
+                            continue
+                        req_pks = req.get("public_keys", [])
+                        if pk_current in req_pks:
+                            req_pks.remove(pk_current)
+                            req["received"] = req.get("received", 0) + 1
+                            req["status"] = "paid" if not req_pks else "partial"
+                            w._save()
+                            break
+                        if req.get("pk") == pk_current and not req_pks:
+                            req["received"] = req.get("received", 0) + 1
+                            req["status"] = "paid"
+                            w._save()
+                            break
 
             notify_local({
                 "type": "coin_received",
@@ -1178,3 +1397,12 @@ def _wallet_handle_message(app, transport, data_dir, wallet_id, notify_local,
                 break
         w._save()
         notify_local({"type": "coin_request_declined", "reason": payload.get("reason", "")})
+
+    elif msg_type == "payment_declined":
+        w = _get_wallet(data_dir)
+        for req in w._data.get("outgoing_payment_requests", []):
+            if req.get("status") == "pending" and req.get("dest") == from_hash:
+                req["status"] = "declined"
+                break
+        w._save()
+        notify_local({"type": "payment_declined", "from_hash": from_hash})

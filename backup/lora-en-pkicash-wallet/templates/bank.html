@@ -58,15 +58,9 @@
             Registreren bij State Engine
         </div>
     </div>
-    <div class="activation-step locked">
-        <div class="activation-step-header">
-            <span class="step-indicator">3</span>
-            Eerste coin uitgeven
-        </div>
-    </div>
 </div>
 
-{% elif not has_coins %}
+{% elif not registered_at_engine %}
 <div class="activation">
     <h2>Bank activeren</h2>
     <div class="activation-step done">
@@ -75,12 +69,11 @@
             Keypair gegenereerd
         </div>
     </div>
-    <div class="activation-step {{ 'done' if registered_at_engine else 'current' }}">
+    <div class="activation-step current">
         <div class="activation-step-header">
-            <span class="step-indicator">{{ '✓' if registered_at_engine else '2' }}</span>
+            <span class="step-indicator">2</span>
             Registreren bij State Engine
         </div>
-        {% if not registered_at_engine %}
         <p>Deel je contactgegevens met de State Engine operator om je te registreren als issuer.</p>
         <div class="card" style="margin:0.75rem 0;padding:0.75rem">
             <div class="my-contact-field">
@@ -119,17 +112,34 @@
                 <i data-lucide="send" style="width:14px;height:14px"></i>
             </button>
         </div>
-        {% else %}
-        <p style="font-size:0.85rem;color:var(--text-muted);margin-top:0.25rem">Geregistreerd bij {{ engine_address }}</p>
-        {% endif %}
-    </div>
-    <div class="activation-step current">
-        <div class="activation-step-header">
-            <span class="step-indicator">3</span>
-            Eerste coin uitgeven
+
+        {% set pending_engine = incoming_requests|selectattr('status', 'equalto', 'pending')|selectattr('request_type', 'equalto', 'engine_register')|list %}
+        {% if pending_engine %}
+        <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0">
+        <h3 style="font-size:0.9rem;margin-bottom:0.5rem">Inkomende registratieverzoeken</h3>
+        {% for req in pending_engine %}
+        {% set real_idx = incoming_requests.index(req) %}
+        <div style="padding:0.5rem 0;{% if not loop.last %}border-bottom:1px solid var(--border);{% endif %}">
+            <div style="font-size:0.85rem;margin-bottom:0.3rem">
+                <strong>{{ req.payload.engine_name|default('State Engine') }}</strong>
+                <span class="mono" style="font-size:0.7rem;margin-left:0.25rem">{{ req.from_hash }}</span>
+            </div>
+            {% if req.payload.pk_engine %}
+            <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;word-break:break-all">
+                PK: {{ req.payload.pk_engine }}
+            </div>
+            {% endif %}
+            <div style="display:flex;gap:0.5rem">
+                <form method="POST" action="{{ url_for('bank_approve_request', idx=real_idx) }}" style="margin:0">
+                    <button class="btn btn-success" style="padding:0.3rem 0.75rem;font-size:0.8rem">Goedkeuren</button>
+                </form>
+                <form method="POST" action="{{ url_for('bank_decline_request', idx=real_idx) }}" style="margin:0">
+                    <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem;color:var(--danger)">Weigeren</button>
+                </form>
+            </div>
         </div>
-        <p>Geef je eerste coin uit aan een wallet.</p>
-        <button class="btn btn-primary" onclick="openOverlay('coin-overlay')">Coin uitgeven</button>
+        {% endfor %}
+        {% endif %}
     </div>
 </div>
 
@@ -350,40 +360,93 @@
         {% if pending %}
         {% for req in pending %}
         {% set real_idx = incoming_requests.index(req) %}
-        <div style="padding:0.75rem 0;{% if not loop.last %}border-bottom:1px solid var(--border);{% endif %}">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
-                <div>
-                    <strong>
-                        {% if req.request_type == 'engine_register' %}Engine registratie
-                        {% elif req.request_type == 'coin_request' %}Coin aanvraag
-                        {% else %}{{ req.request_type }}{% endif %}
-                    </strong>
-                    <span class="badge" style="font-size:0.65rem;margin-left:0.3rem">{{ req.from_role }}</span>
-                </div>
-                <span style="font-size:0.75rem;color:var(--text-muted)">{{ req.ts[:19] if req.ts else '' }}</span>
-            </div>
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.4rem">
-                Van: <span class="mono" style="font-size:0.75rem;word-break:break-all">{{ req.from_hash }}</span>
-            </div>
-            {% if req.payload %}
-            <div style="font-size:0.8rem;margin-bottom:0.4rem">
-                {% if req.request_type == 'engine_register' %}
-                    {% if req.payload.engine_name %}Engine: <strong>{{ req.payload.engine_name }}</strong><br>{% endif %}
-                    {% if req.payload.pk_engine %}PK: <span class="mono" style="font-size:0.7rem;word-break:break-all">{{ req.payload.pk_engine }}</span>{% endif %}
-                {% elif req.request_type == 'coin_request' %}
-                    Aantal: <strong>{{ req.payload.amount }}</strong> coin(s)<br>
-                    Wallet: <span class="mono" style="font-size:0.7rem;word-break:break-all">{{ req.payload.wallet_dest }}</span>
-                {% endif %}
+        {% set req_contact = '' %}
+        {% for c in contacts %}
+            {% if c.address == req.from_hash %}{% set req_contact = c.name %}{% endif %}
+        {% endfor %}
+        <div style="margin-bottom:0.75rem;padding:1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius)">
+
+            {% if req.request_type == 'coin_request' %}
+            <div style="font-size:1rem;font-weight:700;margin-bottom:0.15rem">Aanvraag munten</div>
+            {% elif req.request_type == 'engine_register' %}
+            <div style="font-size:1rem;font-weight:700;margin-bottom:0.15rem">Engine registratie</div>
+            {% else %}
+            <div style="font-size:1rem;font-weight:700;margin-bottom:0.15rem">{{ req.request_type }}</div>
+            {% endif %}
+            {% if req.ts %}
+            {% set ts = req.ts[:19] %}
+            <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.6rem">
+                {% set rd = ts[:10] %}{% set rm = rd[5:7]|int %}
+                {{ rd[8:10]|int }}
+                {%- if rm == 1 %} januari{% elif rm == 2 %} februari{% elif rm == 3 %} maart{% elif rm == 4 %} april{% elif rm == 5 %} mei{% elif rm == 6 %} juni{% elif rm == 7 %} juli{% elif rm == 8 %} augustus{% elif rm == 9 %} september{% elif rm == 10 %} oktober{% elif rm == 11 %} november{% elif rm == 12 %} december{% endif %}
+                {{ rd[:4] }}, {{ ts[11:] }}
             </div>
             {% endif %}
-            <div style="display:flex;gap:0.5rem">
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:0 0 0.6rem 0">
+
+            {% if req.request_type == 'engine_register' %}
+            <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.3rem">Verzoek</div>
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:0.15rem 0.75rem;font-size:0.85rem;margin-bottom:0.5rem">
+                {% if req.payload and req.payload.engine_name %}
+                <span style="color:var(--text-muted)">Naam</span>
+                <span>{{ req.payload.engine_name }}</span>
+                {% endif %}
+                <span style="color:var(--text-muted)">Adres</span>
+                <span>{% if req_contact %}{{ req_contact }}{% else %}<span class="mono" style="font-size:0.8rem;word-break:break-all">{{ req.from_hash }}</span>{% endif %}</span>
+                {% if req.payload and req.payload.pk_engine %}
+                <span style="color:var(--text-muted)">Transactie PK</span>
+                <span class="mono" style="font-size:0.8rem;word-break:break-all">{{ req.payload.pk_engine }}</span>
+                {% endif %}
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:0.6rem 0">
+
+            <div style="display:flex;gap:0.75rem">
                 <form method="POST" action="{{ url_for('bank_approve_request', idx=real_idx) }}" style="margin:0">
-                    <button class="btn btn-success" style="padding:0.3rem 0.75rem;font-size:0.8rem">Goedkeuren</button>
+                    <button class="btn btn-success" style="padding:0.4rem 2rem;font-size:0.85rem">Goedkeuren</button>
                 </form>
                 <form method="POST" action="{{ url_for('bank_decline_request', idx=real_idx) }}" style="margin:0">
-                    <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem;color:var(--danger)">Weigeren</button>
+                    <button class="btn btn-outline" style="padding:0.4rem 2rem;font-size:0.85rem;color:var(--danger);border-color:var(--danger)">Weigeren</button>
                 </form>
             </div>
+
+            {% elif req.request_type == 'coin_request' %}
+            <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.3rem">Gevraagd</div>
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:0.15rem 0.75rem;font-size:0.85rem;margin-bottom:0.15rem">
+                <span style="color:var(--text-muted)">Aantal</span>
+                <span>{{ req.payload.amount }} coins</span>
+                <span style="color:var(--text-muted)">Door</span>
+                <span>{% if req_contact %}{{ req_contact }}{% else %}<span class="mono" style="font-size:0.8rem;word-break:break-all">{{ req.from_hash }}</span>{% endif %}</span>
+                {% if req.payload.description %}
+                <span style="color:var(--text-muted)">Omschrijving</span>
+                <span><em>{{ req.payload.description }}</em></span>
+                {% endif %}
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:0.6rem 0">
+
+            <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.3rem">Beslissing</div>
+            <form method="POST" action="{{ url_for('bank_approve_request', idx=real_idx) }}" style="margin:0">
+                <div class="form-group" style="margin-bottom:0.4rem">
+                    <label style="font-size:0.85rem;color:var(--text-muted);margin:0">Aantal coins</label>
+                    <input type="number" name="approve_amount" min="1" value="{{ req.payload.amount }}" style="width:80px;padding:0.3rem 0.5rem;font-size:0.85rem">
+                </div>
+                <div class="form-group" style="margin-bottom:0.6rem">
+                    <label style="font-size:0.85rem;color:var(--text-muted);margin:0">Omschrijving</label>
+                    <input type="text" name="description" maxlength="32" value="{{ req.payload.description|default('') }}" placeholder="optioneel" style="padding:0.3rem 0.5rem;font-size:0.85rem;max-width:300px">
+                </div>
+
+                <hr style="border:none;border-top:1px solid var(--border);margin:0 0 0.6rem 0">
+
+                <div style="display:flex;gap:0.75rem">
+                    <button class="btn btn-success" style="padding:0.4rem 2rem;font-size:0.85rem">Goedkeuren</button>
+            </form>
+                    <form method="POST" action="{{ url_for('bank_decline_request', idx=real_idx) }}" style="margin:0">
+                        <button class="btn btn-outline" style="padding:0.4rem 2rem;font-size:0.85rem;color:var(--danger);border-color:var(--danger)">Weigeren</button>
+                    </form>
+                </div>
+            {% endif %}
         </div>
         {% endfor %}
         {% else %}

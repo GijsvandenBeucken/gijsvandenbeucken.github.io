@@ -41,6 +41,9 @@ def launch_single(role: str, port: int, wallet_id: str = None):
 
     from app_actor import create_app
     app = create_app(role=role, transport=transport, data_dir=data_dir, wallet_id=wallet_id)
+    app.config["TEMPLATES_AUTO_RELOAD"] = True
+    app.jinja_env.auto_reload = True
+    app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
     print(f"\n=== PKICash {role}{(' ' + wallet_id.upper()) if wallet_id else ''} ===")
     print(f"    Flask:  http://localhost:{port}")
     print(f"    RNS:    {transport.dest_hash_hex}")

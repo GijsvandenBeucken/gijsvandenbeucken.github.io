@@ -130,7 +130,12 @@ Announce:
 - Maakt Destination: RNS.Destination(identity, IN, SINGLE, "pkicash", role)
 - role = "engine", "bank", of "wallet"
 - app_data bij announce bevat: {name, role, pk_transaction}
+- pk_transaction in announce:
+  - Engine: publieke sleutel voor engine-signing (verificatie van coin deliveries)
+  - Bank: PK_issuer (publieke sleutel voor issuer signatures op coins)
+  - Wallet: PK_transactie (ephemere publieke sleutel voor huidige coin-ontvangst)
 - Alle actors ontvangen announces en tonen ze in de UI
+- Bij "Opslaan als contact" vanuit announce worden dest_hash + pk_transaction opgeslagen
 
 Berichttypen (via RNS Link + zlib-compressed JSON):
 
@@ -142,15 +147,32 @@ Berichttypen (via RNS Link + zlib-compressed JSON):
 | engine_register_request | Engine | Bank              | {pk_engine, engine_name, engine_dest}     |
 | bank_register_response  | Bank   | Engine            | {pk_issuer, bank_name}                    |
 | bank_register_declined  | Bank   | Engine            | {reason}                                  |
-| coin_request            | Wallet | Bank              | {amount, wallet_dest, public_keys}        |
+| coin_request            | Wallet | Bank              | {amount, wallet_dest, public_keys, description?} |
 | coin_request_declined   | Bank   | Wallet            | {reason}                                  |
-| register_coin           | Bank   | Engine            | {coin_json, recipient_dest}               |
-| coin_delivery           | Engine | Wallet            | {coin_json, engine_confirmation}          |
-| transaction             | Wallet | Engine            | {coin_id, pk_next, sig, recipient_dest}   |
+| register_coin           | Bank   | Engine            | {coin_json, recipient_dest, description?} |
+| coin_delivery           | Engine | Wallet            | {coin_json, engine_confirmation, description?} |
+| transaction             | Wallet | Engine            | {coin_id, pk_next, sig, recipient_dest, description?} |
 | tx_confirmed            | Engine | Wallet(zender)    | {coin_id, status}                         |
-| coin_transfer           | Engine | Wallet(ontvanger) | {updated_coin, confirmation}              |
-| payment_request         | Wallet | Wallet            | {address, pk, amount}                     |
+| coin_transfer           | Engine | Wallet(ontvanger) | {updated_coin, confirmation, description?} |
+| payment_request         | Wallet | Wallet            | {address, public_keys, amount, description?} |
 | payment_response        | Wallet | Wallet            | {pk, address, original_request}           |
+| payment_declined        | Wallet | Wallet            | {address, reason}                         |
+
+Optionele velden (met ? gemarkeerd):
+- description: max 32 tekens, meegegeven door betaler, wordt doorgegeven door
+  de hele keten (wallet → bank → engine → ontvanger). Toekomstige LoRa impact:
+  +33 bytes binair per bericht.
+- amount: het gevraagde aantal coins. Betaler kan minder sturen (max = gevraagd)
+
+Uniforme betaalverzoek flow:
+- Wallet stuurt betaalverzoek via EEN endpoint (send-payment-request)
+- Backend bepaalt via announces of target een bank of wallet is
+- Bij bank: stuurt coin_request met N gegenereerde PKs
+- Bij wallet: stuurt payment_request met N gegenereerde PKs
+- Betaler (bank of wallet) kiest het aantal coins (max = gevraagd)
+- Betaler kan omschrijving aanpassen of toevoegen
+- Status tracking: pending → partial (gedeeltelijk) → approved/paid (volledig)
+- coin_delivery/coin_transfer bevatten sender_dest voor counterparty-identificatie
 
 Inbox:
 - Inkomende RNS packets worden via callback in een thread-safe lijst geplaatst
@@ -267,16 +289,43 @@ sequenceDiagram
     participant Bank
     participant Engine
     Wallet->>Wallet: Genereer N keypairs
-    Wallet->>Bank: coin_request (amount, wallet_dest, public_keys)
+    Wallet->>Bank: coin_request (amount, wallet_dest, public_keys, description?)
     Note over Bank: Opslaan als pending request
-    alt Operator keurt goed
-        loop Voor elke public key
+    alt Operator keurt goed (kiest zelf aantal coins)
+        loop Voor elke gekozen public key
             Bank->>Bank: issue_coin(waarde=1, pk_owner)
-            Bank->>Engine: register_coin (coin, recipient_dest)
-            Engine->>Wallet: coin_delivery (coin + confirmation)
+            Bank->>Engine: register_coin (coin, recipient_dest, description?)
+            Engine->>Wallet: coin_delivery (coin + confirmation + sender_dest + description?)
         end
     else Operator wijst af
         Bank->>Wallet: coin_request_declined (reden)
+    end
+```
+
+### Wallet → Wallet: Betaalverzoek
+
+Een wallet kan een betaalverzoek sturen naar een andere wallet.
+De betaler kiest hoeveel coins te sturen (max = gevraagd aantal).
+
+```mermaid
+sequenceDiagram
+    participant WalletB as Wallet B (verzoeker)
+    participant WalletA as Wallet A (betaler)
+    participant Engine
+    WalletB->>WalletB: Genereer N keypairs
+    WalletB->>WalletA: payment_request (address, public_keys, amount, description?)
+    Note over WalletA: Toont als inkomend betaalverzoek
+    Note over WalletA: Betaler kiest aantal (max = gevraagd)
+    alt Betaler accepteert (kiest M coins, M ≤ N)
+        loop Voor elke gekozen coin
+            WalletA->>WalletA: Kies coin, sign transactie
+            WalletA->>Engine: transaction (coin_id, PK_next, recipient_dest, sig, description?)
+            Engine->>WalletA: tx_confirmed
+            Engine->>WalletB: coin_transfer (coin + confirmation + sender_dest + description?)
+        end
+        Note over WalletB: Status: partial (M<N) of paid (M=N)
+    else Betaler weigert
+        WalletA->>WalletB: payment_declined (address, reden)
     end
 ```
 
@@ -419,5 +468,9 @@ Roadmap
 6. ✓ Announce systeem: actoren ontdekken elkaar via RNS announces
 7. ✓ RNS berichten: registratie, coin uitgifte, transacties via RNS
 8. ✓ Goedkeuringspatroon: alle interacties via request → approve/decline → action
-9. □ LoRa integratie: Reticulum config met LoRa radio interface
-10. □ Meerdere state engines / redundantie
+9. ✓ Uniforme betaalverzoek flow: wallet→bank en wallet→wallet via zelfde endpoint
+10. ✓ Omschrijving: optioneel description veld (max 32 chars) door hele berichtketen
+11. ✓ Professionele transactie-weergave: datumgroepering (Vandaag/Gisteren/datum)
+12. □ LoRa integratie: Reticulum config met LoRa radio interface
+13. □ Binaire encoding: JSON→MessagePack/CBOR + raw bytes voor LoRa optimalisatie
+14. □ Meerdere state engines / redundantie

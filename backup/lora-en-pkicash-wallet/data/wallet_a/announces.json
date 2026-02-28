@@ -1,16 +1,16 @@
 {
-  "038fdd5e84d49eb538556e2739bfe9cc": {
-    "name": "",
-    "role": "engine",
-    "pk_transaction": "",
-    "dest_hash": "038fdd5e84d49eb538556e2739bfe9cc",
-    "seen": "2026-02-28T00:36:27.613439"
-  },
-  "23a67274000553f74c0068bd52686aa1": {
-    "name": "",
+  "f9d76e15d0de98449225c3c9f181e354": {
+    "name": "Bank",
     "role": "bank",
-    "pk_transaction": "",
-    "dest_hash": "23a67274000553f74c0068bd52686aa1",
-    "seen": "2026-02-28T00:36:48.366457"
+    "pk_transaction": "caf8ec86f1dfd1b7baff1b1957254144965ebc568eaa4934db61bc0f61a9a0a3",
+    "dest_hash": "f9d76e15d0de98449225c3c9f181e354",
+    "seen": "2026-02-28T12:58:58.807224"
+  },
+  "d16f4d31e235b174bfe740a0dd80ac30": {
+    "name": "State Engine",
+    "role": "engine",
+    "pk_transaction": "0324ec9be46b2bdaa1ea56dc1e2c6e631de893fc8489cea5d0ef12b3527f52b6",
+    "dest_hash": "d16f4d31e235b174bfe740a0dd80ac30",
+    "seen": "2026-02-28T12:59:05.416633"
   }
 }
