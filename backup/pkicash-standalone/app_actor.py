@@ -225,6 +225,7 @@ def create_app(role, transport, data_dir, wallet_id=None):
         payload = msg.get("payload", {})
         from_hash = msg.get("from_hash", "")
         from_role = msg.get("from_role", "")
+        print(f"[RNS MSG] role={role} type={msg_type} from={from_role}", flush=True)
 
         if role == "engine":
             _engine_handle_message(app, transport, data_dir, notify_local,
@@ -530,32 +531,53 @@ def _engine_handle_message(app, transport, data_dir, notify_local,
         notify_local({"type": "request_declined", "reason": payload.get("reason", "")})
 
     elif msg_type == "register_coin":
+        print(f"[ENGINE] register_coin ONTVANGEN van {from_hash[:16]}", flush=True)
         coin_data = payload.get("coin")
         recipient_dest = payload.get("recipient_dest", "")
         description = payload.get("description")
         pk_next = payload.get("pk_next", "")
         transfer_signature = payload.get("transfer_signature", "")
+        print(f"[ENGINE] data check: coin={bool(coin_data)}, recipient={recipient_dest[:16] if recipient_dest else 'LEEG'}, pk_next={bool(pk_next)}, sig={bool(transfer_signature)}", flush=True)
         if not coin_data or not pk_next or not transfer_signature:
+            print("[ENGINE] AFGEBROKEN - ontbrekende data!", flush=True)
             return
 
         e = _get_engine(data_dir)
         coin = Coin.from_dict(coin_data)
+        print(f"[ENGINE] coin parsed: {coin.coin_id[:16]}... issuer={coin.pk_issuer[:16]}...", flush=True)
+        print(f"[ENGINE] trusted issuers: {e.list_issuers()}", flush=True)
         try:
             e.register_coin(coin, recipient_dest, pk_next, transfer_signature)
-        except Exception:
+            print(f"[ENGINE] register_coin GELUKT!", flush=True)
+        except Exception as exc:
+            print(f"[ENGINE] register_coin MISLUKT: {exc}", flush=True)
+            import traceback
+            print(traceback.format_exc(), flush=True)
             return
 
         notify_local({"type": "coin_registered", "coin_id": coin.coin_id})
 
         deliveries = e.get_pending_deliveries(recipient_dest)
-        for d in deliveries:
-            if description:
-                d["description"] = description
-            d["sender_dest"] = from_hash
-            try:
-                transport.send(recipient_dest, "wallet", "coin_delivery", d)
-            except Exception:
-                pass
+        print(f"[ENGINE] {len(deliveries)} pending deliveries voor {recipient_dest[:16]}", flush=True)
+
+        def _deliver_coins(deliveries, recipient_dest, description, from_hash):
+            for d in deliveries:
+                if description:
+                    d["description"] = description
+                d["sender_dest"] = from_hash
+                try:
+                    print(f"[ENGINE] coin_delivery sturen naar {recipient_dest[:16]}...", flush=True)
+                    transport.send(recipient_dest, "wallet", "coin_delivery", d)
+                    print(f"[ENGINE] coin_delivery VERSTUURD!", flush=True)
+                except Exception as exc:
+                    print(f"[ENGINE] coin_delivery MISLUKT: {exc}", flush=True)
+
+        import threading
+        threading.Thread(
+            target=_deliver_coins,
+            args=(deliveries, recipient_dest, description, from_hash),
+            daemon=True,
+        ).start()
 
     elif msg_type == "transaction":
         coin_id = payload.get("coin_id", "")

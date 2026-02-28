@@ -144,11 +144,26 @@ class PKICashTransport:
 
         def _established(lnk):
             try:
-                RNS.Packet(lnk, data).send()
-                result["ok"] = True
+                if len(data) <= RNS.Link.MDU:
+                    RNS.Packet(lnk, data).send()
+                    result["ok"] = True
+                    done.set()
+                    threading.Timer(1.0, lnk.teardown).start()
+                else:
+                    print(f"[SEND] Data {len(data)}B > MDU {RNS.Link.MDU}B, gebruik Resource", flush=True)
+                    resource = RNS.Resource(data, lnk)
+                    def _resource_concluded(res):
+                        if res.status == RNS.Resource.COMPLETE:
+                            result["ok"] = True
+                            print(f"[SEND] Resource transfer compleet", flush=True)
+                        else:
+                            result["error"] = f"Resource transfer mislukt (status {res.status})"
+                            print(f"[SEND] Resource transfer MISLUKT", flush=True)
+                        done.set()
+                        threading.Timer(1.0, lnk.teardown).start()
+                    resource.callback = _resource_concluded
             except Exception as exc:
                 result["error"] = str(exc)
-            finally:
                 done.set()
                 threading.Timer(1.0, lnk.teardown).start()
 
@@ -160,7 +175,7 @@ class PKICashTransport:
         link.set_link_established_callback(_established)
         link.set_link_closed_callback(_closed)
 
-        done.wait(timeout=15)
+        done.wait(timeout=30)
         if not result["ok"]:
             raise ConnectionError(result["error"] or "Timeout bij verzenden")
 
@@ -264,9 +279,11 @@ class PKICashTransport:
     def _on_inbound_link(self, link):
         """Called when another actor opens a Link to us."""
         link.set_packet_callback(self._on_packet)
+        link.set_resource_strategy(RNS.Link.ACCEPT_ALL)
+        link.set_resource_concluded_callback(self._on_resource)
 
-    def _on_packet(self, raw_data, packet):
-        """Called when a packet arrives over an inbound Link."""
+    def _process_incoming(self, raw_data):
+        """Shared logic for processing incoming data from Packet or Resource."""
         try:
             decompressed = zlib.decompress(raw_data)
             msg = json.loads(decompressed.decode("utf-8"))
@@ -275,6 +292,8 @@ class PKICashTransport:
                 msg = json.loads(raw_data.decode("utf-8"))
             except Exception:
                 return
+
+        print(f"[MSG IN] type={msg.get('type','?')} from={msg.get('from_role','?')}", flush=True)
 
         with self._inbox_lock:
             self._inbox.append(msg)
@@ -285,8 +304,22 @@ class PKICashTransport:
         for handler in self._message_handlers:
             try:
                 handler(msg)
-            except Exception:
-                pass
+            except Exception as exc:
+                print(f"[HANDLER CRASH] {exc}", flush=True)
+                import traceback
+                print(traceback.format_exc(), flush=True)
+
+    def _on_packet(self, raw_data, packet):
+        """Called when a small packet arrives over an inbound Link."""
+        self._process_incoming(raw_data)
+
+    def _on_resource(self, resource):
+        """Called when a Resource transfer completes over an inbound Link."""
+        if resource.status == RNS.Resource.COMPLETE:
+            print(f"[RESOURCE IN] {len(resource.data)} bytes ontvangen", flush=True)
+            self._process_incoming(resource.data)
+        else:
+            print(f"[RESOURCE FAIL] status={resource.status}", flush=True)
 
     def _on_announce_received(self, dest_hash_bytes, identity, app_data):
         """Called by _AnnounceHandler when an announce arrives."""
