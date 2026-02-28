@@ -10,8 +10,11 @@
             <h1>
                 State Engine
                 {% if activated %}
-                <button class="copy-inline" onclick="copyToClipboard('{{ engine_contact }}', this)" title="Kopieer adres + public key">
+                <button class="copy-inline" onclick="copyToClipboard('{{ engine_address }}', this)" title="Kopieer adres">
                     <i data-lucide="copy" style="width:16px;height:16px"></i>
+                </button>
+                <button class="copy-inline" onclick="doAnnounce()" title="Announce op netwerk">
+                    <i data-lucide="radio" style="width:16px;height:16px"></i>
                 </button>
                 {% endif %}
             </h1>
@@ -178,9 +181,9 @@
         </p>
         <div class="field-with-send">
             <div class="form-group">
-                <label>Bank adres (dest hash)</label>
+                <label>Bank adres (destination hash)</label>
                 <div class="field-with-icon">
-                    <input type="text" id="engine_bank_addr" placeholder="bijv. dest hash van bank">
+                    <input type="text" id="engine_bank_addr" placeholder="bijv. destination hash van bank">
                     {% if contacts %}
                     <button type="button" class="addressbook-btn" onclick="toggleContactPicker(this)" title="Kies uit contacten"><i data-lucide="book-user" style="width:16px;height:16px"></i></button>
                     <div class="contact-picker">
@@ -276,16 +279,15 @@
     <div class="card">
         <h2>Mijn contactgegevens</h2>
         <div class="my-contact-field">
-            <span class="my-contact-label">Adres (dest hash)</span>
+            <span class="my-contact-label">Adres (destination hash)</span>
+            <button class="copy-inline" onclick="copyToClipboard('{{ engine_address }}', this)" title="Kopieer adres"><i data-lucide="copy" style="width:14px;height:14px"></i></button>
             <span class="my-contact-value mono" style="word-break:break-all;font-size:0.75rem">{{ engine_address }}</span>
         </div>
         <div class="my-contact-field">
             <span class="my-contact-label">Public Key (transactie)</span>
+            <button class="copy-inline" onclick="copyToClipboard('{{ pk_engine }}', this)" title="Kopieer public key"><i data-lucide="copy" style="width:14px;height:14px"></i></button>
             <span class="my-contact-value mono" style="word-break:break-all;font-size:0.75rem">{{ pk_engine }}</span>
         </div>
-        <button class="btn btn-outline" style="margin-top:0.75rem" onclick="copyToClipboard('{{ engine_contact }}', this)">
-            <i data-lucide="copy" style="width:14px;height:14px;vertical-align:middle"></i> Kopieer alles
-        </button>
     </div>
 </div>
 
@@ -356,7 +358,7 @@ function sendEngineRegistration() {
     let bankDest = document.getElementById('engine_bank_addr').value.trim();
     if (bankDest.includes('|')) bankDest = bankDest.split('|')[0];
     if (!bankDest) {
-        alert('Vul eerst het bank adres (dest hash) in.');
+        alert('Vul eerst het bank adres (destination hash) in.');
         return;
     }
     fetch('/engine/request-bank-registration', {

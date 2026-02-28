@@ -13,7 +13,7 @@ class Coin:
     pk_engine: str         # hex-encoded public key of engine
 
     def signing_payload(self) -> bytes:
-        return build_payload(self.coin_id, str(self.waarde), self.pk_current)
+        return build_payload(self.coin_id, str(self.waarde), self.pk_issuer)
 
     def verify_issuer(self, pk_issuer_hex: str = None) -> bool:
         pk_hex = pk_issuer_hex or self.pk_issuer

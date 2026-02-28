@@ -18,20 +18,34 @@ class Issuer:
     def pk_hex(self) -> str:
         return pk_to_hex(self._pk)
 
-    def issue_coin(self, waarde: int, pk_owner_hex: str, engine_endpoint: str, pk_engine_hex: str) -> Coin:
+    def issue_coin(self, waarde: int, pk_recipient_hex: str, engine_endpoint: str, pk_engine_hex: str) -> tuple:
+        """Returns (coin, transfer_info) where coin has pk_current=pk_issuer
+        and transfer_info contains pk_next + transfer_signature for the
+        initial ownership transfer from issuer to recipient."""
         coin_id = str(uuid.uuid4())
-        payload = build_payload(coin_id, str(waarde), pk_owner_hex)
-        signature = sign(self._sk, payload)
 
-        return Coin(
+        issuer_payload = build_payload(coin_id, str(waarde), self.pk_hex)
+        issuer_sig = sign(self._sk, issuer_payload)
+
+        transfer_payload = build_payload(coin_id, pk_recipient_hex)
+        transfer_sig = sign(self._sk, transfer_payload)
+
+        coin = Coin(
             coin_id=coin_id,
             waarde=waarde,
-            pk_current=pk_owner_hex,
+            pk_current=self.pk_hex,
             pk_issuer=self.pk_hex,
-            issuer_signature=signature.hex(),
+            issuer_signature=issuer_sig.hex(),
             state_engine_endpoint=engine_endpoint,
             pk_engine=pk_engine_hex,
         )
+
+        transfer_info = {
+            "pk_next": pk_recipient_hex,
+            "transfer_signature": transfer_sig.hex(),
+        }
+
+        return coin, transfer_info
 
     def save_key(self, path: str):
         Path(path).write_text(sk_to_hex(self._sk))

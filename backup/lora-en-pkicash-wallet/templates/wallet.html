@@ -13,6 +13,9 @@
                 <button class="copy-inline" onclick="copyToClipboard('{{ wallet_address }}', this)" title="Kopieer adres">
                     <i data-lucide="copy" style="width:16px;height:16px"></i>
                 </button>
+                <button class="copy-inline" onclick="doAnnounce()" title="Announce op netwerk">
+                    <i data-lucide="radio" style="width:16px;height:16px"></i>
+                </button>
                 {% endif %}
             </h1>
             <div class="menu-wrapper">
@@ -285,15 +288,13 @@
     <div class="card">
         <h2>Mijn contactgegevens</h2>
         <div class="my-contact-field">
-            <span class="my-contact-label">Adres (dest hash)</span>
+            <span class="my-contact-label">Adres (destination hash)</span>
+            <button class="copy-inline" onclick="copyToClipboard('{{ wallet_address }}', this)" title="Kopieer adres"><i data-lucide="copy" style="width:14px;height:14px"></i></button>
             <span class="my-contact-value mono" style="word-break:break-all;font-size:0.75rem">{{ wallet_address }}</span>
         </div>
         <p style="color:var(--text-muted);font-size:0.8rem;margin:0.5rem 0">
             PK transactie verandert per betaalverzoek.
         </p>
-        <button class="btn btn-outline" style="margin-top:0.25rem" onclick="copyToClipboard('{{ wallet_address }}', this)">
-            <i data-lucide="copy" style="width:14px;height:14px;vertical-align:middle"></i> Kopieer adres
-        </button>
     </div>
 </div>
 

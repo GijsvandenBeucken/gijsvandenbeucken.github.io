@@ -1,0 +1,18 @@
+[
+  {
+    "direction": "out",
+    "type": "payment_request",
+    "to_hash": "97cd461cdaa7f1331030226d449a80e7",
+    "to_role": "wallet",
+    "payload": {
+      "address": "2659290dbeb38fe2ff40779115628fca",
+      "pk": "2e899b51215d324f63b9b12d988486c82f4439d8312479c3a4a7685b7acf1d3b",
+      "public_keys": [
+        "2e899b51215d324f63b9b12d988486c82f4439d8312479c3a4a7685b7acf1d3b",
+        "85df9b0eed651b361decef23d6bcb9016aeff5edcd2c6392a367e6c2372d40ca"
+      ],
+      "amount": 2
+    },
+    "ts": "2026-02-28T14:56:06.578218"
+  }
+]

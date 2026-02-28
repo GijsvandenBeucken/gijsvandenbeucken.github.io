@@ -42,6 +42,7 @@ def create_app(role, transport, data_dir, wallet_id=None):
                 template_folder=os.path.join(os.path.dirname(__file__), "templates"),
                 static_folder=os.path.join(os.path.dirname(__file__), "static"))
     app.secret_key = os.urandom(32)
+    app.config["ACTOR_ROLE"] = role
 
     os.makedirs(data_dir, exist_ok=True)
 
@@ -132,6 +133,7 @@ def create_app(role, transport, data_dir, wallet_id=None):
             elif role == "wallet":
                 if not name:
                     name = f"Wallet {wallet_id.upper()}" if wallet_id else "Wallet"
+                pk_tx = ""
 
         transport.announce(name=name, pk_transaction=pk_tx)
         return jsonify({"ok": True, "dest_hash": transport.dest_hash_hex})
@@ -282,6 +284,9 @@ def _register_engine_routes(app, transport, data_dir, notify_local):
             announces=transport.get_announces(),
             incoming_requests=all_requests,
             pending_count=len(pending_requests),
+            announce_name="State Engine",
+            announce_pk=pk or "",
+            role=app.config["ACTOR_ROLE"],
         )
 
     @app.route("/engine/generate-key", methods=["POST"])
@@ -501,13 +506,15 @@ def _engine_handle_message(app, transport, data_dir, notify_local,
         coin_data = payload.get("coin")
         recipient_dest = payload.get("recipient_dest", "")
         description = payload.get("description")
-        if not coin_data:
+        pk_next = payload.get("pk_next", "")
+        transfer_signature = payload.get("transfer_signature", "")
+        if not coin_data or not pk_next or not transfer_signature:
             return
 
         e = _get_engine(data_dir)
         coin = Coin.from_dict(coin_data)
         try:
-            e.register_coin(coin, recipient_dest)
+            e.register_coin(coin, recipient_dest, pk_next, transfer_signature)
         except Exception:
             return
 
@@ -628,6 +635,9 @@ def _register_bank_routes(app, transport, data_dir, notify_local):
             announces=transport.get_announces(),
             incoming_requests=all_requests,
             pending_count=len(pending_requests),
+            announce_name="Bank",
+            announce_pk=pk or "",
+            role=app.config["ACTOR_ROLE"],
         )
 
     @app.route("/bank/generate-key", methods=["POST"])
@@ -646,7 +656,7 @@ def _register_bank_routes(app, transport, data_dir, notify_local):
             recipient_dest = request.form["recipient_address"].strip()
             pk_owner = request.form["recipient_pk"].strip()
 
-            coin = i.issue_coin(waarde, pk_owner, engine_dest, pk_engine)
+            coin, transfer_info = i.issue_coin(waarde, pk_owner, engine_dest, pk_engine)
 
             bdata = _get_bank_data(data_dir)
             bdata["issued_coins"].append({
@@ -671,6 +681,8 @@ def _register_bank_routes(app, transport, data_dir, notify_local):
             transport.send(engine_dest, "engine", "register_coin", {
                 "coin": coin.to_dict(),
                 "recipient_dest": recipient_dest,
+                "pk_next": transfer_info["pk_next"],
+                "transfer_signature": transfer_info["transfer_signature"],
             })
 
             session["bank_msg"] = f"Coin (waarde {waarde}) verstuurd naar engine voor registratie"
@@ -808,7 +820,7 @@ def _register_bank_routes(app, transport, data_dir, notify_local):
                 flash(f"Wallet stuurde {len(public_keys)} PK(s), {actual_amount} coin(s) uitgegeven", "info")
 
             for pk_owner in selected_pks:
-                coin = i.issue_coin(1, pk_owner, engine_dest, engine_pk)
+                coin, transfer_info = i.issue_coin(1, pk_owner, engine_dest, engine_pk)
                 bdata["issued_coins"].append({
                     "timestamp": _now(),
                     "coin_id": coin.coin_id,
@@ -819,6 +831,8 @@ def _register_bank_routes(app, transport, data_dir, notify_local):
                 reg_payload = {
                     "coin": coin.to_dict(),
                     "recipient_dest": wallet_dest,
+                    "pk_next": transfer_info["pk_next"],
+                    "transfer_signature": transfer_info["transfer_signature"],
                 }
                 if coin_description:
                     reg_payload["description"] = coin_description
@@ -948,6 +962,7 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
         from datetime import timedelta
         yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
 
+        wallet_name = f"Wallet {wallet_id.upper()}" if wallet_id else "Wallet"
         return render_template("wallet.html",
             show_nav=False,
             active_page=f"wallet_{wallet_id}",
@@ -967,6 +982,9 @@ def _register_wallet_routes(app, transport, data_dir, wallet_id, notify_local):
             outgoing_payment_requests=outgoing_payment_requests,
             today=today,
             yesterday=yesterday,
+            announce_name=wallet_name,
+            announce_pk="",
+            role=app.config["ACTOR_ROLE"],
         )
 
     @app.route("/wallet/<wallet_id>/request-payment", methods=["POST"])

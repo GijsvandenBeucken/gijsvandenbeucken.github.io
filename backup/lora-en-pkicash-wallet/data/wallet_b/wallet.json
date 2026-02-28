@@ -1,0 +1,32 @@
+{
+  "coins": {},
+  "pending_keypairs": {
+    "ecc8991fe52c54158c54c61e5f82682690731da2a1f4f755cee48ccc5994fd29": "4f4f3f0563c7077091249ea14deddccfacd7cb927b001e6c47805900fa232164",
+    "a87c65f35ec2644686460f88828da149f9e1e9ba5b2ed2dd5b425dfc7c414dd1": "3c524e249d2b2cd3d91f8d4b0ca45ddddf0508d340fdf5cbc5da92d7a3e656ef",
+    "2e899b51215d324f63b9b12d988486c82f4439d8312479c3a4a7685b7acf1d3b": "ad1b72800b69ee6a2cb5992fb67f684a022fe4d336a66ba8e5084a21a808b373",
+    "85df9b0eed651b361decef23d6bcb9016aeff5edcd2c6392a367e6c2372d40ca": "66b06c1146d142c622cd612c448f9ab7560bf2018c9d48c6eb2f2e11c328dd77"
+  },
+  "transaction_log": [],
+  "contacts": [
+    {
+      "name": "Wallet A",
+      "address": "97cd461cdaa7f1331030226d449a80e7",
+      "pk": ""
+    }
+  ],
+  "address": "",
+  "outgoing_payment_requests": [
+    {
+      "dest": "97cd461cdaa7f1331030226d449a80e7",
+      "pk": "2e899b51215d324f63b9b12d988486c82f4439d8312479c3a4a7685b7acf1d3b",
+      "public_keys": [
+        "2e899b51215d324f63b9b12d988486c82f4439d8312479c3a4a7685b7acf1d3b",
+        "85df9b0eed651b361decef23d6bcb9016aeff5edcd2c6392a367e6c2372d40ca"
+      ],
+      "amount": 2,
+      "ts": "2026-02-28 14:56:06",
+      "status": "pending",
+      "description": null
+    }
+  ]
+}

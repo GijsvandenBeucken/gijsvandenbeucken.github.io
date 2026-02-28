@@ -123,10 +123,24 @@
                 <h2>Netwerk</h2>
                 <button class="overlay-close" onclick="closeOverlay('network-overlay')">&times;</button>
             </div>
-            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.5rem">
-                Eigen adres: <code id="own-dest-hash" style="font-size:0.75rem">{{ dest_hash|default('') }}</code>
-                <button class="copy-inline" onclick="copyToClipboard(document.getElementById('own-dest-hash').textContent, this)" title="Kopieer"><i data-lucide="copy" style="width:14px;height:14px"></i></button>
-            </p>
+            <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:0.75rem;margin-bottom:1rem">
+                <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.4rem">Je publiceert de volgende gegevens</div>
+                <div style="display:grid;grid-template-columns:auto 1fr;gap:0.15rem 0.75rem;font-size:0.85rem">
+                    <span style="color:var(--text-muted)">Naam</span>
+                    <span>{{ announce_name|default(dest_hash|default('')) }}</span>
+                    <span style="color:var(--text-muted)">Adres</span>
+                    <span>
+                        <button class="copy-inline" onclick="copyToClipboard('{{ dest_hash|default('') }}', this)" title="Kopieer adres"><i data-lucide="copy" style="width:12px;height:12px"></i></button>
+                        <span class="mono" style="font-size:0.75rem;word-break:break-all">{{ dest_hash|default('') }}</span>
+                    </span>
+                    <span style="color:var(--text-muted)">Rol</span>
+                    <span>{{ role|default('?') }}</span>
+                    {% if announce_pk %}
+                    <span style="color:var(--text-muted)">PK transactie</span>
+                    <span class="mono" style="font-size:0.75rem;word-break:break-all">{{ announce_pk }}</span>
+                    {% endif %}
+                </div>
+            </div>
             <button class="btn btn-primary" style="margin-bottom:1rem;padding:0.4rem 1rem;font-size:0.85rem" onclick="doAnnounce()">
                 <i data-lucide="radio" style="width:14px;height:14px;vertical-align:middle"></i> Announce op netwerk
             </button>
@@ -136,35 +150,29 @@
                 {% for hash, info in announces.items() %}
                 <div class="contact-card">
                     <div class="contact-card-header" onclick="this.parentElement.classList.toggle('expanded')">
-                        <span class="c-name">{{ info.name or info.role or 'Onbekend' }}</span>
+                        <span class="c-name">{{ info.name or 'Onbekend' }}</span>
                         <span class="badge" style="font-size:0.7rem;margin-left:0.5rem">{{ info.role|default('?') }}</span>
                         <span class="c-mono" style="flex:1;text-align:right;font-size:0.7rem">{{ hash[:16] }}…</span>
                         <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--text-muted)"></i>
                     </div>
                     <div class="contact-card-body">
-                        <div class="my-contact-field">
-                            <span class="my-contact-label">Dest hash</span>
-                            <span class="my-contact-value mono" style="font-size:0.7rem;word-break:break-all">{{ hash }}</span>
-                        </div>
-                        {% if info.pk_transaction %}
-                        <div class="my-contact-field">
-                            <span class="my-contact-label">PK transactie</span>
-                            <span class="my-contact-value mono" style="font-size:0.7rem;word-break:break-all">{{ info.pk_transaction }}</span>
-                        </div>
-                        {% endif %}
-                        <div class="my-contact-field">
-                            <span class="my-contact-label">Gezien</span>
-                            <span class="my-contact-value">{{ info.seen|default('') }}</span>
-                        </div>
-                        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.5rem">
-                            <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem" onclick="copyToClipboard('{{ hash }}', this)">
-                                <i data-lucide="copy" style="width:12px;height:12px"></i> Kopieer adres
-                            </button>
+                        <div style="display:grid;grid-template-columns:auto 1fr;gap:0.15rem 0.75rem;font-size:0.85rem">
+                            <span style="color:var(--text-muted)">Adres (destination hash)</span>
+                            <span>
+                                <button class="copy-inline" onclick="event.stopPropagation();copyToClipboard('{{ hash }}', this)" title="Kopieer adres"><i data-lucide="copy" style="width:12px;height:12px"></i></button>
+                                <span class="mono" style="font-size:0.75rem;word-break:break-all">{{ hash }}</span>
+                            </span>
                             {% if info.pk_transaction %}
-                            <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem" onclick="copyToClipboard('{{ info.pk_transaction }}', this)">
-                                <i data-lucide="copy" style="width:12px;height:12px"></i> Kopieer PK
-                            </button>
+                            <span style="color:var(--text-muted)">PK transactie</span>
+                            <span>
+                                <button class="copy-inline" onclick="event.stopPropagation();copyToClipboard('{{ info.pk_transaction }}', this)" title="Kopieer PK"><i data-lucide="copy" style="width:12px;height:12px"></i></button>
+                                <span class="mono" style="font-size:0.75rem;word-break:break-all">{{ info.pk_transaction }}</span>
+                            </span>
                             {% endif %}
+                            <span style="color:var(--text-muted)">Announce ontvangen op</span>
+                            <span class="announce-seen-date" data-ts="{{ info.seen|default('') }}" style="font-size:0.85rem"></span>
+                        </div>
+                        <div style="margin-top:0.5rem">
                             <button class="btn btn-outline" style="padding:0.3rem 0.75rem;font-size:0.8rem" onclick="saveAnnounceAsContact('{{ hash }}', '{{ info.name|default('') }}', '{{ info.pk_transaction|default('') }}')">
                                 <i data-lucide="user-plus" style="width:12px;height:12px"></i> Opslaan als contact
                             </button>
@@ -193,30 +201,35 @@
                 return;
             }
             const reversed = [...messages].reverse();
-            container.innerHTML = reversed.map(m => {
-                const dir = m.direction === 'out' ? '↑ Verstuurd' : '↓ Ontvangen';
-                const dirClass = m.direction === 'out' ? 'badge-info' : 'badge-success';
-                const peer = m.direction === 'out' ? (m.to_hash || '?') : (m.from_hash || '?');
-                const peerRole = m.direction === 'out' ? (m.to_role || '') : (m.from_role || '');
+            container.innerHTML = reversed.map((m, i) => {
+                const isOut = m.direction === 'out';
+                const dir = isOut ? '↑ Verstuurd' : '↓ Ontvangen';
+                const dirClass = isOut ? 'badge-info' : 'badge-success';
+                const peer = isOut ? (m.to_hash || '?') : (m.from_hash || '?');
+                const peerLabel = isOut ? 'Aan' : 'Van';
                 const ts = m.ts ? new Date(m.ts).toLocaleString('nl-NL') : '';
                 const msgType = m.type || '?';
-                let detail = '';
-                if (m.payload) {
-                    const p = m.payload;
-                    if (p.waarde) detail += 'Waarde: ' + p.waarde + ' ';
-                    if (p.address) detail += 'Adres: ' + p.address + ' ';
-                    if (p.coin_id) detail += 'Coin: ' + p.coin_id.substring(0,8) + '… ';
-                }
+                const payloadJson = m.payload ? JSON.stringify(m.payload, null, 2) : null;
+                const detailId = 'inbox-detail-' + i;
                 return '<div class="card" style="margin-bottom:0.5rem;padding:0.6rem 0.8rem">' +
-                    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem">' +
-                        '<span class="badge ' + dirClass + '" style="font-size:0.7rem">' + dir + '</span>' +
-                        '<span style="font-size:0.7rem;color:var(--text-muted)">' + ts + '</span>' +
+                    '<div style="display:grid;grid-template-columns:auto 1fr;gap:0 1rem">' +
+                        '<div style="min-width:90px">' +
+                            '<span class="badge ' + dirClass + '" style="font-size:0.7rem">' + dir + '</span>' +
+                            '<div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.2rem">' + ts + '</div>' +
+                        '</div>' +
+                        '<div>' +
+                            '<div style="font-size:0.85rem;margin-bottom:0.15rem">Type: <strong>' + msgType + '</strong></div>' +
+                            '<div style="font-size:0.8rem;color:var(--text-muted);word-break:break-all">' + peerLabel + ': ' + peer + '</div>' +
+                            (payloadJson ?
+                                '<span class="accordion-toggle" onclick="toggleAccordion(this)" style="font-size:0.75rem;margin-top:0.3rem;display:inline-block">Details</span>' +
+                                '<div class="accordion-body">' +
+                                    '<pre style="font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg);padding:0.5rem;border-radius:4px;margin:0.25rem 0 0 0">' +
+                                        payloadJson.replace(/</g,'&lt;').replace(/>/g,'&gt;') +
+                                    '</pre>' +
+                                '</div>'
+                            : '') +
+                        '</div>' +
                     '</div>' +
-                    '<div style="font-size:0.85rem;margin-bottom:0.2rem"><strong>' + msgType + '</strong>' +
-                        (peerRole ? ' <span class="badge" style="font-size:0.65rem">' + peerRole + '</span>' : '') +
-                    '</div>' +
-                    '<div style="font-size:0.75rem;color:var(--text-muted);word-break:break-all">' + peer + '</div>' +
-                    (detail ? '<div style="font-size:0.75rem;margin-top:0.2rem">' + detail + '</div>' : '') +
                 '</div>';
             }).join('');
         });
@@ -242,6 +255,24 @@
         document.body.appendChild(form);
         form.submit();
     }
+
+    document.querySelectorAll('.announce-seen-date').forEach(el => {
+        const ts = el.dataset.ts;
+        if (!ts) { el.textContent = '?'; return; }
+        const d = new Date(ts);
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const yest = new Date(today); yest.setDate(yest.getDate() - 1);
+        const dDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        const months = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+        const time = d.toLocaleTimeString('nl-NL', {hour:'2-digit', minute:'2-digit'});
+        let label;
+        if (dDay.getTime() === today.getTime()) label = 'Vandaag';
+        else if (dDay.getTime() === yest.getTime()) label = 'Gisteren';
+        else if (d.getFullYear() === now.getFullYear()) label = d.getDate() + ' ' + months[d.getMonth()];
+        else label = d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+        el.textContent = label + ', ' + time;
+    });
 
     const _evtSource = new EventSource('/api/events');
     _evtSource.onmessage = function(event) {

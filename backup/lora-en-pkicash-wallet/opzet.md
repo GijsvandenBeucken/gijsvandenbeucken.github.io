@@ -24,15 +24,22 @@ Een munt is een klein JSON bestandje:
     "waarde": 10,
     "PK_current": "<publieke sleutel huidige eigenaar>",
     "PK_issuer": "<publieke sleutel uitgever>",
-    "issuer_signature": "<handtekening van uitgever over coin_id + waarde + PK_current>",
+    "issuer_signature": "<handtekening van uitgever over coin_id + waarde + PK_issuer>",
     "state_engine_endpoint": "<dest hash van de state engine>",
     "PK_engine": "<publieke sleutel van de state engine>"
   }
 
 De waarde in issuer_signature is het resultaat van: sign met SK_issuer over
-(coin_id | waarde | PK_current). De private key SK_issuer zit NIET in de coin —
+(coin_id | waarde | PK_issuer). De private key SK_issuer zit NIET in de coin —
 alleen het resultaat (de signature hex bytes). Verificatie gaat met PK_issuer
 (publieke sleutel) die al in de coin staat.
+
+Bij creatie is PK_current = PK_issuer (de bank bezit de coin). De bank maakt
+vervolgens een transfer_signature aan: sign met SK_issuer over (coin_id | PK_next),
+identiek aan een wallet-transfer. De state engine verifieert beide signatures en
+roteert PK_current naar PK_next (de ontvanger). Zo is coin-uitgifte conceptueel
+identiek aan een gewone betaling.
+
 Zonder geldige issuer_signature is de coin waardeloos.
 
 
@@ -67,11 +74,17 @@ PK_current op de coin.
 5. State engine stuurt coin via RNS naar de ontvanger
 
 ### Wat de state engine doet
+Bij coin registratie (uitgifte):
 1. Verifieert issuer_signature op de coin met bekende PK_issuer
-2. Verifieert transactie signature met PK_current
-3. Roteert PK_current naar PK_next bij geldige transactie
-4. Stuurt gesigneerde bevestiging via RNS terug
-5. Double spend: geeft error bij hergebruik van oude PK
+2. Verifieert transfer_signature met PK_current (= PK_issuer bij nieuwe coin)
+3. Roteert PK_current naar PK_next (de ontvanger)
+4. Stuurt coin met gesigneerde bevestiging via RNS naar ontvanger
+
+Bij transactie (overdracht):
+1. Verifieert transactie signature met PK_current
+2. Roteert PK_current naar PK_next bij geldige transactie
+3. Stuurt gesigneerde bevestiging via RNS terug
+4. Double spend: geeft error bij hergebruik van oude PK
 
 De state engine bewaart alleen: coin_id → PK_current
 Geen geschiedenis, geen identiteit, geen saldo's.
@@ -149,7 +162,7 @@ Berichttypen (via RNS Link + zlib-compressed JSON):
 | bank_register_declined  | Bank   | Engine            | {reason}                                  |
 | coin_request            | Wallet | Bank              | {amount, wallet_dest, public_keys, description?} |
 | coin_request_declined   | Bank   | Wallet            | {reason}                                  |
-| register_coin           | Bank   | Engine            | {coin_json, recipient_dest, description?} |
+| register_coin           | Bank   | Engine            | {coin_json, recipient_dest, pk_next, transfer_signature, description?} |
 | coin_delivery           | Engine | Wallet            | {coin_json, engine_confirmation, description?} |
 | transaction             | Wallet | Engine            | {coin_id, pk_next, sig, recipient_dest, description?} |
 | tx_confirmed            | Engine | Wallet(zender)    | {coin_id, status}                         |
@@ -198,8 +211,10 @@ sequenceDiagram
     Note over Issuer,WalletA: Coin uitgifte (via RNS)
     WalletA->>WalletA: generate keypair (SK_A, PK_A)
     WalletA-->>Issuer: PK_A + dest_hash (via announce of copy-paste)
-    Issuer->>Issuer: create coin (PK_current=PK_A), sign
-    Issuer->>Engine: register_coin(coin, recipient_dest)
+    Issuer->>Issuer: create coin (PK_current=PK_issuer)
+    Issuer->>Issuer: sign transfer (coin_id, PK_A)
+    Issuer->>Engine: register_coin(coin, PK_next=PK_A, transfer_sig)
+    Engine->>Engine: verify issuer_sig + transfer_sig, rotate PK_current
     Engine->>WalletA: coin_delivery(coin + engine confirmation)
     WalletA->>WalletA: verify engine signature, store coin
     end
@@ -293,8 +308,10 @@ sequenceDiagram
     Note over Bank: Opslaan als pending request
     alt Operator keurt goed (kiest zelf aantal coins)
         loop Voor elke gekozen public key
-            Bank->>Bank: issue_coin(waarde=1, pk_owner)
-            Bank->>Engine: register_coin (coin, recipient_dest, description?)
+            Bank->>Bank: issue_coin(waarde=1, PK_current=PK_issuer)
+            Bank->>Bank: sign transfer (coin_id, PK_next=pk_owner)
+            Bank->>Engine: register_coin (coin, pk_next, transfer_sig, description?)
+            Engine->>Engine: verify issuer_sig + transfer_sig, rotate PK_current
             Engine->>Wallet: coin_delivery (coin + confirmation + sender_dest + description?)
         end
     else Operator wijst af
@@ -471,6 +488,7 @@ Roadmap
 9. ✓ Uniforme betaalverzoek flow: wallet→bank en wallet→wallet via zelfde endpoint
 10. ✓ Omschrijving: optioneel description veld (max 32 chars) door hele berichtketen
 11. ✓ Professionele transactie-weergave: datumgroepering (Vandaag/Gisteren/datum)
-12. □ LoRa integratie: Reticulum config met LoRa radio interface
-13. □ Binaire encoding: JSON→MessagePack/CBOR + raw bytes voor LoRa optimalisatie
-14. □ Meerdere state engines / redundantie
+12. ✓ Issuance = transfer: coin uitgifte conceptueel identiek aan overdracht (PK_current=PK_issuer + transfer_signature)
+13. □ LoRa integratie: Reticulum config met LoRa radio interface
+14. □ Binaire encoding: JSON→MessagePack/CBOR + raw bytes voor LoRa optimalisatie
+15. □ Meerdere state engines / redundantie

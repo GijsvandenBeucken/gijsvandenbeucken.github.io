@@ -79,25 +79,32 @@ class StateEngine:
         rows = self._conn.execute("SELECT pk_issuer FROM trusted_issuers").fetchall()
         return [r["pk_issuer"] for r in rows]
 
-    def register_coin(self, coin: Coin, recipient_address: str):
+    def register_coin(self, coin: Coin, recipient_address: str,
+                       pk_next: str, transfer_signature: str):
         if not self.is_trusted_issuer(coin.pk_issuer):
             raise UntrustedIssuerError(f"Issuer {coin.pk_issuer[:16]}... is niet vertrouwd")
 
         if not coin.verify_issuer():
             raise InvalidSignatureError("Ongeldige issuer signature")
 
+        transfer_payload = build_payload(coin.coin_id, pk_next)
+        if not verify(bytes.fromhex(coin.pk_current), transfer_payload,
+                      bytes.fromhex(transfer_signature)):
+            raise InvalidSignatureError("Ongeldige transfer signature bij issuance")
+
         coin_data = coin.to_dict()
+        coin_data["pk_current"] = pk_next
 
         self._conn.execute(
             "INSERT INTO coins (coin_id, pk_current, coin_data) VALUES (?, ?, ?)",
-            (coin.coin_id, coin.pk_current, json.dumps(coin_data)),
+            (coin.coin_id, pk_next, json.dumps(coin_data)),
         )
 
-        confirmation_payload = build_payload(coin.coin_id, coin.pk_current, "issued")
+        confirmation_payload = build_payload(coin.coin_id, pk_next, "issued")
         confirmation_sig = sign(self._sk, confirmation_payload)
         confirmation = {
             "coin_id": coin.coin_id,
-            "pk_next": coin.pk_current,
+            "pk_next": pk_next,
             "status": "issued",
             "engine_signature": confirmation_sig.hex(),
             "pk_engine": self.pk_hex,

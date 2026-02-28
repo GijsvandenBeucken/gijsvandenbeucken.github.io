@@ -2,12 +2,12 @@
   "contacts": [
     {
       "name": "Bank",
-      "address": "f9d76e15d0de98449225c3c9f181e354",
-      "pk": "caf8ec86f1dfd1b7baff1b1957254144965ebc568eaa4934db61bc0f61a9a0a3"
+      "address": "8857d18c5c5161ab34dd78c83313fb7a",
+      "pk": "99bbb3fd38055f5c36ad54367ed91ba0486a545c9710e59ca40ba99a3b016fba"
     }
   ],
   "issuer_names": {
-    "caf8ec86f1dfd1b7baff1b1957254144965ebc568eaa4934db61bc0f61a9a0a3": "Bank"
+    "99bbb3fd38055f5c36ad54367ed91ba0486a545c9710e59ca40ba99a3b016fba": "Bank"
   },
   "incoming_requests": []
 }
